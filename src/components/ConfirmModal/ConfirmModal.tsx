@@ -6,7 +6,7 @@ export default function Modal() {
   const [showModal, setShowModal] = React.useState(false);
   const { entities } = useEntitiesStore();
   const groupedEntities = groupEntitiesByType(entities);
-  console.log(groupedEntities);
+
   return (
     <>
       <button

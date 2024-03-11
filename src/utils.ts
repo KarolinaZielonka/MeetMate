@@ -1,13 +1,13 @@
 import { DayModes, MonthEntities } from "./types";
 
 export const days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+  "Sun",
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
 ];
 
 export const getDaysInMonth = (year: number, month: number) => {

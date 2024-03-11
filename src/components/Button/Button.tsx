@@ -1,9 +1,11 @@
 import React from "react";
 
-const Button: React.FC<{
+type ButtonProps = {
   text: string;
   onClick: () => void;
-}> = ({ text, onClick }) => {
+};
+
+const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
   return (
     <button
       type="button"

@@ -4,7 +4,7 @@ import Header from "../components/Header";
 export default function App() {
   return (
     <div className="flex justify-center items-center h-screen flex-col">
-      <Header/>
+      <Header />
       <div className="w-full m-6">
         <p className="font-semibold">Do you have a code?</p>
         <input

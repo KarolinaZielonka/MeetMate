@@ -9,8 +9,7 @@ export default function CalendarPage() {
       <Header />
       <MainCalendar />
       <StatePicker />
-        <ConfirmModal />
-      
+      <ConfirmModal />
     </div>
   );
 }
