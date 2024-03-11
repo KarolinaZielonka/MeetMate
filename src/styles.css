@@ -1,0 +1,47 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  margin: 0 auto;
+  text-align: center;
+  background-color: #f5f5f5
+}
+
+/* styles.css */
+.allow {
+  background-color: #23ce6b;
+  color: #363537;
+}
+
+.disallow {
+  background-color: #c14953;
+  color: #fff;
+}
+
+.maybe {
+  background-color: #e5b25d;
+  color: #363537;
+}
+
+.day {
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  margin: auto;
+  border-radius: 12px;
+}
+
+.empty-day {
+  width: 30px;
+  height: 30px;
+  border: none;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
