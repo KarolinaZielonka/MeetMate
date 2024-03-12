@@ -10,13 +10,13 @@ export default function App() {
         <input
           type="text"
           id="small-input"
-          className="block w-1/2 m-auto my-4 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs"
+          className="block w-1/2 m-auto my-4 p-2 text-gray-900 border border-gray-300 rounded-lg bg-white sm:text-xs"
         />
 
         <p className="font-semibold">or create a new one</p>
         <Link
           to={`calendar/12345`}
-          className="block w-1/2 m-auto my-4 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs"
+          className="block w-1/2 m-auto my-4 p-2 text-gray-900 border border-gray-300 rounded-lg bg-white sm:text-xs"
         >
           Create
         </Link>

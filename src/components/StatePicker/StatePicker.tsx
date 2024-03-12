@@ -18,8 +18,8 @@ export default function App() {
         />
         <label
           htmlFor="toggleSwitchAllow"
-          className={`m-8 p-2 capitalize font-bold text-green-500 ${
-            mode === "allow" ? "bg-green-100" : ""
+          className={`m-8 p-2 capitalize font-bold text-green ${
+            mode === "allow" ? "bg-green" : ""
           } rounded-md`}
         >
           available date
@@ -37,8 +37,8 @@ export default function App() {
         />
         <label
           htmlFor="toggleSwitchDisallow"
-          className={`m-8 p-2 capitalize font-bold text-red-500 ${
-            mode === "disallow" ? "bg-red-100" : ""
+          className={`m-8 p-2 capitalize font-bold text-red ${
+            mode === "disallow" ? "bg-red" : ""
           } rounded-md`}
         >
           busy date
@@ -56,8 +56,8 @@ export default function App() {
         />
         <label
           htmlFor="toggleSwitchMaybe"
-          className={`m-8 p-2 capitalize font-bold text-gray-500 ${
-            mode === "maybe" ? "bg-gray-100" : ""
+          className={`m-8 p-2 capitalize font-bold text-gray-800 ${
+            mode === "maybe" ? "bg-gray" : ""
           } rounded-md`}
         >
           possible date available

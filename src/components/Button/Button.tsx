@@ -10,7 +10,7 @@ const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
     <button
       type="button"
       onClick={onClick}
-      className={`m-8 p-2 bg-yellow-600 rounded-md text-slate-100`}
+      className={`m-8 p-2 bg-yellow rounded-md text-light`}
     >
       {text}
     </button>

@@ -71,10 +71,10 @@ export default function MainPage() {
   };
 
   return (
-    <div className="bg-gray-100 inline m-4 p-2 rounded-lg">
+    <div className="bg-gray inline m-4 p-2 rounded-lg">
       {error && (
         <div
-          className="max-w-xs bg-red-500 text-sm text-white rounded-xl shadow-lg absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          className="max-w-xs bg-red text-sm text-white rounded-xl shadow-lg absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           role="alert"
         >
           <div className="flex p-4">Earlier choose mode!</div>
@@ -112,7 +112,7 @@ export default function MainPage() {
         {daysArray.map((day, index) => (
           <div
             key={`day-${index}`}
-            className={`${getMode(entities, day.date)} day hover:bg-gray-200`}
+            className={`${getMode(entities, day.date)} day hover:bg-gray`}
             onClick={() => updateDayMode(day.date)}
           >
             {day.date.getDate()}
