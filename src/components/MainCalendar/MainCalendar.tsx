@@ -4,13 +4,11 @@ import { useState } from "react";
 import { days, getDaysInMonth, getFirstDayOfWeek, getMode } from "../../utils";
 import { useEntitiesStore } from "../../stores/EntitiesStore";
 
-const YEAR = 2024;
-
 export default function MainPage() {
-  const { mode } = useModeStore();
+  const { mode, calendarRange } = useModeStore();
   const { entities, setEntities } = useEntitiesStore();
 
-  const [currentDate, setCurrentDate] = useState(new Date(YEAR, 0));
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [error, setError] = useState(false);
 
   const daysInMonth = getDaysInMonth(
@@ -24,16 +22,20 @@ export default function MainPage() {
 
   const daysArray = Array.from({ length: daysInMonth }, (_, index) => {
     const dayNumber = index;
+    const date = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      dayNumber + 1
+    );
+    const mode =
+      date > new Date(calendarRange.start) && date < new Date(calendarRange.end)
+        ? ""
+        : "disabled";
     return {
-      date: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        dayNumber + 1
-      ),
-      mode: "",
+      date,
+      mode,
     };
   });
-
   const emptyDaysArray = [...Array(firstDayOfWeek).keys()];
 
   const updateDayMode = (date: Date): void => {
@@ -71,7 +73,7 @@ export default function MainPage() {
   };
 
   return (
-    <div className="bg-gray inline m-4 p-2 rounded-lg">
+    <div className="bg-white i react-calendar inline m-4 p-2 rounded-lg">
       {error && (
         <div
           className="max-w-xs bg-red text-sm text-white rounded-xl shadow-lg absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -112,8 +114,12 @@ export default function MainPage() {
         {daysArray.map((day, index) => (
           <div
             key={`day-${index}`}
-            className={`${getMode(entities, day.date)} day hover:bg-gray`}
-            onClick={() => updateDayMode(day.date)}
+            className={`${getMode(entities, day.date)} ${
+              day.mode === "disabled" ? "disabled" : ""
+            } day
+            ${day.mode !== "disabled" && "hover:bg-gray"}
+            `}
+            onClick={() => day.mode !== "disabled" && updateDayMode(day.date)}
           >
             {day.date.getDate()}
           </div>

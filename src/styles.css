@@ -11,6 +11,11 @@
 }
 
 /* styles.css */
+.disabled {
+  background-color: #a8a4ac;
+  color: #fff;
+}
+
 .allow {
   background-color: #23ce6b;
   color: #363537;
