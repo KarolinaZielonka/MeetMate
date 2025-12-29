@@ -4,48 +4,98 @@
 
 @layer base {
   :root {
+    /* Background & Surface Colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 240 10% 3.9%;
+
+    /* Card & Elevated Surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
+
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* Primary Brand Color - Royal Blue (trustworthy, professional, modern) */
+    --primary: 217 100% 34%;       /* #0047AB - main brand color */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary Actions */
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+
+    /* Muted Elements */
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    /* Accent Color - Warm Amber (friendly, energetic) */
+    --accent: 43 96% 56%;          /* amber-400 - CTAs and highlights */
+    --accent-foreground: 26 83% 14%;
+
+    /* Destructive/Error States */
+    --destructive: 0 84.2% 60.2%;  /* red-500 */
+    --destructive-foreground: 0 0% 100%;
+
+    /* Success States */
+    --success: 142 76% 36%;        /* green-600 */
+    --success-foreground: 0 0% 100%;
+
+    /* Warning States */
+    --warning: 38 92% 50%;         /* orange-500 */
+    --warning-foreground: 0 0% 100%;
+
+    /* Borders & Inputs */
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 217 100% 34%;          /* matches primary */
+
+    /* Border Radius */
+    --radius: 0.75rem;             /* 12px - friendly rounded corners */
+
+    /* Availability State Colors (per CLAUDE.md) */
+    --available: 142 76% 36%;      /* green-600 */
+    --available-light: 142 76% 96%;
+    --maybe: 38 92% 50%;           /* orange-500 */
+    --maybe-light: 38 92% 96%;
+    --unavailable: 0 84.2% 60.2%;  /* red-500 */
+    --unavailable-light: 0 84.2% 96%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Dark mode - Phase 2 enhancement */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 217 100% 45%;       /* lighter blue for dark mode */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 43 96% 60%;
+    --accent-foreground: 26 83% 14%;
+
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 142 76% 42%;
+    --success-foreground: 0 0% 98%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 240 10% 3.9%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 217 100% 45%;
   }
 }
 
@@ -53,8 +103,230 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Smooth scrolling for better UX */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Improve tap targets on mobile */
+  @media (hover: none) and (pointer: coarse) {
+    button, a, input, select, textarea {
+      @apply min-h-[44px];
+    }
+  }
+}
+
+@layer utilities {
+  /* Gradient backgrounds */
+  .bg-gradient-soft {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #f0f9ff 100%);
+  }
+
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #0047AB 0%, #003d99 100%);
+  }
+
+  .bg-gradient-accent {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  }
+
+  /* Availability state utilities */
+  .state-available {
+    @apply bg-green-50 border-green-500 text-green-900;
+  }
+
+  .state-maybe {
+    @apply bg-orange-50 border-orange-500 text-orange-900;
+  }
+
+  .state-unavailable {
+    @apply bg-red-50 border-red-500 text-red-900;
+  }
+
+  /* Glass morphism effect for elevated cards */
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+
+  /* Animation utilities for natural micro-interactions */
+
+  /* Smooth base transition - use for most interactive elements */
+  .transition-smooth {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  /* Medium transition for larger movements */
+  .transition-medium {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Slow transition for emphasis */
+  .transition-slow {
+    @apply transition-all duration-500 ease-in-out;
+  }
+
+  /* Button hover lift effect */
+  .hover-lift {
+    @apply transition-smooth hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  /* Subtle scale on hover */
+  .hover-scale {
+    @apply transition-smooth hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  /* Icon button scale */
+  .hover-scale-icon {
+    @apply transition-smooth hover:scale-110 active:scale-95;
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-medium hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Fade in animation */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  /* Slide up animation */
+  .slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  /* Pulse animation for loading states */
+  .pulse-soft {
+    animation: pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Shimmer effect for skeleton loaders */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.2) 20%,
+      rgba(255, 255, 255, 0.5) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+    background-size: 200% 100%;
+  }
+
+  /* Bounce subtle - for success states */
+  .bounce-subtle {
+    animation: bounceSubtle 0.5s ease-in-out;
+  }
+
+  /* Spin smooth - for loading spinners */
+  .spin-smooth {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@layer components {
+  /* Enhanced input focus states */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply ring-2 ring-primary/20 border-primary transition-all duration-200;
+  }
+
+  /* Animated button states */
+  button {
+    @apply transition-smooth;
+  }
+
+  button:active {
+    @apply scale-[0.98];
+  }
+
+  /* Link hover underline animation */
+  .link-animated {
+    @apply relative;
+  }
+
+  .link-animated::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300;
+  }
+
+  .link-animated:hover::after {
+    @apply w-full;
+  }
+}
+
+/* Keyframe animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseSoft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Reduced motion support - respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

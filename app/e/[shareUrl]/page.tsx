@@ -3,7 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { formatDateRange, parseDate } from '@/lib/utils/dates';
-import { getSession, isAdmin, isParticipant } from '@/lib/utils/session';
+import { getSession, isParticipant } from '@/lib/utils/session';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
+import { Label } from '@/components/ui/label';
 
 interface EventData {
   id: string;
@@ -27,6 +33,7 @@ export default function EventPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<'admin' | 'participant' | 'visitor'>('visitor');
+  const [copySuccess, setCopySuccess] = useState(false);
 
   // Fetch event data
   useEffect(() => {
@@ -69,18 +76,33 @@ export default function EventPage() {
     }
   }, [shareUrl]);
 
+  // Handle copy to clipboard
+  const handleCopyLink = async () => {
+    if (typeof window !== 'undefined') {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    }
+  };
+
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white rounded-lg shadow-xl p-8">
-            <div className="animate-pulse space-y-4">
-              <div className="h-8 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div className="h-32 bg-gray-200 rounded mt-8"></div>
-            </div>
-          </div>
+      <div className="min-h-screen bg-gradient-soft pt-24 pb-12 px-4">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <Card className="shadow-lg border-none">
+            <CardHeader>
+              <Skeleton className="h-10 w-3/4 mb-2 shimmer" />
+              <Skeleton className="h-6 w-1/2 shimmer" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-32 w-full shimmer" />
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -89,24 +111,30 @@ export default function EventPage() {
   // Error state
   if (error || !event) {
     return (
-      <div className="min-h-screen p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white rounded-lg shadow-xl p-8">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-red-600 mb-4">
-                {error === 'Event not found' ? 'Event Not Found' : 'Error'}
+      <div className="min-h-screen bg-gradient-soft pt-24 pb-12 px-4">
+        <div className="max-w-2xl mx-auto fade-in">
+          <Card className="shadow-lg border-none">
+            <CardContent className="pt-12 pb-12 text-center">
+              <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 bounce-subtle">
+                <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-3">
+                {error === 'Event not found' ? 'Event Not Found' : 'Oops!'}
               </h1>
-              <p className="text-gray-600 mb-6">
-                {error || 'Unable to load event'}
+              <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+                {error || 'Unable to load event. Please check the link and try again.'}
               </p>
-              <button
+              <Button
                 onClick={() => router.push('/')}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                size="lg"
+                className="bg-gradient-primary hover:opacity-90 hover-lift"
               >
                 Go to Homepage
-              </button>
-            </div>
-          </div>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -118,114 +146,175 @@ export default function EventPage() {
   const dateRangeText = formatDateRange(startDate, endDate);
 
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-soft pt-24 pb-12 px-4">
       <div className="max-w-6xl mx-auto space-y-6">
-        {/* Event Header */}
-        <div className="bg-white rounded-lg shadow-xl p-8">
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {event.name}
-              </h1>
-              <p className="text-lg text-gray-600">
-                {dateRangeText}
-              </p>
-              {event.creator_name && (
-                <p className="text-sm text-gray-500 mt-2">
-                  Created by {event.creator_name}
-                </p>
-              )}
+        {/* Event Header Card */}
+        <Card className="shadow-xl border-none fade-in">
+          <CardHeader>
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 flex-wrap mb-3">
+                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900">{event.name}</h1>
+
+                  {/* Role Badge */}
+                  {userRole === 'admin' && (
+                    <Badge className="bg-gradient-to-r from-purple-600 to-purple-700 text-white border-none shadow-md hover-scale">
+                      <svg className="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                      </svg>
+                      Admin
+                    </Badge>
+                  )}
+                  {userRole === 'participant' && (
+                    <Badge className="bg-gradient-to-r from-green-600 to-green-700 text-white border-none shadow-md hover-scale">
+                      <svg className="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Participant
+                    </Badge>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 text-lg text-gray-600 mb-2">
+                  <svg className="w-5 h-5 text-[#0047AB] transition-smooth hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  {dateRangeText}
+                </div>
+
+                {event.creator_name && (
+                  <p className="text-sm text-gray-500">
+                    Created by <span className="font-semibold">{event.creator_name}</span>
+                  </p>
+                )}
+              </div>
             </div>
+          </CardHeader>
 
-            {/* Role Badge */}
-            {userRole === 'admin' && (
-              <span className="px-3 py-1 bg-purple-100 text-purple-800 text-sm font-medium rounded-full">
-                Admin
-              </span>
+          <CardContent className="space-y-4">
+            {/* Locked Event Status */}
+            {event.is_locked && event.calculated_date && (
+              <>
+                <div className="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl fade-in">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0 shadow-md hover-scale-icon">
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-bold text-blue-900 text-lg mb-1">Event Locked</p>
+                      <p className="text-blue-800">
+                        Chosen date: <span className="font-semibold">{formatDateRange(parseDate(event.calculated_date), parseDate(event.calculated_date))}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <Separator />
+              </>
             )}
-            {userRole === 'participant' && (
-              <span className="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-                Participant
-              </span>
-            )}
-          </div>
 
-          {/* Locked Event Badge */}
-          {event.is_locked && event.calculated_date && (
-            <div className="mt-6 p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
-              <div className="flex items-center">
-                <svg
-                  className="w-5 h-5 text-indigo-600 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+            {/* Share Section */}
+            <div>
+              <Label className="text-sm font-semibold text-gray-700 mb-3 block">
+                Share this event with participants
+              </Label>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg font-mono text-sm overflow-x-auto transition-smooth hover:border-blue-300">
+                  {typeof window !== 'undefined' ? window.location.href : ''}
+                </div>
+                <Button
+                  onClick={handleCopyLink}
+                  className={`${copySuccess ? 'bg-green-600 hover:bg-green-700' : 'bg-gradient-primary hover:opacity-90'} shadow-md transition-smooth hover-lift min-w-[120px]`}
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div>
-                  <p className="font-semibold text-indigo-900">Event Locked</p>
-                  <p className="text-sm text-indigo-700">
-                    Chosen date: {formatDateRange(parseDate(event.calculated_date), parseDate(event.calculated_date))}
+                  {copySuccess ? (
+                    <>
+                      <svg className="w-4 h-4 mr-2 bounce-subtle" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4 mr-2 transition-smooth group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Copy Link
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Join Event Section */}
+        {!isParticipant(event.id) && !event.is_locked && (
+          <Card className="shadow-lg border-none slide-up">
+            <CardHeader>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center shadow-md hover-scale-icon">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                  </svg>
+                </div>
+                Join This Event
+              </CardTitle>
+              <CardDescription className="text-base">
+                Enter your name to participate and share your availability
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 transition-smooth hover:border-blue-300">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg pulse-soft">
+                    <svg className="w-8 h-8 text-[#0047AB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </div>
+                  <p className="text-blue-900 font-semibold text-lg">
+                    Join functionality coming in Phase 2
+                  </p>
+                  <p className="text-blue-700 text-sm mt-2">
+                    Soon you&apos;ll be able to add your availability and see when everyone can meet
                   </p>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* Share URL Info */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <p className="text-sm font-medium text-gray-700 mb-2">Share this event:</p>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded text-sm">
-                {typeof window !== 'undefined' ? window.location.href : ''}
-              </code>
-              <button
-                onClick={() => {
-                  if (typeof window !== 'undefined') {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert('Link copied to clipboard!');
-                  }
-                }}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm font-medium"
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Join Event Section - Placeholder for Phase 2 */}
-        {!isParticipant(event.id) && !event.is_locked && (
-          <div className="bg-white rounded-lg shadow-xl p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Join This Event
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Enter your name to participate and share your availability.
-            </p>
-            <div className="p-6 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-blue-800 text-center">
-                Join functionality coming in Phase 2
-              </p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         )}
 
-        {/* Participant Info - Placeholder */}
-        <div className="bg-white rounded-lg shadow-xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            What's Next?
-          </h2>
-          <ul className="list-disc list-inside space-y-2 text-gray-700">
-            <li>Join the event by entering your name (Phase 2)</li>
-            <li>Select your available dates on the calendar (Phase 3)</li>
-            <li>See other participants' responses in real-time (Phase 4)</li>
-            <li>Find the optimal meeting date (Phase 5)</li>
-          </ul>
-        </div>
+        {/* What's Next Section */}
+        <Card className="shadow-lg border-none slide-up">
+          <CardHeader>
+            <CardTitle className="text-2xl flex items-center gap-2">
+              <svg className="w-7 h-7 text-[#0047AB] transition-smooth hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              What&apos;s Next?
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3">
+              {[
+                { text: 'Join the event by entering your name', phase: 'Phase 2' },
+                { text: 'Select your available dates on the calendar', phase: 'Phase 3' },
+                { text: "See other participants' responses in real-time", phase: 'Phase 4' },
+                { text: 'Find the optimal meeting date automatically', phase: 'Phase 5' }
+              ].map((item, index) => (
+                <li key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg transition-smooth hover:bg-gray-100 hover:shadow-md group">
+                  <div className="w-6 h-6 bg-gradient-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5 transition-smooth group-hover:scale-110">
+                    <span className="text-white text-xs font-bold">{index + 1}</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-gray-900 font-medium">{item.text}</p>
+                    <p className="text-sm text-gray-500">{item.phase}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
