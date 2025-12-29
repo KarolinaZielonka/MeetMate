@@ -23,12 +23,6 @@ export default function HomePage() {
           >
             Create Event
           </Link>
-          <a
-            href="#how-it-works"
-            className="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold text-lg hover:bg-gray-50 transition-colors shadow-md"
-          >
-            How It Works
-          </a>
         </div>
 
         <div
