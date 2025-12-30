@@ -202,7 +202,9 @@
     "unselected": "Nie wybrano",
     "previousMonth": "Poprzedni miesiąc",
     "nextMonth": "Następny miesiąc",
-    "instructions": "Kliknij daty, aby przełączać: Nie wybrano → Dostępny → Może → Niedostępny → Nie wybrano"
+    "instructions": "Kliknij daty, aby przełączać: Nie wybrano → Dostępny → Może → Niedostępny → Nie wybrano",
+    "howToUse": "Jak używać",
+    "tap": "kliknięcie"
   },
   "optimalDates": {
     "title": "Najlepsze daty spotkań",
@@ -236,5 +238,29 @@
     "unlock": "Odblokuj wydarzenie",
     "passwordVerified": "Hasło zweryfikowane pomyślnie!",
     "passwordVerificationFailed": "Nie udało się zweryfikować hasła. Spróbuj ponownie."
+  },
+  "adminControls": {
+    "title": "Panel administracyjny",
+    "description": "Zarządzaj ustawieniami wydarzenia",
+    "reopenButton": "Otwórz ponownie wydarzenie",
+    "reopeningButton": "Otwieranie...",
+    "deleteButton": "Usuń wydarzenie",
+    "deletingButton": "Usuwanie...",
+    "reopenConfirm": {
+      "title": "Otworzyć ponownie wydarzenie?",
+      "description": "Czy na pewno chcesz otworzyć ponownie to wydarzenie? Uczestnicy będą mogli ponownie edytować swoją dostępność, a zablokowana data zostanie wyczyszczona.",
+      "confirm": "Otwórz ponownie",
+      "cancel": "Anuluj"
+    },
+    "deleteConfirm": {
+      "title": "Trwale usunąć wydarzenie?",
+      "description": "Tej operacji nie można cofnąć. Wszystkie dane wydarzenia, uczestnicy i dostępność zostaną trwale usunięte.",
+      "confirm": "Usuń na zawsze",
+      "cancel": "Anuluj"
+    },
+    "successReopen": "Wydarzenie zostało pomyślnie otwarte ponownie!",
+    "errorReopen": "Nie udało się otworzyć ponownie wydarzenia. Spróbuj ponownie.",
+    "successDelete": "Wydarzenie zostało pomyślnie usunięte. Przekierowywanie...",
+    "errorDelete": "Nie udało się usunąć wydarzenia. Spróbuj ponownie."
   }
 }

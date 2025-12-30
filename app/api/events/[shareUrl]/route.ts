@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase/client"
+import { getSession } from "@/lib/utils/session"
 
 /**
  * GET /api/events/[shareUrl]
@@ -56,5 +57,61 @@ export async function GET(
   } catch (error) {
     console.error("Unexpected error in GET /api/events/[shareUrl]:", error)
     return NextResponse.json({ data: null, error: "An unexpected error occurred" }, { status: 500 })
+  }
+}
+
+/**
+ * DELETE /api/events/[shareUrl]
+ * Delete event and all associated data (admin only)
+ */
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ shareUrl: string }> }
+) {
+  try {
+    const { shareUrl } = await params
+
+    if (!shareUrl) {
+      return NextResponse.json({ data: null, error: "Share URL is required" }, { status: 400 })
+    }
+
+    // Fetch the event to verify it exists and get the ID
+    const { data: event, error: eventError } = await supabase
+      .from("events")
+      .select("id")
+      .eq("share_url", shareUrl)
+      .single()
+
+    if (eventError || !event) {
+      return NextResponse.json({ data: null, error: "Event not found" }, { status: 404 })
+    }
+
+    // Verify admin session
+    const session = getSession(event.id)
+    if (!session || session.role !== "admin") {
+      return NextResponse.json(
+        { data: null, error: "Only the event creator can delete the event" },
+        { status: 403 }
+      )
+    }
+
+    // Delete the event (cascade will handle participants and availability)
+    const { error: deleteError } = await supabase.from("events").delete().eq("id", event.id)
+
+    if (deleteError) {
+      console.error("Error deleting event:", deleteError)
+      return NextResponse.json(
+        { data: null, error: "Failed to delete event. Please try again." },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ data: { success: true }, error: null })
+  } catch (error) {
+    console.error("Unexpected error in DELETE /api/events/[shareUrl]:", error)
+    return NextResponse.json(
+      { data: null, error: "Failed to delete event. Please try again." },
+      { status: 500 }
+    )
   }
 }

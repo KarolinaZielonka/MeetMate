@@ -10,6 +10,7 @@ import { OptimalDatesDisplay } from "@/components/event/OptimalDatesDisplay"
 import { PasswordDialog } from "@/components/event/PasswordDialog"
 import { ParticipantList } from "@/components/participants/ParticipantList"
 import { AvailabilitySection } from "@/components/event/AvailabilitySection"
+import { AdminControls } from "@/components/event/AdminControls"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getSession, isParticipant } from "@/lib/utils/session"
 import { useRealtimeEvent } from "@/hooks/useRealtimeEvent"
@@ -186,6 +187,15 @@ export default function EventPage() {
                 onSubmit={handleSubmitAvailability}
                 onEdit={() => setIsEditingAvailability(true)}
                 onCancel={handleCancelEdit}
+              />
+            )}
+
+            {/* Admin Controls */}
+            {userRole === "admin" && (
+              <AdminControls
+                shareUrl={shareUrl}
+                isLocked={event.is_locked}
+                onEventReopened={handleEventLocked}
               />
             )}
           </div>

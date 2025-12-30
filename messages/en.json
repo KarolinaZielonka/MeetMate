@@ -202,7 +202,9 @@
     "unselected": "Not selected",
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
-    "instructions": "Tap dates to cycle through: Not selected → Available → Maybe → Unavailable → Not selected"
+    "instructions": "Tap dates to cycle through: Not selected → Available → Maybe → Unavailable → Not selected",
+    "howToUse": "How to use",
+    "tap": "tap"
   },
   "optimalDates": {
     "title": "Best Meeting Dates",
@@ -236,5 +238,29 @@
     "unlock": "Unlock Event",
     "passwordVerified": "Password verified successfully!",
     "passwordVerificationFailed": "Failed to verify password. Please try again."
+  },
+  "adminControls": {
+    "title": "Admin Controls",
+    "description": "Manage your event settings",
+    "reopenButton": "Reopen Event",
+    "reopeningButton": "Reopening...",
+    "deleteButton": "Delete Event",
+    "deletingButton": "Deleting...",
+    "reopenConfirm": {
+      "title": "Reopen Event?",
+      "description": "Are you sure you want to reopen this event? Participants will be able to edit their availability again, and the locked date will be cleared.",
+      "confirm": "Reopen Event",
+      "cancel": "Cancel"
+    },
+    "deleteConfirm": {
+      "title": "Delete Event Permanently?",
+      "description": "This action cannot be undone. All event data, participants, and availability will be permanently deleted.",
+      "confirm": "Delete Permanently",
+      "cancel": "Cancel"
+    },
+    "successReopen": "Event reopened successfully!",
+    "errorReopen": "Failed to reopen event. Please try again.",
+    "successDelete": "Event deleted successfully. Redirecting...",
+    "errorDelete": "Failed to delete event. Please try again."
   }
 }
