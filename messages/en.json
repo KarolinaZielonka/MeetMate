@@ -225,5 +225,15 @@
     "successLock": "Event locked successfully!",
     "errorLock": "Failed to lock event. Please try again.",
     "errorCalculate": "Failed to calculate optimal dates. Please try again."
+  },
+  "events": {
+    "passwordRequired": "Password Required",
+    "passwordDialogDescription": "This event is password protected. Please enter the password to continue.",
+    "password": "Password",
+    "enterPassword": "Enter password",
+    "verifying": "Verifying...",
+    "unlock": "Unlock Event",
+    "passwordVerified": "Password verified successfully!",
+    "passwordVerificationFailed": "Failed to verify password. Please try again."
   }
 }

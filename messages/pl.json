@@ -225,5 +225,15 @@
     "successLock": "Wydarzenie zostało pomyślnie zablokowane!",
     "errorLock": "Nie udało się zablokować wydarzenia. Spróbuj ponownie.",
     "errorCalculate": "Nie udało się obliczyć optymalnych dat. Spróbuj ponownie."
+  },
+  "events": {
+    "passwordRequired": "Wymagane hasło",
+    "passwordDialogDescription": "To wydarzenie jest chronione hasłem. Wprowadź hasło, aby kontynuować.",
+    "password": "Hasło",
+    "enterPassword": "Wprowadź hasło",
+    "verifying": "Weryfikacja...",
+    "unlock": "Odblokuj wydarzenie",
+    "passwordVerified": "Hasło zweryfikowane pomyślnie!",
+    "passwordVerificationFailed": "Nie udało się zweryfikować hasła. Spróbuj ponownie."
   }
 }

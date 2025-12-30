@@ -9,6 +9,7 @@ import { EventPageSkeleton } from "@/components/EventPageSkeleton"
 import { EventHeader } from "@/components/event/EventHeader"
 import { JoinEventForm } from "@/components/event/JoinEventForm"
 import { OptimalDatesDisplay } from "@/components/event/OptimalDatesDisplay"
+import { PasswordDialog } from "@/components/event/PasswordDialog"
 import { ParticipantList } from "@/components/participants/ParticipantList"
 import { DateRangePicker } from "@/components/calendar/DateRangePicker"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -46,6 +47,8 @@ export default function EventPage() {
   const [isSubmittingAvailability, setIsSubmittingAvailability] = useState(false)
   const [isEditingAvailability, setIsEditingAvailability] = useState(false)
   const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false)
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false)
 
   // Real-time subscriptions
   useRealtimeEvent({
@@ -89,6 +92,18 @@ export default function EventPage() {
           setUserRole(session.role)
         }
 
+        // Check password protection
+        if (result.data.has_password) {
+          const accessToken = localStorage.getItem(`password_access_${result.data.id}`)
+          if (!accessToken) {
+            setShowPasswordDialog(true)
+          } else {
+            setIsPasswordVerified(true)
+          }
+        } else {
+          setIsPasswordVerified(true)
+        }
+
         setIsLoading(false)
       } catch (err) {
         console.error("Error fetching event:", err)
@@ -130,6 +145,12 @@ export default function EventPage() {
 
     fetchAvailability()
   }, [event, refreshTrigger])
+
+  // Handle password verification success
+  const handlePasswordSuccess = () => {
+    setIsPasswordVerified(true)
+    setShowPasswordDialog(false)
+  }
 
   // Handle availability submission
   const handleSubmitAvailability = async () => {
@@ -204,10 +225,22 @@ export default function EventPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-24 pb-12 px-4">
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Event Header Card */}
-        <EventHeader
+    <>
+      {/* Password Dialog */}
+      {event?.has_password && (
+        <PasswordDialog
+          shareUrl={shareUrl}
+          open={showPasswordDialog}
+          onSuccess={handlePasswordSuccess}
+        />
+      )}
+
+      {/* Main Content - Only show if password is verified or not required */}
+      {isPasswordVerified && (
+        <div className="min-h-screen bg-background pt-24 pb-12 px-4">
+          <div className="max-w-6xl mx-auto space-y-6">
+            {/* Event Header Card */}
+            <EventHeader
           event={event}
           userRole={userRole}
           shareUrl={typeof window !== "undefined" ? window.location.href : ""}
@@ -390,7 +423,9 @@ export default function EventPage() {
             </CardContent>
           </Card>
         )}
-      </div>
-    </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
