@@ -100,8 +100,23 @@
     "join": {
       "title": "Dołącz do tego wydarzenia",
       "description": "Wpisz swoje imię, aby uczestniczyć i udostępnić swoją dostępność",
-      "comingSoon": "Funkcja dołączania wkrótce w fazie 2",
-      "comingSoonDescription": "Wkrótce będziesz mógł dodać swoją dostępność i zobaczyć, kiedy wszyscy mogą się spotkać"
+      "nameLabel": "Twoje imię",
+      "namePlaceholder": "np. Anna Kowalska",
+      "joinButton": "Dołącz do wydarzenia",
+      "joiningButton": "Dołączanie...",
+      "successMessage": "Pomyślnie dołączono do wydarzenia!",
+      "errorNameRequired": "Imię jest wymagane",
+      "errorNameTooLong": "Imię może mieć maksymalnie 100 znaków",
+      "errorJoinFailed": "Nie udało się dołączyć do wydarzenia. Spróbuj ponownie."
+    },
+    "participants": {
+      "title": "Uczestnicy",
+      "description": "Osoby, które dołączyły do tego wydarzenia",
+      "noParticipants": "Brak uczestników. Bądź pierwszy!",
+      "submittedBadge": "Wysłano",
+      "pendingBadge": "Oczekuje",
+      "youBadge": "Ty",
+      "errorFetch": "Nie udało się załadować uczestników"
     },
     "whatsNext": {
       "title": "Co dalej?",

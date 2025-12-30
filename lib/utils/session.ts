@@ -3,28 +3,28 @@
  * No user accounts - sessions are event-scoped and stored in localStorage
  */
 
-export type SessionRole = 'admin' | 'participant' | 'visitor';
+export type SessionRole = "admin" | "participant" | "visitor"
 
 export interface Session {
-  eventId: string;
-  role: SessionRole;
-  sessionToken?: string; // UUID for participants
-  participantId?: string; // Database ID for participants
-  createdAt: number; // Timestamp
+  eventId: string
+  role: SessionRole
+  sessionToken?: string // UUID for participants
+  participantId?: string // Database ID for participants
+  createdAt: number // Timestamp
 }
 
 /**
  * Get localStorage key for event session
  */
 function getSessionKey(eventId: string): string {
-  return `session_${eventId}`;
+  return `session_${eventId}`
 }
 
 /**
  * Get localStorage key for access token (password protection)
  */
 function getAccessTokenKey(eventId: string): string {
-  return `access_token_${eventId}`;
+  return `access_token_${eventId}`
 }
 
 /**
@@ -34,12 +34,12 @@ function getAccessTokenKey(eventId: string): string {
 export function initializeSession(eventId: string, isCreator: boolean = false): Session {
   const session: Session = {
     eventId,
-    role: isCreator ? 'admin' : 'visitor',
-    createdAt: Date.now()
-  };
+    role: isCreator ? "admin" : "visitor",
+    createdAt: Date.now(),
+  }
 
-  saveSession(eventId, session);
-  return session;
+  saveSession(eventId, session)
+  return session
 }
 
 /**
@@ -47,32 +47,32 @@ export function initializeSession(eventId: string, isCreator: boolean = false): 
  * Returns null if no session exists
  */
 export function getSession(eventId: string): Session | null {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Server-side rendering
-    return null;
+    return null
   }
 
   try {
-    const sessionKey = getSessionKey(eventId);
-    const sessionData = localStorage.getItem(sessionKey);
+    const sessionKey = getSessionKey(eventId)
+    const sessionData = localStorage.getItem(sessionKey)
 
     if (!sessionData) {
-      return null;
+      return null
     }
 
-    const session: Session = JSON.parse(sessionData);
+    const session: Session = JSON.parse(sessionData)
 
     // Validate session structure
     if (!session.eventId || !session.role || !session.createdAt) {
-      console.warn('Invalid session data, clearing session');
-      clearSession(eventId);
-      return null;
+      console.warn("Invalid session data, clearing session")
+      clearSession(eventId)
+      return null
     }
 
-    return session;
+    return session
   } catch (error) {
-    console.error('Error retrieving session:', error);
-    return null;
+    console.error("Error retrieving session:", error)
+    return null
   }
 }
 
@@ -80,15 +80,15 @@ export function getSession(eventId: string): Session | null {
  * Save session to localStorage
  */
 export function saveSession(eventId: string, session: Session): void {
-  if (typeof window === 'undefined') {
-    return;
+  if (typeof window === "undefined") {
+    return
   }
 
   try {
-    const sessionKey = getSessionKey(eventId);
-    localStorage.setItem(sessionKey, JSON.stringify(session));
+    const sessionKey = getSessionKey(eventId)
+    localStorage.setItem(sessionKey, JSON.stringify(session))
   } catch (error) {
-    console.error('Error saving session:', error);
+    console.error("Error saving session:", error)
   }
 }
 
@@ -100,37 +100,37 @@ export function updateSessionAsParticipant(
   participantId: string,
   sessionToken: string
 ): Session {
-  const existingSession = getSession(eventId);
+  const existingSession = getSession(eventId)
 
   const session: Session = {
     eventId,
-    role: existingSession?.role === 'admin' ? 'admin' : 'participant',
+    role: existingSession?.role === "admin" ? "admin" : "participant",
     sessionToken,
     participantId,
-    createdAt: existingSession?.createdAt || Date.now()
-  };
+    createdAt: existingSession?.createdAt || Date.now(),
+  }
 
-  saveSession(eventId, session);
-  return session;
+  saveSession(eventId, session)
+  return session
 }
 
 /**
  * Clear session for an event
  */
 export function clearSession(eventId: string): void {
-  if (typeof window === 'undefined') {
-    return;
+  if (typeof window === "undefined") {
+    return
   }
 
   try {
-    const sessionKey = getSessionKey(eventId);
-    localStorage.removeItem(sessionKey);
+    const sessionKey = getSessionKey(eventId)
+    localStorage.removeItem(sessionKey)
 
     // Also clear access token if exists
-    const accessTokenKey = getAccessTokenKey(eventId);
-    localStorage.removeItem(accessTokenKey);
+    const accessTokenKey = getAccessTokenKey(eventId)
+    localStorage.removeItem(accessTokenKey)
   } catch (error) {
-    console.error('Error clearing session:', error);
+    console.error("Error clearing session:", error)
   }
 }
 
@@ -138,16 +138,16 @@ export function clearSession(eventId: string): void {
  * Check if user is admin for an event
  */
 export function isAdmin(eventId: string): boolean {
-  const session = getSession(eventId);
-  return session?.role === 'admin';
+  const session = getSession(eventId)
+  return session?.role === "admin"
 }
 
 /**
  * Check if user is a participant for an event
  */
 export function isParticipant(eventId: string): boolean {
-  const session = getSession(eventId);
-  return session?.role === 'participant' || session?.role === 'admin';
+  const session = getSession(eventId)
+  return session?.role === "participant" || session?.role === "admin"
 }
 
 /**
@@ -155,23 +155,23 @@ export function isParticipant(eventId: string): boolean {
  * Returns null if not a participant
  */
 export function getParticipantId(eventId: string): string | null {
-  const session = getSession(eventId);
-  return session?.participantId || null;
+  const session = getSession(eventId)
+  return session?.participantId || null
 }
 
 /**
  * Store access token for password-protected event
  */
 export function storeAccessToken(eventId: string, token: string): void {
-  if (typeof window === 'undefined') {
-    return;
+  if (typeof window === "undefined") {
+    return
   }
 
   try {
-    const accessTokenKey = getAccessTokenKey(eventId);
-    localStorage.setItem(accessTokenKey, token);
+    const accessTokenKey = getAccessTokenKey(eventId)
+    localStorage.setItem(accessTokenKey, token)
   } catch (error) {
-    console.error('Error storing access token:', error);
+    console.error("Error storing access token:", error)
   }
 }
 
@@ -180,16 +180,16 @@ export function storeAccessToken(eventId: string, token: string): void {
  * Returns null if no token exists
  */
 export function getAccessToken(eventId: string): string | null {
-  if (typeof window === 'undefined') {
-    return null;
+  if (typeof window === "undefined") {
+    return null
   }
 
   try {
-    const accessTokenKey = getAccessTokenKey(eventId);
-    return localStorage.getItem(accessTokenKey);
+    const accessTokenKey = getAccessTokenKey(eventId)
+    return localStorage.getItem(accessTokenKey)
   } catch (error) {
-    console.error('Error retrieving access token:', error);
-    return null;
+    console.error("Error retrieving access token:", error)
+    return null
   }
 }
 
@@ -198,29 +198,29 @@ export function getAccessToken(eventId: string): string | null {
  */
 export function hasAccess(eventId: string, passwordRequired: boolean): boolean {
   if (!passwordRequired) {
-    return true;
+    return true
   }
 
-  const token = getAccessToken(eventId);
-  return token !== null;
+  const token = getAccessToken(eventId)
+  return token !== null
 }
 
 /**
  * Clear all sessions (useful for debugging)
  */
 export function clearAllSessions(): void {
-  if (typeof window === 'undefined') {
-    return;
+  if (typeof window === "undefined") {
+    return
   }
 
   try {
-    const keys = Object.keys(localStorage);
+    const keys = Object.keys(localStorage)
     keys.forEach((key) => {
-      if (key.startsWith('session_') || key.startsWith('access_token_')) {
-        localStorage.removeItem(key);
+      if (key.startsWith("session_") || key.startsWith("access_token_")) {
+        localStorage.removeItem(key)
       }
-    });
+    })
   } catch (error) {
-    console.error('Error clearing all sessions:', error);
+    console.error("Error clearing all sessions:", error)
   }
 }

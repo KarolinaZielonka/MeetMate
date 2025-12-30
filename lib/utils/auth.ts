@@ -1,11 +1,11 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs"
 
 /**
  * Number of salt rounds for bcrypt hashing
  * Higher number = more secure but slower
  * 10 is a good balance for most applications
  */
-const SALT_ROUNDS = 10;
+const SALT_ROUNDS = 10
 
 /**
  * Hash a password using bcrypt
@@ -14,15 +14,15 @@ const SALT_ROUNDS = 10;
  */
 export async function hashPassword(password: string): Promise<string> {
   if (!password || password.length === 0) {
-    throw new Error('Password cannot be empty');
+    throw new Error("Password cannot be empty")
   }
 
   try {
-    const hash = await bcrypt.hash(password, SALT_ROUNDS);
-    return hash;
+    const hash = await bcrypt.hash(password, SALT_ROUNDS)
+    return hash
   } catch (error) {
-    console.error('Error hashing password:', error);
-    throw new Error('Failed to hash password');
+    console.error("Error hashing password:", error)
+    throw new Error("Failed to hash password")
   }
 }
 
@@ -34,15 +34,15 @@ export async function hashPassword(password: string): Promise<string> {
  */
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   if (!password || !hash) {
-    return false;
+    return false
   }
 
   try {
-    const isMatch = await bcrypt.compare(password, hash);
-    return isMatch;
+    const isMatch = await bcrypt.compare(password, hash)
+    return isMatch
   } catch (error) {
-    console.error('Error verifying password:', error);
-    return false;
+    console.error("Error verifying password:", error)
+    return false
   }
 }
 
@@ -51,33 +51,33 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
  * Returns { valid: boolean, error?: string }
  */
 export interface PasswordValidation {
-  valid: boolean;
-  error?: string;
+  valid: boolean
+  error?: string
 }
 
 export function validatePasswordStrength(password: string): PasswordValidation {
   if (!password || password.length === 0) {
     return {
       valid: false,
-      error: 'Password is required'
-    };
+      error: "Password is required",
+    }
   }
 
   if (password.length < 6) {
     return {
       valid: false,
-      error: 'Password must be at least 6 characters long'
-    };
+      error: "Password must be at least 6 characters long",
+    }
   }
 
   if (password.length > 128) {
     return {
       valid: false,
-      error: 'Password must be less than 128 characters'
-    };
+      error: "Password must be less than 128 characters",
+    }
   }
 
-  return { valid: true };
+  return { valid: true }
 }
 
 /**
@@ -85,5 +85,5 @@ export function validatePasswordStrength(password: string): PasswordValidation {
  * Used for temporary password verification tokens
  */
 export function generateAccessToken(): string {
-  return crypto.randomUUID();
+  return crypto.randomUUID()
 }

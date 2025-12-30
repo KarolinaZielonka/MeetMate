@@ -100,8 +100,23 @@
     "join": {
       "title": "Join This Event",
       "description": "Enter your name to participate and share your availability",
-      "comingSoon": "Join functionality coming in Phase 2",
-      "comingSoonDescription": "Soon you'll be able to add your availability and see when everyone can meet"
+      "nameLabel": "Your Name",
+      "namePlaceholder": "e.g., Sarah Johnson",
+      "joinButton": "Join Event",
+      "joiningButton": "Joining...",
+      "successMessage": "Successfully joined the event!",
+      "errorNameRequired": "Name is required",
+      "errorNameTooLong": "Name must be 100 characters or less",
+      "errorJoinFailed": "Failed to join event. Please try again."
+    },
+    "participants": {
+      "title": "Participants",
+      "description": "People who have joined this event",
+      "noParticipants": "No participants yet. Be the first to join!",
+      "submittedBadge": "Submitted",
+      "pendingBadge": "Pending",
+      "youBadge": "You",
+      "errorFetch": "Failed to load participants"
     },
     "whatsNext": {
       "title": "What's Next?",

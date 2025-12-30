@@ -1,13 +1,13 @@
-import { useRouter } from '@/i18n/routing';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { useRouter } from "@/i18n/routing"
 
 interface EventPageErrorProps {
-  error: string;
-  notFoundMessage: string;
-  isNotFound: boolean;
-  goHomeText: string;
-  oopsText: string;
+  error: string
+  notFoundMessage: string
+  isNotFound: boolean
+  goHomeText: string
+  oopsText: string
 }
 
 export function EventPageError({
@@ -17,7 +17,7 @@ export function EventPageError({
   goHomeText,
   oopsText,
 }: EventPageErrorProps) {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-12 px-4">
@@ -25,8 +25,18 @@ export function EventPageError({
         <Card className="shadow-lg border-none">
           <CardContent className="pt-12 pb-12 text-center">
             <div className="w-20 h-20 bg-destructive/20 rounded-full flex items-center justify-center mx-auto mb-6 bounce-subtle">
-              <svg className="w-10 h-10 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-10 h-10 text-destructive"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-3">
@@ -36,7 +46,7 @@ export function EventPageError({
               {error || notFoundMessage}
             </p>
             <Button
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               size="lg"
               className="bg-gradient-primary hover:opacity-90 hover-lift"
             >
@@ -46,5 +56,5 @@ export function EventPageError({
         </Card>
       </div>
     </div>
-  );
+  )
 }

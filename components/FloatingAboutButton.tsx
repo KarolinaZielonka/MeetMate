@@ -1,5 +1,5 @@
-import { Link } from "@/i18n/routing";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
+import { Link } from "@/i18n/routing"
 
 export function FloatingAboutButton() {
   return (
@@ -25,5 +25,5 @@ export function FloatingAboutButton() {
         </svg>
       </Button>
     </Link>
-  );
+  )
 }

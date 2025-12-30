@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+build
+dist
+
+# Deployment
+.vercel
+
+# Cache
+.cache
+
+# Coverage
+coverage
+
+# Note: Biome doesn't fully support Tailwind's @apply syntax yet
+# The CSS errors are expected for app/globals.css - they can be safely ignored
+# All TypeScript/JavaScript code is properly linted and formatted
