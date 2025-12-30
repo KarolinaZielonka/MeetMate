@@ -42,7 +42,7 @@ export function LanguageSwitcher() {
         <Button
           variant="ghost"
           size="sm"
-          className="gap-2 hover:bg-gray-100 transition-smooth"
+          className="gap-2 transition-smooth"
           disabled={isPending}
           aria-label="Change language"
         >
@@ -58,7 +58,7 @@ export function LanguageSwitcher() {
           <DropdownMenuItem
             key={loc}
             onClick={() => switchLocale(loc)}
-            className={`cursor-pointer ${locale === loc ? 'bg-gray-100 font-semibold' : ''}`}
+            className={`cursor-pointer ${locale === loc ? 'bg-secondary font-semibold' : ''}`}
           >
             <span className="mr-2">{languages[loc].flag}</span>
             {languages[loc].name}

@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { locales } from '@/i18n';
 import { Header } from "@/components/Header";
 import { FloatingAboutButton } from "@/components/FloatingAboutButton";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "../globals.css";
 
 const inter = Inter({
@@ -34,13 +35,20 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <NextIntlClientProvider messages={messages}>
-          <Header />
-          {children}
-          <FloatingAboutButton />
-        </NextIntlClientProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider messages={messages}>
+            <Header />
+            {children}
+            <FloatingAboutButton />
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
