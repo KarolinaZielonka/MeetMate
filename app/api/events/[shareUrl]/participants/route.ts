@@ -7,7 +7,10 @@ import { supabase } from "@/lib/supabase/client"
  *
  * Returns: { data: Participant[], error: null } | { data: null, error: string }
  */
-export async function GET(_request: NextRequest, { params }: { params: Promise<{ shareUrl: string }> }) {
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ shareUrl: string }> }
+) {
   try {
     const { shareUrl } = await params
 

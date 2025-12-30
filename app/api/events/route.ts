@@ -104,6 +104,30 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Automatically create a participant record for the creator if they provided a name
+    let participantData = null
+    if (creator_name && creator_name.trim().length > 0) {
+      const sessionToken = crypto.randomUUID()
+
+      const { data: participant, error: participantError } = await supabase
+        .from("participants")
+        .insert({
+          event_id: data.id,
+          name: creator_name.trim(),
+          session_token: sessionToken,
+          has_submitted: false,
+        })
+        .select("id, session_token")
+        .single()
+
+      if (!participantError && participant) {
+        participantData = {
+          participant_id: participant.id,
+          session_token: participant.session_token,
+        }
+      }
+    }
+
     // Return success response
     return NextResponse.json(
       {
@@ -115,6 +139,7 @@ export async function POST(request: NextRequest) {
           end_date: data.end_date,
           creator_name: data.creator_name,
           is_locked: data.is_locked,
+          participant: participantData,
         },
         error: null,
       },

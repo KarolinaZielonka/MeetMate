@@ -118,6 +118,20 @@
       "youBadge": "Ty",
       "errorFetch": "Nie udało się załadować uczestników"
     },
+    "availability": {
+      "title": "Wybierz swoją dostępność",
+      "description": "Dotknij dat, aby wskazać, kiedy jesteś dostępny",
+      "submitButton": "Wyślij dostępność",
+      "submittingButton": "Wysyłanie...",
+      "updateButton": "Zaktualizuj dostępność",
+      "updatingButton": "Aktualizowanie...",
+      "editButton": "Edytuj dostępność",
+      "successSubmit": "Dostępność została pomyślnie wysłana!",
+      "successUpdate": "Dostępność została pomyślnie zaktualizowana!",
+      "errorSubmit": "Nie udało się wysłać dostępności. Spróbuj ponownie.",
+      "errorFetch": "Nie udało się załadować Twojej dostępności",
+      "noSelections": "Wybierz co najmniej jedną datę przed wysłaniem"
+    },
     "whatsNext": {
       "title": "Co dalej?",
       "step1": "Dołącz do wydarzenia, wpisując swoje imię",

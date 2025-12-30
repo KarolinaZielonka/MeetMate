@@ -5,7 +5,10 @@ import { supabase } from "@/lib/supabase/client"
  * GET /api/events/[shareUrl]
  * Fetch event details by share URL
  */
-export async function GET(_request: NextRequest, { params }: { params: Promise<{ shareUrl: string }> }) {
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ shareUrl: string }> }
+) {
   try {
     const { shareUrl } = await params
 
