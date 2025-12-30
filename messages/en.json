@@ -195,12 +195,13 @@
     }
   },
   "calendar": {
-    "legend": {
-      "available": "Available",
-      "maybe": "Maybe",
-      "unavailable": "Unavailable",
-      "notSelected": "Not selected"
-    },
+    "legend": "Legend",
+    "available": "Available",
+    "maybe": "Maybe",
+    "unavailable": "Unavailable",
+    "unselected": "Not selected",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
     "instructions": "Tap dates to cycle through: Not selected → Available → Maybe → Unavailable → Not selected"
   },
   "optimalDates": {

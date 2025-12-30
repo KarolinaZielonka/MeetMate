@@ -195,12 +195,13 @@
     }
   },
   "calendar": {
-    "legend": {
-      "available": "Dostępny",
-      "maybe": "Może",
-      "unavailable": "Niedostępny",
-      "notSelected": "Nie wybrano"
-    },
+    "legend": "Legenda",
+    "available": "Dostępny",
+    "maybe": "Może",
+    "unavailable": "Niedostępny",
+    "unselected": "Nie wybrano",
+    "previousMonth": "Poprzedni miesiąc",
+    "nextMonth": "Następny miesiąc",
     "instructions": "Kliknij daty, aby przełączać: Nie wybrano → Dostępny → Może → Niedostępny → Nie wybrano"
   },
   "optimalDates": {

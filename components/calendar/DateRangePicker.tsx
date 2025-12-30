@@ -1,202 +1,286 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, getDay } from "date-fns"
-import { motion } from "framer-motion"
-import { cn } from "@/lib/utils"
-import type { AvailabilityStatus } from "@/types"
-import { useTranslations } from "next-intl"
+import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useTranslations } from 'next-intl'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { MonthCalendar } from './MonthCalendar'
+import { useSwipeNavigation } from '@/hooks/useSwipeNavigation'
+import { useDateSelection } from '@/hooks/useDateSelection'
+import type { AvailabilityMap } from '@/types'
+import { cn } from '@/lib/utils'
 
 interface DateRangePickerProps {
   startDate: Date
   endDate: Date
-  onSelectionChange?: (selections: Map<string, AvailabilityStatus>) => void
-  initialSelections?: Map<string, AvailabilityStatus>
-  disabled?: boolean
+  initialAvailability?: AvailabilityMap
+  onAvailabilityChange?: (availability: AvailabilityMap) => void
+  readonly?: boolean
+  className?: string
 }
-
-const statusColors: Record<AvailabilityStatus, string> = {
-  available: "bg-green-100 border-green-500 dark:bg-green-900/30 dark:border-green-600",
-  maybe: "bg-orange-100 border-orange-500 dark:bg-orange-900/30 dark:border-orange-600",
-  unavailable: "bg-red-100 border-red-500 dark:bg-red-900/30 dark:border-red-600",
-}
-
-const unselectedColor = "bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700"
-
-// Cycle order: null → available → maybe → unavailable → null
-const cycleStatus = (current: AvailabilityStatus | null): AvailabilityStatus | null => {
-  if (current === null) return "available"
-  if (current === "available") return "maybe"
-  if (current === "maybe") return "unavailable"
-  return null // unavailable → null
-}
-
-const weekDays = ["S", "M", "T", "W", "T", "F", "S"]
 
 export function DateRangePicker({
   startDate,
   endDate,
-  onSelectionChange,
-  initialSelections,
-  disabled = false,
+  initialAvailability,
+  onAvailabilityChange,
+  readonly = false,
+  className,
 }: DateRangePickerProps) {
-  const t = useTranslations("calendar")
-  const [selections, setSelections] = useState<Map<string, AvailabilityStatus>>(
-    initialSelections || new Map()
-  )
+  const t = useTranslations('calendar')
+  const { availability, selectDate, setAvailabilityMap } = useDateSelection(initialAvailability)
 
-  // Update selections when initialSelections changes
+  // Current viewing index (0 = first month in range)
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(0)
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Generate list of months in the date range
+  const monthsInRange = useMemo(() => {
+    const months: Array<{ year: number; month: number }> = []
+    const current = new Date(startDate)
+    current.setDate(1) // Set to first day of month
+    current.setHours(0, 0, 0, 0)
+
+    const end = new Date(endDate)
+    end.setDate(1)
+    end.setHours(0, 0, 0, 0)
+
+    while (current <= end) {
+      months.push({
+        year: current.getFullYear(),
+        month: current.getMonth(),
+      })
+      current.setMonth(current.getMonth() + 1)
+    }
+
+    return months
+  }, [startDate, endDate])
+
+  const totalMonths = monthsInRange.length
+  const monthsPerView = isMobile ? 1 : 2
+  const maxIndex = Math.max(0, totalMonths - monthsPerView)
+
+  // Handle responsive behavior
   useEffect(() => {
-    if (initialSelections) {
-      setSelections(initialSelections)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768) // md breakpoint
     }
-  }, [initialSelections])
 
-  // Generate all dates in range
-  const allDates = eachDayOfInterval({ start: startDate, end: endDate })
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
-  // Group dates by month
-  const monthGroups = allDates.reduce(
-    (groups, date) => {
-      const monthKey = format(date, "yyyy-MM")
-      if (!groups[monthKey]) {
-        groups[monthKey] = []
+  // Sync availability changes with parent
+  useEffect(() => {
+    if (onAvailabilityChange) {
+      onAvailabilityChange(availability)
+    }
+  }, [availability, onAvailabilityChange])
+
+  // Update availability if initial data changes
+  useEffect(() => {
+    if (initialAvailability) {
+      setAvailabilityMap(initialAvailability)
+    }
+  }, [initialAvailability, setAvailabilityMap])
+
+  const handlePrevious = useCallback(() => {
+    if (currentMonthIndex > 0) {
+      setSwipeDirection('right')
+      setCurrentMonthIndex((prev) => prev - 1)
+    }
+  }, [currentMonthIndex])
+
+  const handleNext = useCallback(() => {
+    if (currentMonthIndex < maxIndex) {
+      setSwipeDirection('left')
+      setCurrentMonthIndex((prev) => prev + 1)
+    }
+  }, [currentMonthIndex, maxIndex])
+
+  // Swipe navigation
+  const swipeHandlers = useSwipeNavigation({
+    onSwipeLeft: handleNext,
+    onSwipeRight: handlePrevious,
+  })
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        handlePrevious()
+      } else if (e.key === 'ArrowRight') {
+        handleNext()
       }
-      groups[monthKey].push(date)
-      return groups
-    },
-    {} as Record<string, Date[]>
-  )
-
-  const handleDateClick = (date: Date) => {
-    if (disabled) return
-
-    const dateKey = format(date, "yyyy-MM-dd")
-    const currentStatus = selections.get(dateKey) || null
-    const newStatus = cycleStatus(currentStatus)
-
-    const newSelections = new Map(selections)
-    if (newStatus === null) {
-      newSelections.delete(dateKey)
-    } else {
-      newSelections.set(dateKey, newStatus)
     }
 
-    setSelections(newSelections)
-    onSelectionChange?.(newSelections)
-  }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handlePrevious, handleNext])
 
-  const renderMonth = (monthKey: string, dates: Date[]) => {
-    const firstDate = dates[0]
-    const monthStart = startOfMonth(firstDate)
-    const monthEnd = endOfMonth(firstDate)
+  // Get currently visible months
+  const visibleMonths = useMemo(() => {
+    return monthsInRange.slice(currentMonthIndex, currentMonthIndex + monthsPerView)
+  }, [monthsInRange, currentMonthIndex, monthsPerView])
 
-    // Get the day of week for the first day of the month (0 = Sunday)
-    const startDay = getDay(monthStart)
+  // Get header text
+  const headerText = useMemo(() => {
+    if (visibleMonths.length === 0) return ''
 
-    // Create empty cells for days before the month starts
-    const leadingEmptyCells = Array(startDay).fill(null)
+    const firstMonth = new Date(visibleMonths[0].year, visibleMonths[0].month, 1)
 
-    return (
-      <div key={monthKey} className="mb-8">
-        {/* Month header */}
-        <h3 className="text-lg font-semibold mb-4">{format(firstDate, "MMMM yyyy")}</h3>
+    if (visibleMonths.length === 1 || isMobile) {
+      return firstMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    }
 
-        {/* Calendar grid */}
-        <div className="inline-block">
-          {/* Week day labels */}
-          <div className="grid grid-cols-7 gap-2 mb-2">
-            {weekDays.map((day, index) => (
-              <div
-                key={`${monthKey}-weekday-${index}`}
-                className="w-11 h-11 flex items-center justify-center text-sm font-medium text-gray-500 dark:text-gray-400"
-              >
-                {day}
-              </div>
-            ))}
-          </div>
+    const secondMonth = new Date(visibleMonths[1].year, visibleMonths[1].month, 1)
+    const firstMonthName = firstMonth.toLocaleDateString('en-US', { month: 'long' })
+    const secondMonthName = secondMonth.toLocaleDateString('en-US', { month: 'long' })
 
-          {/* Date grid */}
-          <div className="grid grid-cols-7 gap-2">
-            {/* Empty cells for alignment */}
-            {leadingEmptyCells.map((_, index) => (
-              <div key={`empty-${monthKey}-${index}`} className="w-11 h-11" />
-            ))}
+    // If same year, show: "January - February 2025"
+    if (visibleMonths[0].year === visibleMonths[1].year) {
+      return `${firstMonthName} - ${secondMonthName} ${visibleMonths[0].year}`
+    }
 
-            {/* Date cells */}
-            {eachDayOfInterval({ start: monthStart, end: monthEnd }).map((date) => {
-              const dateKey = format(date, "yyyy-MM-dd")
-              const isInRange = date >= startDate && date <= endDate
-              const status = selections.get(dateKey)
+    // Different years: "December 2024 - January 2025"
+    return `${firstMonthName} ${visibleMonths[0].year} - ${secondMonthName} ${visibleMonths[1].year}`
+  }, [visibleMonths, isMobile])
 
-              if (!isInRange) {
-                // Out of range - show but disabled
-                return (
-                  <div
-                    key={dateKey}
-                    className="w-11 h-11 flex items-center justify-center text-sm text-gray-300 dark:text-gray-600"
-                  >
-                    {format(date, "d")}
-                  </div>
-                )
-              }
-
-              return (
-                <motion.button
-                  key={dateKey}
-                  type="button"
-                  onClick={() => handleDateClick(date)}
-                  disabled={disabled}
-                  whileTap={{ scale: disabled ? 1 : 0.9 }}
-                  className={cn(
-                    "w-11 h-11 rounded-md border-2 text-sm font-medium transition-colors",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500",
-                    "disabled:opacity-50 disabled:cursor-not-allowed",
-                    status ? statusColors[status] : unselectedColor,
-                    !disabled && "cursor-pointer hover:opacity-80"
-                  )}
-                >
-                  {format(date, "d")}
-                </motion.button>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-    )
-  }
+  const canGoPrevious = currentMonthIndex > 0
+  const canGoNext = currentMonthIndex < maxIndex
 
   return (
-    <div className="space-y-6">
+    <div className={cn('w-full', className)}>
+      {/* Navigation Header */}
+      <div className="flex items-center justify-between mb-6 px-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handlePrevious}
+          disabled={!canGoPrevious || readonly}
+          aria-label={t('previousMonth')}
+          className="h-11 w-11"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+
+        <div className="text-center font-semibold text-lg flex-1 px-4">
+          {headerText}
+        </div>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleNext}
+          disabled={!canGoNext || readonly}
+          aria-label={t('nextMonth')}
+          className="h-11 w-11"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+      </div>
+
+      {/* Calendar Grid */}
+      <div
+        className="relative overflow-hidden"
+        {...swipeHandlers}
+      >
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            key={currentMonthIndex}
+            initial={{
+              opacity: 0,
+              x: swipeDirection === 'left' ? 100 : swipeDirection === 'right' ? -100 : 0
+            }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{
+              opacity: 0,
+              x: swipeDirection === 'left' ? -100 : swipeDirection === 'right' ? 100 : 0
+            }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className={cn(
+              'grid gap-6',
+              isMobile ? 'grid-cols-1' : 'grid-cols-2'
+            )}
+          >
+            {visibleMonths.map((monthData) => (
+              <div key={`${monthData.year}-${monthData.month}`}>
+                {/* Desktop: Show month name above each calendar */}
+                {!isMobile && (
+                  <div className="mb-4 text-center font-semibold text-lg">
+                    {new Date(monthData.year, monthData.month, 1).toLocaleDateString('en-US', {
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </div>
+                )}
+                <MonthCalendar
+                  year={monthData.year}
+                  month={monthData.month}
+                  startDate={startDate}
+                  endDate={endDate}
+                  availability={availability}
+                  onDateSelect={selectDate}
+                  readonly={readonly}
+                />
+              </div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Progress Indicators (dots) - only show if more than monthsPerView */}
+      {totalMonths > monthsPerView && (
+        <div className="flex justify-center gap-2 mt-6">
+          {Array.from({ length: Math.ceil(totalMonths / monthsPerView) }).map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => {
+                const newIndex = index * monthsPerView
+                if (newIndex <= maxIndex) {
+                  setSwipeDirection(newIndex > currentMonthIndex ? 'left' : 'right')
+                  setCurrentMonthIndex(newIndex)
+                }
+              }}
+              className={cn(
+                'h-2 w-2 rounded-full transition-all duration-200',
+                Math.floor(currentMonthIndex / monthsPerView) === index
+                  ? 'bg-primary'
+                  : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+              )}
+              aria-label={`Go to ${isMobile ? 'month' : 'months'} ${index * monthsPerView + 1}`}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Legend */}
-      <div className="flex flex-wrap gap-4 text-sm">
-        <div className="flex items-center gap-2">
-          <div className={cn("w-6 h-6 rounded border-2", statusColors.available)} />
-          <span>{t("legend.available")}</span>
+      {!readonly && (
+        <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+          <div className="text-sm font-medium mb-3 text-foreground">
+            {t('legend')}:
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <LegendItem className="state-available" label={t('available')} />
+            <LegendItem className="state-maybe" label={t('maybe')} />
+            <LegendItem className="state-unavailable" label={t('unavailable')} />
+            <LegendItem className="bg-card border-border" label={t('unselected')} />
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className={cn("w-6 h-6 rounded border-2", statusColors.maybe)} />
-          <span>{t("legend.maybe")}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className={cn("w-6 h-6 rounded border-2", statusColors.unavailable)} />
-          <span>{t("legend.unavailable")}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className={cn("w-6 h-6 rounded border-2", unselectedColor)} />
-          <span>{t("legend.notSelected")}</span>
-        </div>
-      </div>
+      )}
+    </div>
+  )
+}
 
-      {/* Instructions */}
-      <p className="text-sm text-gray-600 dark:text-gray-400">
-        {t("instructions")}
-      </p>
-
-      {/* Calendar months */}
-      <div>
-        {Object.entries(monthGroups).map(([monthKey, dates]) => renderMonth(monthKey, dates))}
-      </div>
+function LegendItem({ className, label }: { className: string; label: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className={cn('w-6 h-6 rounded border-2', className)} />
+      <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   )
 }
