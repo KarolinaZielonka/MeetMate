@@ -2,7 +2,7 @@
 
 import { getDateRangeLength, validateDateRange } from '@/lib/utils/dates';
 import { initializeSession } from '@/lib/utils/session';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

@@ -1,8 +1,11 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function HomePage() {
+  const t = useTranslations('homepage');
+
   return (
     <main className="min-h-screen bg-gradient-soft">
       {/* Hero Section */}
@@ -12,17 +15,17 @@ export default function HomePage() {
           <div className="space-y-4 fade-in">
             <div className="inline-block">
               <span className="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-4 hover-scale">
-                No sign-up required
+                {t('badge')}
               </span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 leading-tight">
-              Find Time
-              <span className="bg-gradient-to-r from-[#0047AB] to-[#003d99] bg-clip-text text-transparent"> Together</span>
+              {t('title')}
+              <span className="bg-gradient-to-r from-[#0047AB] to-[#003d99] bg-clip-text text-transparent">{t('titleAccent')}</span>
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Coordinate group schedules in seconds. Share a link, pick dates, find what works.
+              {t('subtitle')}
             </p>
           </div>
 
@@ -34,7 +37,7 @@ export default function HomePage() {
               className="bg-gradient-primary hover:opacity-90 shadow-lg hover:shadow-xl transition-smooth hover-lift text-lg px-8 py-6 h-auto"
             >
               <Link href="/create">
-                Create Free Event
+                {t('createEventButton')}
               </Link>
             </Button>
 
@@ -45,14 +48,14 @@ export default function HomePage() {
               className="border-2 border-gray-300 hover:border-[#0047AB] hover:text-[#0047AB] text-lg px-8 py-6 h-auto transition-smooth hover-scale"
             >
               <Link href="/about">
-                How It Works
+                {t('howItWorksButton')}
               </Link>
             </Button>
           </div>
 
           {/* Social Proof */}
           <p className="text-sm text-gray-500 pt-4 fade-in">
-            Simple scheduling for teams, friends, and communities
+            {t('socialProof')}
           </p>
         </div>
       </section>
@@ -69,9 +72,9 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Lightning Fast</h3>
+                <h3 className="text-xl font-bold text-gray-900">{t('features.fast.title')}</h3>
                 <p className="text-gray-600">
-                  Create and share events in under 30 seconds. No registration, no friction.
+                  {t('features.fast.description')}
                 </p>
               </CardContent>
             </Card>
@@ -84,9 +87,9 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Real-Time Updates</h3>
+                <h3 className="text-xl font-bold text-gray-900">{t('features.realtime.title')}</h3>
                 <p className="text-gray-600">
-                  See responses as they arrive. Live updates keep everyone in sync.
+                  {t('features.realtime.description')}
                 </p>
               </CardContent>
             </Card>
@@ -99,9 +102,9 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Smart & Simple</h3>
+                <h3 className="text-xl font-bold text-gray-900">{t('features.smart.title')}</h3>
                 <p className="text-gray-600">
-                  Automatically finds the best dates. Optional password protection included.
+                  {t('features.smart.description')}
                 </p>
               </CardContent>
             </Card>

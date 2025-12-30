@@ -1,0 +1,167 @@
+{
+  "common": {
+    "appName": "MeetSync",
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "submit": "Wyślij",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "close": "Zamknij",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano!"
+  },
+  "header": {
+    "createEvent": "Utwórz wydarzenie",
+    "about": "O nas"
+  },
+  "languageSwitcher": {
+    "label": "Język",
+    "english": "English",
+    "polish": "Polski"
+  },
+  "homepage": {
+    "badge": "Bez rejestracji",
+    "title": "Znajdź czas",
+    "titleAccent": " razem",
+    "subtitle": "Koordynuj grupowe harmonogramy w sekundach. Udostępnij link, wybierz daty, znajdź co działa.",
+    "createEventButton": "Utwórz darmowe wydarzenie",
+    "howItWorksButton": "Jak to działa",
+    "socialProof": "Proste planowanie dla zespołów, przyjaciół i społeczności",
+    "features": {
+      "fast": {
+        "title": "Błyskawicznie szybkie",
+        "description": "Twórz i udostępniaj wydarzenia w mniej niż 30 sekund. Bez rejestracji, bez przeszkód."
+      },
+      "realtime": {
+        "title": "Aktualizacje w czasie rzeczywistym",
+        "description": "Zobacz odpowiedzi w miarę ich napływania. Aktualizacje na żywo utrzymują wszystkich w synchronizacji."
+      },
+      "smart": {
+        "title": "Inteligentne i proste",
+        "description": "Automatycznie znajduje najlepsze daty. Opcjonalna ochrona hasłem w zestawie."
+      }
+    }
+  },
+  "createEvent": {
+    "title": "Utwórz nowe wydarzenie",
+    "subtitle": "Skonfiguruj wydarzenie grupowe w sekundach",
+    "eventDetails": "Szczegóły wydarzenia",
+    "optionalSettings": "Ustawienia opcjonalne",
+    "eventName": {
+      "label": "Nazwa wydarzenia",
+      "required": "*",
+      "placeholder": "np. Planowanie weekendowego brunchu",
+      "helper": "Wybierz jasną, opisową nazwę wydarzenia"
+    },
+    "dateRange": {
+      "label": "Zakres dat",
+      "required": "*",
+      "startDate": "Data rozpoczęcia",
+      "endDate": "Data zakończenia",
+      "daysInfo": "Zakres dat: {days} dni"
+    },
+    "creatorName": {
+      "label": "Twoje imię",
+      "placeholder": "np. Jan Kowalski",
+      "helper": "Daj uczestnikom znać, kto utworzył to wydarzenie"
+    },
+    "password": {
+      "label": "Ochrona hasłem",
+      "optional": "Opcjonalne",
+      "placeholder": "Pozostaw puste dla publicznego wydarzenia",
+      "helper": "Dodaj hasło, aby ograniczyć dostęp do wydarzenia"
+    },
+    "submitButton": "Utwórz wydarzenie",
+    "submittingButton": "Tworzenie wydarzenia...",
+    "successMessage": "Twoje wydarzenie zostanie utworzone natychmiast z unikalnym linkiem do udostępnienia",
+    "errors": {
+      "nameRequired": "Nazwa wydarzenia jest wymagana",
+      "datesRequired": "Wymagane są obie daty: rozpoczęcia i zakończenia",
+      "invalidDate": "Nieprawidłowy format daty"
+    }
+  },
+  "eventPage": {
+    "badges": {
+      "admin": "Administrator",
+      "participant": "Uczestnik"
+    },
+    "createdBy": "Utworzone przez",
+    "locked": {
+      "title": "Wydarzenie zablokowane",
+      "chosenDate": "Wybrana data: {date}"
+    },
+    "share": {
+      "label": "Udostępnij to wydarzenie uczestnikom",
+      "copyButton": "Kopiuj link",
+      "copied": "Skopiowano!"
+    },
+    "join": {
+      "title": "Dołącz do tego wydarzenia",
+      "description": "Wpisz swoje imię, aby uczestniczyć i udostępnić swoją dostępność",
+      "comingSoon": "Funkcja dołączania wkrótce w fazie 2",
+      "comingSoonDescription": "Wkrótce będziesz mógł dodać swoją dostępność i zobaczyć, kiedy wszyscy mogą się spotkać"
+    },
+    "whatsNext": {
+      "title": "Co dalej?",
+      "step1": "Dołącz do wydarzenia, wpisując swoje imię",
+      "step2": "Wybierz dostępne daty w kalendarzu",
+      "step3": "Zobacz odpowiedzi innych uczestników w czasie rzeczywistym",
+      "step4": "Automatycznie znajdź optymalną datę spotkania",
+      "phase": "Faza {number}"
+    },
+    "errors": {
+      "notFound": "Nie znaleziono wydarzenia",
+      "notFoundMessage": "Nie można załadować wydarzenia. Sprawdź link i spróbuj ponownie.",
+      "oops": "Ups!",
+      "goHome": "Przejdź do strony głównej"
+    }
+  },
+  "aboutPage": {
+    "title": "Jak to działa",
+    "subtitle": "Trzy proste kroki do koordynacji dowolnej grupy",
+    "steps": {
+      "step1": {
+        "title": "Utwórz swoje wydarzenie",
+        "description": "Ustaw nazwę wydarzenia i zakres dat. Natychmiast otrzymaj link do udostępnienia."
+      },
+      "step2": {
+        "title": "Udostępnij swojej grupie",
+        "description": "Wyślij link uczestnikom. Oni oznaczają swoją dostępność jednym dotknięciem."
+      },
+      "step3": {
+        "title": "Znajdź idealny czas",
+        "description": "Zobacz optymalne daty automatycznie uszeregowane. Zablokuj spotkanie, gdy będziesz gotowy."
+      }
+    }
+  },
+  "validation": {
+    "dateRange": {
+      "startBeforeEnd": "Data rozpoczęcia musi być przed datą zakończenia",
+      "pastDate": "Data rozpoczęcia nie może być w przeszłości",
+      "tooLong": "Zakres dat nie może przekraczać {max} dni. Obecny zakres to {current} dni.",
+      "warning": "Zakres dat wynosi {days} dni. Duże zakresy dat mogą być trudniejsze dla uczestników do wypełnienia."
+    },
+    "password": {
+      "required": "Hasło jest wymagane",
+      "tooShort": "Hasło musi mieć co najmniej 6 znaków",
+      "tooLong": "Hasło musi mieć mniej niż 128 znaków"
+    }
+  },
+  "api": {
+    "errors": {
+      "nameRequired": "Nazwa wydarzenia jest wymagana",
+      "nameLength": "Nazwa wydarzenia musi mieć od 1 do 255 znaków",
+      "datesRequired": "Wymagana jest data rozpoczęcia i zakończenia",
+      "creatorNameLength": "Imię twórcy musi mieć od 1 do 100 znaków",
+      "invalidDateFormat": "Nieprawidłowy format daty. Użyj ciągów dat ISO (RRRR-MM-DD)",
+      "passwordFailed": "Nie udało się przetworzyć hasła",
+      "createFailed": "Nie udało się utworzyć wydarzenia. Spróbuj ponownie.",
+      "unexpected": "Wystąpił nieoczekiwany błąd",
+      "shareUrlRequired": "Wymagany jest adres URL udostępniania",
+      "eventNotFound": "Nie znaleziono wydarzenia",
+      "fetchFailed": "Nie udało się pobrać wydarzenia"
+    }
+  }
+}

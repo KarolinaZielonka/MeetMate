@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { formatDateRange, parseDate } from '@/lib/utils/dates';
 import { getSession, isParticipant } from '@/lib/utils/session';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

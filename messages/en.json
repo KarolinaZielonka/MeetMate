@@ -1,0 +1,167 @@
+{
+  "common": {
+    "appName": "MeetSync",
+    "loading": "Loading...",
+    "error": "Error",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied!"
+  },
+  "header": {
+    "createEvent": "Create Event",
+    "about": "About"
+  },
+  "languageSwitcher": {
+    "label": "Language",
+    "english": "English",
+    "polish": "Polski"
+  },
+  "homepage": {
+    "badge": "No sign-up required",
+    "title": "Find Time",
+    "titleAccent": " Together",
+    "subtitle": "Coordinate group schedules in seconds. Share a link, pick dates, find what works.",
+    "createEventButton": "Create Free Event",
+    "howItWorksButton": "How It Works",
+    "socialProof": "Simple scheduling for teams, friends, and communities",
+    "features": {
+      "fast": {
+        "title": "Lightning Fast",
+        "description": "Create and share events in under 30 seconds. No registration, no friction."
+      },
+      "realtime": {
+        "title": "Real-Time Updates",
+        "description": "See responses as they arrive. Live updates keep everyone in sync."
+      },
+      "smart": {
+        "title": "Smart & Simple",
+        "description": "Automatically finds the best dates. Optional password protection included."
+      }
+    }
+  },
+  "createEvent": {
+    "title": "Create New Event",
+    "subtitle": "Set up your group scheduling event in seconds",
+    "eventDetails": "Event Details",
+    "optionalSettings": "Optional Settings",
+    "eventName": {
+      "label": "Event Name",
+      "required": "*",
+      "placeholder": "e.g., Weekend Brunch Planning",
+      "helper": "Choose a clear, descriptive name for your event"
+    },
+    "dateRange": {
+      "label": "Date Range",
+      "required": "*",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "daysInfo": "Date range: {days} days"
+    },
+    "creatorName": {
+      "label": "Your Name",
+      "placeholder": "e.g., John Doe",
+      "helper": "Let participants know who created this event"
+    },
+    "password": {
+      "label": "Password Protection",
+      "optional": "Optional",
+      "placeholder": "Leave blank for public event",
+      "helper": "Add a password to restrict access to your event"
+    },
+    "submitButton": "Create Event",
+    "submittingButton": "Creating Event...",
+    "successMessage": "Your event will be created instantly with a unique shareable link",
+    "errors": {
+      "nameRequired": "Event name is required",
+      "datesRequired": "Both start and end dates are required",
+      "invalidDate": "Invalid date format"
+    }
+  },
+  "eventPage": {
+    "badges": {
+      "admin": "Admin",
+      "participant": "Participant"
+    },
+    "createdBy": "Created by",
+    "locked": {
+      "title": "Event Locked",
+      "chosenDate": "Chosen date: {date}"
+    },
+    "share": {
+      "label": "Share this event with participants",
+      "copyButton": "Copy Link",
+      "copied": "Copied!"
+    },
+    "join": {
+      "title": "Join This Event",
+      "description": "Enter your name to participate and share your availability",
+      "comingSoon": "Join functionality coming in Phase 2",
+      "comingSoonDescription": "Soon you'll be able to add your availability and see when everyone can meet"
+    },
+    "whatsNext": {
+      "title": "What's Next?",
+      "step1": "Join the event by entering your name",
+      "step2": "Select your available dates on the calendar",
+      "step3": "See other participants' responses in real-time",
+      "step4": "Find the optimal meeting date automatically",
+      "phase": "Phase {number}"
+    },
+    "errors": {
+      "notFound": "Event Not Found",
+      "notFoundMessage": "Unable to load event. Please check the link and try again.",
+      "oops": "Oops!",
+      "goHome": "Go to Homepage"
+    }
+  },
+  "aboutPage": {
+    "title": "How It Works",
+    "subtitle": "Three simple steps to coordinate any group",
+    "steps": {
+      "step1": {
+        "title": "Create Your Event",
+        "description": "Set your event name and date range. Get a shareable link instantly."
+      },
+      "step2": {
+        "title": "Share With Your Group",
+        "description": "Send the link to participants. They mark their availability with a tap."
+      },
+      "step3": {
+        "title": "Find the Perfect Time",
+        "description": "See optimal dates ranked automatically. Lock in your meeting when ready."
+      }
+    }
+  },
+  "validation": {
+    "dateRange": {
+      "startBeforeEnd": "Start date must be before end date",
+      "pastDate": "Start date cannot be in the past",
+      "tooLong": "Date range cannot exceed {max} days. Current range is {current} days.",
+      "warning": "Date range is {days} days. Large date ranges may be harder for participants to fill out."
+    },
+    "password": {
+      "required": "Password is required",
+      "tooShort": "Password must be at least 6 characters long",
+      "tooLong": "Password must be less than 128 characters"
+    }
+  },
+  "api": {
+    "errors": {
+      "nameRequired": "Event name is required",
+      "nameLength": "Event name must be between 1 and 255 characters",
+      "datesRequired": "Start date and end date are required",
+      "creatorNameLength": "Creator name must be between 1 and 100 characters",
+      "invalidDateFormat": "Invalid date format. Please use ISO date strings (YYYY-MM-DD)",
+      "passwordFailed": "Failed to process password",
+      "createFailed": "Failed to create event. Please try again.",
+      "unexpected": "An unexpected error occurred",
+      "shareUrlRequired": "Share URL is required",
+      "eventNotFound": "Event not found",
+      "fetchFailed": "Failed to fetch event"
+    }
+  }
+}

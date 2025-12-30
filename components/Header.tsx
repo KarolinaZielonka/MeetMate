@@ -1,7 +1,13 @@
-import Link from "next/link";
+'use client';
+
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export function Header() {
+  const t = useTranslations('header');
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -29,17 +35,21 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Desktop CTA */}
-        <div className="hidden sm:block">
-          <Button
-            asChild
-            size="sm"
-            className="bg-gradient-primary hover:opacity-90 shadow-md hover:shadow-lg hover-lift"
-          >
-            <Link href="/create">
-              Create Event
-            </Link>
-          </Button>
+        {/* Right side: Language Switcher + CTA */}
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+
+          <div className="hidden sm:block">
+            <Button
+              asChild
+              size="sm"
+              className="bg-gradient-primary hover:opacity-90 shadow-md hover:shadow-lg hover-lift"
+            >
+              <Link href="/create">
+                {t('createEvent')}
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </header>
