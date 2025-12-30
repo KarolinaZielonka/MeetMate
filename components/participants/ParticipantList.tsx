@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getSession } from "@/lib/utils/session"
@@ -16,23 +17,14 @@ interface ParticipantListProps {
   shareUrl: string
   eventId: string
   refreshTrigger?: number
-  translations: {
-    title: string
-    description: string
-    noParticipants: string
-    submittedBadge: string
-    pendingBadge: string
-    youBadge: string
-    errorFetch: string
-  }
 }
 
 export function ParticipantList({
   shareUrl,
   eventId,
   refreshTrigger = 0,
-  translations,
 }: ParticipantListProps) {
+  const t = useTranslations("eventPage.participants")
   const [participants, setParticipants] = useState<Participant[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -50,7 +42,7 @@ export function ParticipantList({
         const result = await response.json()
 
         if (!response.ok || result.error) {
-          setError(result.error || translations.errorFetch)
+          setError(result.error || t("errorFetch"))
           setIsLoading(false)
           return
         }
@@ -59,13 +51,13 @@ export function ParticipantList({
         setIsLoading(false)
       } catch (err) {
         console.error("Error fetching participants:", err)
-        setError(translations.errorFetch)
+        setError(t("errorFetch"))
         setIsLoading(false)
       }
     }
 
     fetchParticipants()
-  }, [shareUrl, translations.errorFetch, refreshTrigger])
+  }, [shareUrl, t, refreshTrigger])
 
   return (
     <Card className="shadow-lg border-none slide-up">
@@ -86,12 +78,12 @@ export function ParticipantList({
               />
             </svg>
           </div>
-          {translations.title}
+          {t("title")}
           <Badge variant="secondary" className="ml-2 hover-scale">
             {participants.length}
           </Badge>
         </CardTitle>
-        <CardDescription className="text-base">{translations.description}</CardDescription>
+        <CardDescription className="text-base">{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading && (
@@ -134,7 +126,7 @@ export function ParticipantList({
                 />
               </svg>
             </div>
-            <p className="text-muted-foreground">{translations.noParticipants}</p>
+            <p className="text-muted-foreground">{t("noParticipants")}</p>
           </div>
         )}
 
@@ -195,7 +187,7 @@ export function ParticipantList({
                         variant="outline"
                         className="bg-primary/10 border-primary/30 text-primary hover-scale"
                       >
-                        {translations.youBadge}
+                        {t("youBadge")}
                       </Badge>
                     )}
                     {participant.has_submitted ? (
@@ -216,7 +208,7 @@ export function ParticipantList({
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        {translations.submittedBadge}
+                        {t("submittedBadge")}
                       </Badge>
                     ) : (
                       <Badge variant="secondary" className="hover-scale">
@@ -233,7 +225,7 @@ export function ParticipantList({
                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        {translations.pendingBadge}
+                        {t("pendingBadge")}
                       </Badge>
                     )}
                   </div>

@@ -1,3 +1,6 @@
+"use client"
+
+import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -15,19 +18,10 @@ interface EventHeaderProps {
   }
   userRole: "admin" | "participant" | "visitor"
   shareUrl: string
-  translations: {
-    badgesAdmin: string
-    badgesParticipant: string
-    createdBy: string
-    lockedTitle: string
-    lockedChosenDate: string
-    shareLabel: string
-    shareCopyButton: string
-    shareCopied: string
-  }
 }
 
-export function EventHeader({ event, userRole, shareUrl, translations }: EventHeaderProps) {
+export function EventHeader({ event, userRole, shareUrl }: EventHeaderProps) {
+  const t = useTranslations("eventPage")
   const startDate = parseDate(event.start_date)
   const endDate = parseDate(event.end_date)
   const dateRangeText = formatDateRange(startDate, endDate)
@@ -50,7 +44,7 @@ export function EventHeader({ event, userRole, shareUrl, translations }: EventHe
                       clipRule="evenodd"
                     />
                   </svg>
-                  {translations.badgesAdmin}
+                  {t("badges.admin")}
                 </Badge>
               )}
               {userRole === "participant" && (
@@ -62,7 +56,7 @@ export function EventHeader({ event, userRole, shareUrl, translations }: EventHe
                       clipRule="evenodd"
                     />
                   </svg>
-                  {translations.badgesParticipant}
+                  {t("badges.participant")}
                 </Badge>
               )}
             </div>
@@ -86,7 +80,7 @@ export function EventHeader({ event, userRole, shareUrl, translations }: EventHe
 
             {event.creator_name && (
               <p className="text-sm text-muted-foreground">
-                {translations.createdBy} <span className="font-semibold">{event.creator_name}</span>
+                {t("createdBy")} <span className="font-semibold">{event.creator_name}</span>
               </p>
             )}
           </div>
@@ -109,15 +103,14 @@ export function EventHeader({ event, userRole, shareUrl, translations }: EventHe
                   </svg>
                 </div>
                 <div>
-                  <p className="font-bold text-primary text-lg mb-1">{translations.lockedTitle}</p>
+                  <p className="font-bold text-primary text-lg mb-1">{t("locked.title")}</p>
                   <p className="text-foreground">
-                    {translations.lockedChosenDate.replace(
-                      "{date}",
-                      formatDateRange(
+                    {t("locked.chosenDate", {
+                      date: formatDateRange(
                         parseDate(event.calculated_date),
                         parseDate(event.calculated_date)
-                      )
-                    )}
+                      ),
+                    })}
                   </p>
                 </div>
               </div>
@@ -127,12 +120,7 @@ export function EventHeader({ event, userRole, shareUrl, translations }: EventHe
         )}
 
         {/* Share Section */}
-        <ShareSection
-          shareUrl={shareUrl}
-          labelText={translations.shareLabel}
-          copyButtonText={translations.shareCopyButton}
-          copiedText={translations.shareCopied}
-        />
+        <ShareSection shareUrl={shareUrl} />
       </CardContent>
     </Card>
   )

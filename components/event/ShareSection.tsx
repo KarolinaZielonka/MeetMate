@@ -1,21 +1,17 @@
+"use client"
+
 import { useState } from "react"
+import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 
 interface ShareSectionProps {
   shareUrl: string
-  labelText: string
-  copyButtonText: string
-  copiedText: string
 }
 
-export function ShareSection({
-  shareUrl,
-  labelText,
-  copyButtonText,
-  copiedText,
-}: ShareSectionProps) {
+export function ShareSection({ shareUrl }: ShareSectionProps) {
+  const t = useTranslations("eventPage.share")
   const [copySuccess, setCopySuccess] = useState(false)
 
   const handleCopyLink = async () => {
@@ -26,7 +22,7 @@ export function ShareSection({
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl)
         setCopySuccess(true)
-        toast.success(copiedText)
+        toast.success(t("copied"))
         setTimeout(() => setCopySuccess(false), 2000)
       } else {
         // Fallback for older browsers or insecure contexts (HTTP)
@@ -40,7 +36,7 @@ export function ShareSection({
         try {
           document.execCommand("copy")
           setCopySuccess(true)
-          toast.success(copiedText)
+          toast.success(t("copied"))
           setTimeout(() => setCopySuccess(false), 2000)
         } catch (fallbackErr) {
           console.error("Fallback copy failed:", fallbackErr)
@@ -57,7 +53,7 @@ export function ShareSection({
 
   return (
     <div>
-      <Label className="text-sm font-semibold text-foreground mb-3 block">{labelText}</Label>
+      <Label className="text-sm font-semibold text-foreground mb-3 block">{t("label")}</Label>
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1 px-4 py-3 bg-muted border-2 border-border rounded-lg font-mono text-sm overflow-x-auto transition-smooth hover:border-primary/50">
           {shareUrl}
@@ -75,7 +71,7 @@ export function ShareSection({
                   clipRule="evenodd"
                 />
               </svg>
-              {copiedText}
+              {t("copied")}
             </>
           ) : (
             <>
@@ -92,7 +88,7 @@ export function ShareSection({
                   d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                 />
               </svg>
-              {copyButtonText}
+              {t("copyButton")}
             </>
           )}
         </Button>

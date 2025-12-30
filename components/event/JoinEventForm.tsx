@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,23 +10,11 @@ import { updateSessionAsParticipant } from "@/lib/utils/session"
 
 interface JoinEventFormProps {
   eventId: string
-  shareUrl: string
   onSuccess: () => void
-  translations: {
-    title: string
-    description: string
-    nameLabel: string
-    namePlaceholder: string
-    joinButton: string
-    joiningButton: string
-    successMessage: string
-    errorNameRequired: string
-    errorNameTooLong: string
-    errorJoinFailed: string
-  }
 }
 
-export function JoinEventForm({ eventId, shareUrl, onSuccess, translations }: JoinEventFormProps) {
+export function JoinEventForm({ eventId, onSuccess }: JoinEventFormProps) {
+  const t = useTranslations("eventPage.join")
   const [name, setName] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -34,12 +23,12 @@ export function JoinEventForm({ eventId, shareUrl, onSuccess, translations }: Jo
 
     // Validation
     if (!name.trim()) {
-      toast.error(translations.errorNameRequired)
+      toast.error(t("errorNameRequired"))
       return
     }
 
     if (name.trim().length > 100) {
-      toast.error(translations.errorNameTooLong)
+      toast.error(t("errorNameTooLong"))
       return
     }
 
@@ -60,7 +49,7 @@ export function JoinEventForm({ eventId, shareUrl, onSuccess, translations }: Jo
       const result = await response.json()
 
       if (!response.ok || result.error) {
-        toast.error(result.error || translations.errorJoinFailed)
+        toast.error(result.error || t("errorJoinFailed"))
         setIsLoading(false)
         return
       }
@@ -69,13 +58,13 @@ export function JoinEventForm({ eventId, shareUrl, onSuccess, translations }: Jo
       updateSessionAsParticipant(eventId, result.data.id, result.data.session_token)
 
       // Show success message
-      toast.success(translations.successMessage)
+      toast.success(t("successMessage"))
 
       // Trigger parent refresh
       onSuccess()
     } catch (err) {
       console.error("Error joining event:", err)
-      toast.error(translations.errorJoinFailed)
+      toast.error(t("errorJoinFailed"))
       setIsLoading(false)
     }
   }
@@ -84,14 +73,14 @@ export function JoinEventForm({ eventId, shareUrl, onSuccess, translations }: Jo
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="participant-name" className="text-base font-semibold">
-          {translations.nameLabel}
+          {t("nameLabel")}
         </Label>
         <Input
           type="text"
           id="participant-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder={translations.namePlaceholder}
+          placeholder={t("namePlaceholder")}
           maxLength={100}
           required
           disabled={isLoading}
@@ -122,10 +111,10 @@ export function JoinEventForm({ eventId, shareUrl, onSuccess, translations }: Jo
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            {translations.joiningButton}
+            {t("joiningButton")}
           </span>
         ) : (
-          translations.joinButton
+          t("joinButton")
         )}
       </Button>
     </form>
