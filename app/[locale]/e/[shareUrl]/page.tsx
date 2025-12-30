@@ -8,6 +8,7 @@ import { EventPageError } from "@/components/EventPageError"
 import { EventPageSkeleton } from "@/components/EventPageSkeleton"
 import { EventHeader } from "@/components/event/EventHeader"
 import { JoinEventForm } from "@/components/event/JoinEventForm"
+import { OptimalDatesDisplay } from "@/components/event/OptimalDatesDisplay"
 import { ParticipantList } from "@/components/participants/ParticipantList"
 import { DateRangePicker } from "@/components/calendar/DateRangePicker"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -291,6 +292,27 @@ export default function EventPage() {
           }}
         />
 
+        {/* Optimal Dates Display Section */}
+        <OptimalDatesDisplay
+          shareUrl={shareUrl}
+          isAdmin={userRole === "admin"}
+          isLocked={event.is_locked}
+          calculatedDate={event.calculated_date}
+          onEventLocked={() => {
+            // Refresh event data to show locked state
+            setRefreshTrigger((prev) => prev + 1)
+            // Re-fetch event to update is_locked status
+            fetch(`/api/events/${shareUrl}`)
+              .then((res) => res.json())
+              .then((result) => {
+                if (result.data) {
+                  setEvent(result.data)
+                }
+              })
+              .catch((err) => console.error("Error refreshing event:", err))
+          }}
+        />
+
         {/* Availability Selection Section */}
         {isParticipant(event.id) && !event.is_locked && (
           <Card className="shadow-lg border-none slide-up">
@@ -368,67 +390,6 @@ export default function EventPage() {
             </CardContent>
           </Card>
         )}
-
-        {/* What's Next Section */}
-        <Card className="shadow-lg border-none slide-up">
-          <CardHeader>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <svg
-                className="w-7 h-7 text-primary transition-smooth hover:rotate-12"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-              {t("whatsNext.title")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-3">
-              {[
-                {
-                  id: "step1",
-                  text: t("whatsNext.step1"),
-                  phase: t("whatsNext.phase", { number: 2 }),
-                },
-                {
-                  id: "step2",
-                  text: t("whatsNext.step2"),
-                  phase: t("whatsNext.phase", { number: 3 }),
-                },
-                {
-                  id: "step3",
-                  text: t("whatsNext.step3"),
-                  phase: t("whatsNext.phase", { number: 4 }),
-                },
-                {
-                  id: "step4",
-                  text: t("whatsNext.step4"),
-                  phase: t("whatsNext.phase", { number: 5 }),
-                },
-              ].map((item, index) => (
-                <li
-                  key={item.id}
-                  className="flex items-start gap-3 p-3 bg-muted rounded-lg transition-smooth hover:bg-secondary hover:shadow-md group"
-                >
-                  <div className="w-6 h-6 bg-gradient-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5 transition-smooth group-hover:scale-110">
-                    <span className="text-white text-xs font-bold">{index + 1}</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-foreground font-medium">{item.text}</p>
-                    <p className="text-sm text-muted-foreground">{item.phase}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
       </div>
     </div>
   )

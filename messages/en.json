@@ -137,8 +137,8 @@
       "title": "What's Next?",
       "step1": "Join the event by entering your name",
       "step2": "Select your available dates on the calendar",
-      "step3": "See other participants' responses in real-time",
-      "step4": "Find the optimal meeting date automatically",
+      "step3": "View the best meeting dates ranked by availability",
+      "step4": "Lock in your final meeting date (admin only)",
       "phase": "Phase {number}"
     },
     "errors": {
@@ -202,5 +202,28 @@
       "notSelected": "Not selected"
     },
     "instructions": "Tap dates to cycle through: Not selected → Available → Maybe → Unavailable → Not selected"
+  },
+  "optimalDates": {
+    "title": "Best Meeting Dates",
+    "description": "Ranked by participant availability",
+    "noData": "No availability data yet. Waiting for participants to submit.",
+    "minParticipants": "Need at least 2 participants with availability to calculate.",
+    "score": "{percentage}% match",
+    "breakdown": "{available} available, {maybe} maybe, {unavailable} unavailable",
+    "outOf": "out of {total} participants",
+    "lockButton": "Lock Event",
+    "lockingButton": "Locking...",
+    "recalculateButton": "Recalculate",
+    "recalculatingButton": "Recalculating...",
+    "lockedMessage": "This event has been locked to {date}",
+    "lockConfirm": {
+      "title": "Lock Event?",
+      "description": "Are you sure you want to lock this event to {date}? Participants will no longer be able to edit their availability.",
+      "confirm": "Lock Event",
+      "cancel": "Cancel"
+    },
+    "successLock": "Event locked successfully!",
+    "errorLock": "Failed to lock event. Please try again.",
+    "errorCalculate": "Failed to calculate optimal dates. Please try again."
   }
 }

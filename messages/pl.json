@@ -137,8 +137,8 @@
       "title": "Co dalej?",
       "step1": "Dołącz do wydarzenia, wpisując swoje imię",
       "step2": "Wybierz dostępne daty w kalendarzu",
-      "step3": "Zobacz odpowiedzi innych uczestników w czasie rzeczywistym",
-      "step4": "Automatycznie znajdź optymalną datę spotkania",
+      "step3": "Zobacz najlepsze daty spotkań uszeregowane według dostępności",
+      "step4": "Zablokuj ostateczną datę spotkania (tylko administrator)",
       "phase": "Faza {number}"
     },
     "errors": {
@@ -202,5 +202,28 @@
       "notSelected": "Nie wybrano"
     },
     "instructions": "Kliknij daty, aby przełączać: Nie wybrano → Dostępny → Może → Niedostępny → Nie wybrano"
+  },
+  "optimalDates": {
+    "title": "Najlepsze daty spotkań",
+    "description": "Uszeregowane według dostępności uczestników",
+    "noData": "Brak danych o dostępności. Oczekiwanie na przesłanie przez uczestników.",
+    "minParticipants": "Potrzeba co najmniej 2 uczestników z dostępnością do obliczenia.",
+    "score": "{percentage}% dopasowanie",
+    "breakdown": "{available} dostępnych, {maybe} może, {unavailable} niedostępnych",
+    "outOf": "z {total} uczestników",
+    "lockButton": "Zablokuj wydarzenie",
+    "lockingButton": "Blokowanie...",
+    "recalculateButton": "Przelicz ponownie",
+    "recalculatingButton": "Przeliczanie...",
+    "lockedMessage": "To wydarzenie zostało zablokowane na {date}",
+    "lockConfirm": {
+      "title": "Zablokować wydarzenie?",
+      "description": "Czy na pewno chcesz zablokować to wydarzenie na {date}? Uczestnicy nie będą już mogli edytować swojej dostępności.",
+      "confirm": "Zablokuj wydarzenie",
+      "cancel": "Anuluj"
+    },
+    "successLock": "Wydarzenie zostało pomyślnie zablokowane!",
+    "errorLock": "Nie udało się zablokować wydarzenia. Spróbuj ponownie.",
+    "errorCalculate": "Nie udało się obliczyć optymalnych dat. Spróbuj ponownie."
   }
 }

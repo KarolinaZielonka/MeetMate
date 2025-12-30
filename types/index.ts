@@ -44,8 +44,10 @@ export interface Session {
 export interface DateScore {
   date: string
   score: number
-  available: number
-  maybe: number
+  availableCount: number
+  maybeCount: number
+  unavailableCount: number
+  totalParticipants: number
 }
 
 export type AvailabilityMap = Map<string, AvailabilityStatus>
