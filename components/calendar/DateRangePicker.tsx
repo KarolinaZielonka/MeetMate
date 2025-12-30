@@ -5,6 +5,7 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, getDa
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import type { AvailabilityStatus } from "@/types"
+import { useTranslations } from "next-intl"
 
 interface DateRangePickerProps {
   startDate: Date
@@ -39,6 +40,7 @@ export function DateRangePicker({
   initialSelections,
   disabled = false,
 }: DateRangePickerProps) {
+  const t = useTranslations("calendar")
   const [selections, setSelections] = useState<Map<string, AvailabilityStatus>>(
     initialSelections || new Map()
   )
@@ -170,25 +172,25 @@ export function DateRangePicker({
       <div className="flex flex-wrap gap-4 text-sm">
         <div className="flex items-center gap-2">
           <div className={cn("w-6 h-6 rounded border-2", statusColors.available)} />
-          <span>Available</span>
+          <span>{t("legend.available")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className={cn("w-6 h-6 rounded border-2", statusColors.maybe)} />
-          <span>Maybe</span>
+          <span>{t("legend.maybe")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className={cn("w-6 h-6 rounded border-2", statusColors.unavailable)} />
-          <span>Unavailable</span>
+          <span>{t("legend.unavailable")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className={cn("w-6 h-6 rounded border-2", unselectedColor)} />
-          <span>Not selected</span>
+          <span>{t("legend.notSelected")}</span>
         </div>
       </div>
 
       {/* Instructions */}
       <p className="text-sm text-gray-600 dark:text-gray-400">
-        Tap dates to cycle through: Not selected → Available → Maybe → Unavailable → Not selected
+        {t("instructions")}
       </p>
 
       {/* Calendar months */}

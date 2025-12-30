@@ -65,7 +65,7 @@ export function ParticipantList({
     }
 
     fetchParticipants()
-  }, [shareUrl, translations.errorFetch])
+  }, [shareUrl, translations.errorFetch, refreshTrigger])
 
   return (
     <Card className="shadow-lg border-none slide-up">

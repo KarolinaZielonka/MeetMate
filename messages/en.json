@@ -87,6 +87,7 @@
       "admin": "Admin",
       "participant": "Participant"
     },
+    "cancel": "Cancel",
     "createdBy": "Created by",
     "locked": {
       "title": "Event Locked",
@@ -192,5 +193,14 @@
       "eventNotFound": "Event not found",
       "fetchFailed": "Failed to fetch event"
     }
+  },
+  "calendar": {
+    "legend": {
+      "available": "Available",
+      "maybe": "Maybe",
+      "unavailable": "Unavailable",
+      "notSelected": "Not selected"
+    },
+    "instructions": "Tap dates to cycle through: Not selected → Available → Maybe → Unavailable → Not selected"
   }
 }

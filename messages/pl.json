@@ -87,6 +87,7 @@
       "admin": "Administrator",
       "participant": "Uczestnik"
     },
+    "cancel": "Anuluj",
     "createdBy": "Utworzone przez",
     "locked": {
       "title": "Wydarzenie zablokowane",
@@ -192,5 +193,14 @@
       "eventNotFound": "Nie znaleziono wydarzenia",
       "fetchFailed": "Nie udało się pobrać wydarzenia"
     }
+  },
+  "calendar": {
+    "legend": {
+      "available": "Dostępny",
+      "maybe": "Może",
+      "unavailable": "Niedostępny",
+      "notSelected": "Nie wybrano"
+    },
+    "instructions": "Kliknij daty, aby przełączać: Nie wybrano → Dostępny → Może → Niedostępny → Nie wybrano"
   }
 }

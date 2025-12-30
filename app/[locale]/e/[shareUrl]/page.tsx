@@ -13,6 +13,7 @@ import { DateRangePicker } from "@/components/calendar/DateRangePicker"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getSession, isParticipant } from "@/lib/utils/session"
+import { useRealtimeEvent } from "@/hooks/useRealtimeEvent"
 import type { AvailabilityStatus } from "@/types"
 
 interface EventData {
@@ -44,6 +45,20 @@ export default function EventPage() {
   const [isSubmittingAvailability, setIsSubmittingAvailability] = useState(false)
   const [isEditingAvailability, setIsEditingAvailability] = useState(false)
   const [hasSubmitted, setHasSubmitted] = useState(false)
+
+  // Real-time subscriptions
+  useRealtimeEvent({
+    eventId: event?.id || "",
+    showToasts: true,
+    onParticipantJoin: () => {
+      // Trigger refresh to update participant list
+      setRefreshTrigger((prev) => prev + 1)
+    },
+    onParticipantUpdate: () => {
+      // Trigger refresh to update participant list
+      setRefreshTrigger((prev) => prev + 1)
+    },
+  })
 
   // Fetch event data
   useEffect(() => {
@@ -346,7 +361,7 @@ export default function EventPage() {
                     variant="ghost"
                     className="h-12"
                   >
-                    {t("common.cancel")}
+                    {t("cancel")}
                   </Button>
                 )}
               </div>
