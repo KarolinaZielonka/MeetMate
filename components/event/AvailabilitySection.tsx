@@ -60,9 +60,9 @@ export function AvailabilitySection({
         <DateRangePicker
           startDate={startDate}
           endDate={endDate}
-          onSelectionChange={onSelectionChange}
-          initialSelections={availabilitySelections}
-          disabled={hasSubmitted && !isEditingAvailability}
+          onAvailabilityChange={onSelectionChange}
+          initialAvailability={availabilitySelections}
+          readonly={hasSubmitted && !isEditingAvailability}
         />
 
         <div className="flex gap-3">

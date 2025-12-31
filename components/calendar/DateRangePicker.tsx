@@ -1,24 +1,17 @@
-'use client'
+"use client"
 
-import { useState, useMemo, useEffect, useCallback } from 'react'
-import { useTranslations } from 'next-intl'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { MonthCalendar } from './MonthCalendar'
-import { useSwipeNavigation } from '@/hooks/useSwipeNavigation'
-import { useDateSelection } from '@/hooks/useDateSelection'
-import type { AvailabilityMap } from '@/types'
-import { cn } from '@/lib/utils'
+import { useState, useMemo, useEffect, useCallback } from "react"
 
-interface DateRangePickerProps {
-  startDate: Date
-  endDate: Date
-  initialAvailability?: AvailabilityMap
-  onAvailabilityChange?: (availability: AvailabilityMap) => void
-  readonly?: boolean
-  className?: string
-}
+import { useTranslations } from "next-intl"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { MonthCalendar } from "./MonthCalendar"
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation"
+import { useDateSelection } from "@/hooks/useDateSelection"
+import type { DateRangePickerProps } from "./types"
+import { cn } from "@/lib/utils"
+import { Instructions } from "./Instructions"
 
 export function DateRangePicker({
   startDate,
@@ -28,12 +21,12 @@ export function DateRangePicker({
   readonly = false,
   className,
 }: DateRangePickerProps) {
-  const t = useTranslations('calendar')
+  const t = useTranslations("calendar")
   const { availability, selectDate, setAvailabilityMap } = useDateSelection(initialAvailability)
 
   // Current viewing index (0 = first month in range)
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0)
-  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null)
+  const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(null)
   const [isMobile, setIsMobile] = useState(false)
 
   // Generate list of months in the date range
@@ -69,8 +62,8 @@ export function DateRangePicker({
     }
 
     checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
   // Sync availability changes with parent
@@ -89,14 +82,14 @@ export function DateRangePicker({
 
   const handlePrevious = useCallback(() => {
     if (currentMonthIndex > 0) {
-      setSwipeDirection('right')
+      setSwipeDirection("right")
       setCurrentMonthIndex((prev) => prev - 1)
     }
   }, [currentMonthIndex])
 
   const handleNext = useCallback(() => {
     if (currentMonthIndex < maxIndex) {
-      setSwipeDirection('left')
+      setSwipeDirection("left")
       setCurrentMonthIndex((prev) => prev + 1)
     }
   }, [currentMonthIndex, maxIndex])
@@ -110,15 +103,15 @@ export function DateRangePicker({
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
+      if (e.key === "ArrowLeft") {
         handlePrevious()
-      } else if (e.key === 'ArrowRight') {
+      } else if (e.key === "ArrowRight") {
         handleNext()
       }
     }
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
   }, [handlePrevious, handleNext])
 
   // Get currently visible months
@@ -128,17 +121,17 @@ export function DateRangePicker({
 
   // Get header text
   const headerText = useMemo(() => {
-    if (visibleMonths.length === 0) return ''
+    if (visibleMonths.length === 0) return ""
 
     const firstMonth = new Date(visibleMonths[0].year, visibleMonths[0].month, 1)
 
     if (visibleMonths.length === 1 || isMobile) {
-      return firstMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+      return firstMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })
     }
 
     const secondMonth = new Date(visibleMonths[1].year, visibleMonths[1].month, 1)
-    const firstMonthName = firstMonth.toLocaleDateString('en-US', { month: 'long' })
-    const secondMonthName = secondMonth.toLocaleDateString('en-US', { month: 'long' })
+    const firstMonthName = firstMonth.toLocaleDateString("en-US", { month: "long" })
+    const secondMonthName = secondMonth.toLocaleDateString("en-US", { month: "long" })
 
     // If same year, show: "January - February 2025"
     if (visibleMonths[0].year === visibleMonths[1].year) {
@@ -153,7 +146,7 @@ export function DateRangePicker({
   const canGoNext = currentMonthIndex < maxIndex
 
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn("w-full", className)}>
       {/* Navigation Header */}
       <div className="flex items-center justify-between mb-6 px-2">
         <Button
@@ -161,22 +154,20 @@ export function DateRangePicker({
           size="icon"
           onClick={handlePrevious}
           disabled={!canGoPrevious || readonly}
-          aria-label={t('previousMonth')}
+          aria-label={t("previousMonth")}
           className="h-11 w-11"
         >
           <ChevronLeft className="h-5 w-5" />
         </Button>
 
-        <div className="text-center font-semibold text-lg flex-1 px-4">
-          {headerText}
-        </div>
+        <div className="text-center font-semibold text-lg flex-1 px-4">{headerText}</div>
 
         <Button
           variant="ghost"
           size="icon"
           onClick={handleNext}
           disabled={!canGoNext || readonly}
-          aria-label={t('nextMonth')}
+          aria-label={t("nextMonth")}
           className="h-11 w-11"
         >
           <ChevronRight className="h-5 w-5" />
@@ -184,36 +175,30 @@ export function DateRangePicker({
       </div>
 
       {/* Calendar Grid */}
-      <div
-        className="relative overflow-hidden"
-        {...swipeHandlers}
-      >
+      <div className="relative overflow-hidden" {...swipeHandlers}>
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={currentMonthIndex}
             initial={{
               opacity: 0,
-              x: swipeDirection === 'left' ? 100 : swipeDirection === 'right' ? -100 : 0
+              x: swipeDirection === "left" ? 100 : swipeDirection === "right" ? -100 : 0,
             }}
             animate={{ opacity: 1, x: 0 }}
             exit={{
               opacity: 0,
-              x: swipeDirection === 'left' ? -100 : swipeDirection === 'right' ? 100 : 0
+              x: swipeDirection === "left" ? -100 : swipeDirection === "right" ? 100 : 0,
             }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className={cn(
-              'grid gap-6',
-              isMobile ? 'grid-cols-1' : 'grid-cols-2'
-            )}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className={cn("grid gap-6", isMobile ? "grid-cols-1" : "grid-cols-2")}
           >
             {visibleMonths.map((monthData) => (
               <div key={`${monthData.year}-${monthData.month}`}>
                 {/* Desktop: Show month name above each calendar */}
                 {!isMobile && (
                   <div className="mb-4 text-center font-semibold text-lg">
-                    {new Date(monthData.year, monthData.month, 1).toLocaleDateString('en-US', {
-                      month: 'long',
-                      year: 'numeric',
+                    {new Date(monthData.year, monthData.month, 1).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
                     })}
                   </div>
                 )}
@@ -237,84 +222,27 @@ export function DateRangePicker({
         <div className="flex justify-center gap-2 mt-6">
           {Array.from({ length: Math.ceil(totalMonths / monthsPerView) }).map((_, index) => (
             <button
-              key={index}
+              key={index * monthsPerView}
               type="button"
               onClick={() => {
                 const newIndex = index * monthsPerView
                 if (newIndex <= maxIndex) {
-                  setSwipeDirection(newIndex > currentMonthIndex ? 'left' : 'right')
+                  setSwipeDirection(newIndex > currentMonthIndex ? "left" : "right")
                   setCurrentMonthIndex(newIndex)
                 }
               }}
               className={cn(
-                'h-2 w-2 rounded-full transition-all duration-200',
+                "h-2 w-2 rounded-full transition-all duration-200",
                 Math.floor(currentMonthIndex / monthsPerView) === index
-                  ? 'bg-primary'
-                  : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                  ? "bg-primary"
+                  : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
               )}
-              aria-label={`Go to ${isMobile ? 'month' : 'months'} ${index * monthsPerView + 1}`}
+              aria-label={`Go to ${isMobile ? "month" : "months"} ${index * monthsPerView + 1}`}
             />
           ))}
         </div>
       )}
-
-      {/* Legend and Instructions */}
-      {!readonly && (
-        <div className="mt-6 p-4 bg-muted/50 rounded-lg space-y-4">
-          <div>
-            <div className="text-sm font-medium mb-3 text-foreground">
-              {t('legend')}:
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <LegendItem className="state-available" label={t('available')} />
-              <LegendItem className="state-maybe" label={t('maybe')} />
-              <LegendItem className="state-unavailable" label={t('unavailable')} />
-              <LegendItem className="bg-card border-border" label={t('unselected')} />
-            </div>
-          </div>
-
-          {/* Instructions */}
-          <div className="border-t border-border pt-4">
-            <div className="text-sm font-medium mb-2 text-foreground flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {t('howToUse')}:
-            </div>
-            <div className="text-xs text-muted-foreground space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-background px-2 py-0.5 rounded">1x {t('tap')}</span>
-                <span>→</span>
-                <span className="text-green-600 dark:text-green-400 font-medium">{t('available')}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-background px-2 py-0.5 rounded">2x {t('tap')}</span>
-                <span>→</span>
-                <span className="text-orange-600 dark:text-orange-400 font-medium">{t('maybe')}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-background px-2 py-0.5 rounded">3x {t('tap')}</span>
-                <span>→</span>
-                <span className="text-red-600 dark:text-red-400 font-medium">{t('unavailable')}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-background px-2 py-0.5 rounded">4x {t('tap')}</span>
-                <span>→</span>
-                <span className="text-muted-foreground font-medium">{t('unselected')}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function LegendItem({ className, label }: { className: string; label: string }) {
-  return (
-    <div className="flex items-center gap-2">
-      <div className={cn('w-6 h-6 rounded border-2', className)} />
-      <span className="text-xs text-muted-foreground">{label}</span>
+      <Instructions readonly={readonly} />
     </div>
   )
 }

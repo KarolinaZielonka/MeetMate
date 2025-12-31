@@ -15,19 +15,6 @@ import type { DateScore } from "@/types";
 export async function calculateOptimalDates(
 	eventId: string,
 ): Promise<DateScore[]> {
-	// Fetch all availability records for this event
-	const { data: availabilityRecords, error: availabilityError } =
-		await supabase
-			.from("availability")
-			.select("date, status, participant_id")
-			.eq("participant_id", eventId) // This needs to be fixed - we need to join with participants
-			.order("date", { ascending: true });
-
-	if (availabilityError) {
-		console.error("Error fetching availability:", availabilityError);
-		throw new Error("Failed to fetch availability data");
-	}
-
 	// We need to get participants for this event first
 	const { data: participants, error: participantsError } = await supabase
 		.from("participants")

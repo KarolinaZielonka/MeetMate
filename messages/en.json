@@ -204,7 +204,16 @@
     "nextMonth": "Next month",
     "instructions": "Tap dates to cycle through: Not selected → Available → Maybe → Unavailable → Not selected",
     "howToUse": "How to use",
-    "tap": "tap"
+    "tap": "tap",
+    "weekdays": {
+      "monday": "Mo",
+      "tuesday": "Tu",
+      "wednesday": "We",
+      "thursday": "Th",
+      "friday": "Fr",
+      "saturday": "Sa",
+      "sunday": "Su"
+    }
   },
   "optimalDates": {
     "title": "Best Meeting Dates",

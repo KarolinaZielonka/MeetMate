@@ -204,7 +204,16 @@
     "nextMonth": "Następny miesiąc",
     "instructions": "Kliknij daty, aby przełączać: Nie wybrano → Dostępny → Może → Niedostępny → Nie wybrano",
     "howToUse": "Jak używać",
-    "tap": "kliknięcie"
+    "tap": "kliknięcie",
+    "weekdays": {
+      "monday": "Pn",
+      "tuesday": "Wt",
+      "wednesday": "Śr",
+      "thursday": "Cz",
+      "friday": "Pt",
+      "saturday": "So",
+      "sunday": "Nd"
+    }
   },
   "optimalDates": {
     "title": "Najlepsze daty spotkań",

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
 import { verifyPassword } from "@/lib/utils/auth";
 import { randomUUID } from "crypto";

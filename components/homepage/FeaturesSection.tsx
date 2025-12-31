@@ -1,18 +1,14 @@
 import { useTranslations } from "next-intl"
+import type { FeatureCardProps } from "./FeatureCard"
 import { FeatureCard } from "./FeatureCard"
 
 export function FeaturesSection() {
   const t = useTranslations("homepage")
 
-  const features = [
+  const features: FeatureCardProps[] = [
     {
       icon: (
-        <svg
-          className="w-7 h-7 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -27,12 +23,7 @@ export function FeaturesSection() {
     },
     {
       icon: (
-        <svg
-          className="w-7 h-7 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -47,12 +38,7 @@ export function FeaturesSection() {
     },
     {
       icon: (
-        <svg
-          className="w-7 h-7 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -71,14 +57,8 @@ export function FeaturesSection() {
     <section className="pb-20 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={index}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-              gradientClass={feature.gradientClass}
-            />
+          {features.map((feature) => (
+            <FeatureCard key={feature.title} feature={feature} />
           ))}
         </div>
       </div>

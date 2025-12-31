@@ -1,6 +1,6 @@
+import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
 import { calculateOptimalDates } from "@/lib/utils/dateCalculation";
-import { NextResponse } from "next/server";
 
 export async function GET(
 	request: Request,

@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase/client"
 import { NextResponse } from "next/server"
+import { supabase } from "@/lib/supabase/client"
 import type { AvailabilityStatus } from "@/types"
 
 /**

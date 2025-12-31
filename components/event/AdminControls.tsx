@@ -4,19 +4,10 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
+import { LockOpen, Trash2 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Lock, LockOpen, Trash2 } from "lucide-react"
+import { ReopenEventDialog, DeleteEventDialog } from "./dialogs"
 
 interface AdminControlsProps {
   shareUrl: string
@@ -148,55 +139,19 @@ export function AdminControls({ shareUrl, isLocked, onEventReopened }: AdminCont
         </CardContent>
       </Card>
 
-      {/* Reopen Confirmation Dialog */}
-      <AlertDialog open={showReopenDialog} onOpenChange={setShowReopenDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <LockOpen className="w-5 h-5" />
-              {t("reopenConfirm.title")}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-base">
-              {t("reopenConfirm.description")}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isReopening}>
-              {t("reopenConfirm.cancel")}
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleReopen} disabled={isReopening}>
-              {isReopening ? t("reopeningButton") : t("reopenConfirm.confirm")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ReopenEventDialog
+        open={showReopenDialog}
+        onOpenChange={setShowReopenDialog}
+        onConfirm={handleReopen}
+        isLoading={isReopening}
+      />
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
-              <Trash2 className="w-5 h-5" />
-              {t("deleteConfirm.title")}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-base">
-              {t("deleteConfirm.description")}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>
-              {t("deleteConfirm.cancel")}
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isDeleting ? t("deletingButton") : t("deleteConfirm.confirm")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteEventDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={handleDelete}
+        isLoading={isDeleting}
+      />
     </>
   )
 }

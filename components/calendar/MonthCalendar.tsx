@@ -1,27 +1,11 @@
-'use client'
+"use client"
 
-import { useMemo } from 'react'
-import type { AvailabilityStatus } from '@/types'
-import { cn } from '@/lib/utils'
-
-interface MonthCalendarProps {
-  year: number
-  month: number // 0-indexed (0 = January)
-  startDate: Date
-  endDate: Date
-  availability: Map<string, AvailabilityStatus>
-  onDateSelect: (date: string) => void
-  readonly?: boolean
-}
-
-interface CalendarDay {
-  date: string // YYYY-MM-DD
-  dayOfMonth: number
-  isInRange: boolean
-  isToday: boolean
-}
-
-const DAYS_OF_WEEK = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
+import { useMemo } from "react"
+import { useTranslations } from "next-intl"
+import type { AvailabilityStatus } from "@/types"
+import { cn } from "@/lib/utils"
+import type { CalendarDay, MonthCalendarProps } from "./types"
+import { getWeekdayKeys } from "./utils/calendarUtils"
 
 export function MonthCalendar({
   year,
@@ -32,6 +16,8 @@ export function MonthCalendar({
   onDateSelect,
   readonly = false,
 }: MonthCalendarProps) {
+  const t = useTranslations("calendar.weekdays")
+
   const calendarDays = useMemo(() => {
     const days: (CalendarDay | null)[] = []
     const firstDayOfMonth = new Date(year, month, 1)
@@ -72,26 +58,34 @@ export function MonthCalendar({
 
   const monthName = useMemo(() => {
     const date = new Date(year, month, 1)
-    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    return date.toLocaleDateString("en-US", { month: "long", year: "numeric" })
   }, [year, month])
 
-  const getDateStyles = (status: AvailabilityStatus | undefined, isInRange: boolean, isToday: boolean) => {
+  const getDateStyles = (
+    status: AvailabilityStatus | undefined,
+    isInRange: boolean,
+    isToday: boolean
+  ) => {
     if (!isInRange) {
-      return 'bg-muted/50 text-muted-foreground cursor-not-allowed border-border'
+      return "bg-muted/50 text-muted-foreground cursor-not-allowed border-border"
     }
 
-    const baseStyles = 'cursor-pointer transition-smooth hover:scale-105 border-2'
-    const todayRing = isToday ? 'ring-2 ring-primary ring-offset-1' : ''
+    const baseStyles = "cursor-pointer transition-smooth hover:scale-105 border-2"
+    const todayRing = isToday ? "ring-2 ring-primary ring-offset-1" : ""
 
     switch (status) {
-      case 'available':
-        return cn(baseStyles, todayRing, 'state-available')
-      case 'maybe':
-        return cn(baseStyles, todayRing, 'state-maybe')
-      case 'unavailable':
-        return cn(baseStyles, todayRing, 'state-unavailable')
+      case "available":
+        return cn(baseStyles, todayRing, "state-available")
+      case "maybe":
+        return cn(baseStyles, todayRing, "state-maybe")
+      case "unavailable":
+        return cn(baseStyles, todayRing, "state-unavailable")
       default:
-        return cn(baseStyles, todayRing, 'bg-card border-border text-card-foreground hover:bg-muted/50')
+        return cn(
+          baseStyles,
+          todayRing,
+          "bg-card border-border text-card-foreground hover:bg-muted/50"
+        )
     }
   }
 
@@ -104,21 +98,18 @@ export function MonthCalendar({
     <div className="w-full">
       {/* Day of week headers */}
       <div className="grid grid-cols-7 gap-1 mb-2">
-        {DAYS_OF_WEEK.map((day) => (
-          <div
-            key={day}
-            className="text-center text-xs font-medium text-muted-foreground py-1"
-          >
-            {day}
+        {getWeekdayKeys().map((weekdayKey) => (
+          <div key={weekdayKey} className="text-center text-xs font-medium text-muted-foreground py-1">
+            {t(weekdayKey)}
           </div>
         ))}
       </div>
 
       {/* Calendar grid */}
       <div className="grid grid-cols-7 gap-1">
-        {calendarDays.map((day, index) => {
+        {calendarDays.map((day) => {
           if (!day) {
-            return <div key={`empty-${index}`} className="aspect-square" />
+            return <div key={`empty-${day}`} className="aspect-square" />
           }
 
           const status = availability.get(day.date)
@@ -131,11 +122,11 @@ export function MonthCalendar({
               onClick={() => handleDateClick(day)}
               disabled={!day.isInRange || readonly}
               className={cn(
-                'aspect-square flex items-center justify-center rounded-md text-sm font-medium',
-                'min-h-[44px] min-w-[44px]', // Minimum touch target
+                "aspect-square flex items-center justify-center rounded-md text-sm font-medium",
+                "min-h-[44px] min-w-[44px]", // Minimum touch target
                 styles
               )}
-              aria-label={`${day.dayOfMonth} ${monthName} - ${status || 'unselected'}`}
+              aria-label={`${day.dayOfMonth} ${monthName} - ${status || "unselected"}`}
             >
               {day.dayOfMonth}
             </button>
@@ -148,7 +139,7 @@ export function MonthCalendar({
 
 function formatDateToYYYYMMDD(date: Date): string {
   const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
   return `${year}-${month}-${day}`
 }
