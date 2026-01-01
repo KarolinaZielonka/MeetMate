@@ -1,5 +1,3 @@
-import { supabase } from "@/lib/supabase/client"
-
 /**
  * Adjectives for readable URL generation
  */
@@ -104,49 +102,4 @@ export function generateShareUrl(): string {
   const number = getRandomInt(10, 99)
 
   return `${adjective}-${noun}-${number}`
-}
-
-/**
- * Validate that a share URL is unique in the database
- * Returns true if URL is unique (can be used), false if already exists
- */
-export async function validateShareUrl(shareUrl: string): Promise<boolean> {
-  const { data, error } = await supabase
-    .from("events")
-    .select("share_url")
-    .eq("share_url", shareUrl)
-    .single()
-
-  // If no data found, URL is unique
-  if (error && error.code === "PGRST116") {
-    return true
-  }
-
-  // If data exists, URL is taken
-  if (data) {
-    return false
-  }
-
-  // Handle other errors conservatively
-  return false
-}
-
-/**
- * Generate a unique share URL by checking against the database
- * Retries up to maxRetries times if collisions occur
- */
-export async function generateUniqueShareUrl(maxRetries: number = 10): Promise<string> {
-  for (let i = 0; i < maxRetries; i++) {
-    const shareUrl = generateShareUrl()
-    const isUnique = await validateShareUrl(shareUrl)
-
-    if (isUnique) {
-      return shareUrl
-    }
-  }
-
-  // Fallback: append timestamp if we couldn't find a unique URL
-  const fallbackUrl = generateShareUrl()
-  const timestamp = Date.now().toString(36)
-  return `${fallbackUrl}-${timestamp}`
 }

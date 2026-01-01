@@ -1,9 +1,9 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import type { MonthCalendarProps } from "./types"
 import { CalendarDay } from "./components/CalendarDay"
 import { useCalendarGrid } from "./hooks/useCalendarGrid"
+import type { MonthCalendarProps } from "./types"
 import { getWeekdayKeys } from "./utils/calendarUtils"
 
 /**
@@ -36,9 +36,7 @@ export function MonthCalendar({
   return (
     <div className="w-full space-y-3">
       {/* Month and year header */}
-      <h3 className="text-center text-lg font-semibold text-foreground">
-        {monthName}
-      </h3>
+      <h3 className="text-center text-lg font-semibold text-foreground">{monthName}</h3>
 
       {/* Day of week headers */}
       <div className="grid grid-cols-7 gap-1 mb-2">

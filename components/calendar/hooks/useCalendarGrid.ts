@@ -13,12 +13,7 @@ interface UseCalendarGridProps {
  * Generates calendar grid data for a given month
  * Handles empty cells for week alignment and marks dates within range
  */
-export function useCalendarGrid({
-  year,
-  month,
-  startDate,
-  endDate,
-}: UseCalendarGridProps) {
+export function useCalendarGrid({ year, month, startDate, endDate }: UseCalendarGridProps) {
   const calendarDays = useMemo(() => {
     const days: (CalendarDay | null)[] = []
     const firstDayOfMonth = new Date(year, month, 1)

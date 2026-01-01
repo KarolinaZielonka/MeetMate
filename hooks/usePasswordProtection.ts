@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
-import type { EventData, UsePasswordProtectionResult } from "./types"
+import type { Event } from "@/types"
+import type { UsePasswordProtectionResult } from "./types"
 
-export function usePasswordProtection(
-  event: EventData | null
-): UsePasswordProtectionResult {
+export function usePasswordProtection(event: Event | null): UsePasswordProtectionResult {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false)
   const [showPasswordDialog, setShowPasswordDialog] = useState(false)
 

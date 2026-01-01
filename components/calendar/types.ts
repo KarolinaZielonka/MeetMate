@@ -1,4 +1,4 @@
-import type { AvailabilityStatus, AvailabilityMap } from "@/types"
+import type { AvailabilityMap, AvailabilityStatus } from "@/types"
 
 export interface MonthCalendarProps {
   year: number

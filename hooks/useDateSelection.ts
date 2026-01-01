@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react'
-import type { AvailabilityStatus, AvailabilityMap } from '@/types'
+import { useCallback, useState } from "react"
+
+import type { AvailabilityMap, AvailabilityStatus } from "@/types"
 
 interface DateSelectionReturn {
   availability: AvailabilityMap
@@ -27,15 +28,15 @@ export function useDateSelection(initialAvailability?: AvailabilityMap): DateSel
 
       switch (currentStatus) {
         case undefined:
-          newStatus = 'available'
+          newStatus = "available"
           break
-        case 'available':
-          newStatus = 'maybe'
+        case "available":
+          newStatus = "maybe"
           break
-        case 'maybe':
-          newStatus = 'unavailable'
+        case "maybe":
+          newStatus = "unavailable"
           break
-        case 'unavailable':
+        case "unavailable":
           newStatus = undefined // Remove from map (unselected)
           break
       }

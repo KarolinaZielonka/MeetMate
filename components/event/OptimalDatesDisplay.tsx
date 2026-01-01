@@ -1,13 +1,13 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useEventLock } from "@/hooks/useEventLock"
-import { useOptimalDates } from "@/hooks/useOptimalDates"
 import { Calendar, RefreshCw } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useCallback, useMemo } from "react"
+import { SkeletonText } from "@/components/skeletons"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEventLock } from "@/hooks/useEventLock"
+import { useOptimalDates } from "@/hooks/useOptimalDates"
 import { DateScoreItem } from "./components/DateScoreItem"
 import { EmptyState } from "./components/EmptyState"
 import { LockConfirmationDialog } from "./components/LockConfirmationDialog"
@@ -95,7 +95,7 @@ export function OptimalDatesDisplay({
         </CardHeader>
         <CardContent>
           {loading ? (
-            <LoadingSkeleton />
+            <SkeletonText lines={3} height="h-24" widths={["w-full", "w-full", "w-full"]} shimmer />
           ) : dateScores.length === 0 ? (
             <EmptyState />
           ) : (
@@ -122,15 +122,5 @@ export function OptimalDatesDisplay({
         onConfirm={handleLockEvent}
       />
     </>
-  )
-}
-
-function LoadingSkeleton() {
-  return (
-    <div className="space-y-3">
-      {[1, 2, 3].map((i) => (
-        <Skeleton key={i} className="h-24 w-full" />
-      ))}
-    </div>
   )
 }

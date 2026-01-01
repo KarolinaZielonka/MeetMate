@@ -1,5 +1,5 @@
-import type { AvailabilityStatus } from "@/types"
 import { cn } from "@/lib/utils"
+import type { AvailabilityStatus } from "@/types"
 
 /**
  * Formats a Date object to YYYY-MM-DD string

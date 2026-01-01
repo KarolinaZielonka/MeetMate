@@ -1,10 +1,10 @@
 "use client"
 
+import type { RealtimeChannel } from "@supabase/supabase-js"
 import { useEffect, useRef } from "react"
+import { toast } from "sonner"
 import { supabase } from "@/lib/supabase/client"
 import { useEventStore } from "@/store/eventStore"
-import { toast } from "sonner"
-import type { RealtimeChannel } from "@supabase/supabase-js"
 
 interface UseRealtimeEventOptions {
   eventId: string
@@ -30,6 +30,39 @@ export function useRealtimeEvent({
 }: UseRealtimeEventOptions) {
   const channelRef = useRef<RealtimeChannel | null>(null)
   const setParticipants = useEventStore((state) => state.setParticipants)
+
+  // Helper function to refresh participants list
+  const refreshParticipants = async (eventId: string) => {
+    try {
+      // Fetch event's share_url first
+      const { data: event } = await supabase
+        .from("events")
+        .select("share_url")
+        .eq("id", eventId)
+        .single()
+
+      if (!event) return
+
+      // Fetch updated participants list
+      const { data: participants, error } = await supabase
+        .from("participants")
+        .select("id, name, has_submitted, created_at, session_token")
+        .eq("event_id", eventId)
+        .order("created_at", { ascending: true })
+
+      if (error) {
+        console.error("Error fetching participants:", error)
+        return
+      }
+
+      // Update Zustand store
+      if (participants) {
+        setParticipants(participants)
+      }
+    } catch (error) {
+      console.error("Error refreshing participants:", error)
+    }
+  }
 
   useEffect(() => {
     if (!eventId) return
@@ -135,39 +168,6 @@ export function useRealtimeEvent({
       }
     }
   }, [eventId, onParticipantJoin, onParticipantUpdate, showToasts])
-
-  // Helper function to refresh participants list
-  const refreshParticipants = async (eventId: string) => {
-    try {
-      // Fetch event's share_url first
-      const { data: event } = await supabase
-        .from("events")
-        .select("share_url")
-        .eq("id", eventId)
-        .single()
-
-      if (!event) return
-
-      // Fetch updated participants list
-      const { data: participants, error } = await supabase
-        .from("participants")
-        .select("id, name, has_submitted, created_at, session_token")
-        .eq("event_id", eventId)
-        .order("created_at", { ascending: true })
-
-      if (error) {
-        console.error("Error fetching participants:", error)
-        return
-      }
-
-      // Update Zustand store
-      if (participants) {
-        setParticipants(participants)
-      }
-    } catch (error) {
-      console.error("Error refreshing participants:", error)
-    }
-  }
 
   return {
     isConnected: channelRef.current !== null,

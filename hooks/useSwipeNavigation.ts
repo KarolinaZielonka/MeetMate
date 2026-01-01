@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react'
+import { useCallback, useRef } from "react"
 
 interface SwipeCallbacks {
   onSwipeLeft?: () => void
@@ -13,10 +13,7 @@ interface SwipeNavigation {
 
 const SWIPE_THRESHOLD = 50 // Minimum distance in pixels to trigger swipe
 
-export function useSwipeNavigation({
-  onSwipeLeft,
-  onSwipeRight
-}: SwipeCallbacks): SwipeNavigation {
+export function useSwipeNavigation({ onSwipeLeft, onSwipeRight }: SwipeCallbacks): SwipeNavigation {
   const touchStartX = useRef<number>(0)
   const touchEndX = useRef<number>(0)
 

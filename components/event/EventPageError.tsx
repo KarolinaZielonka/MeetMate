@@ -1,3 +1,4 @@
+import { AlertCircle } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -18,19 +19,7 @@ export function EventPageError({ error, isNotFound = false }: EventPageErrorProp
         <Card className="shadow-lg border-none">
           <CardContent className="pt-12 pb-12 text-center">
             <div className="w-20 h-20 bg-destructive/20 rounded-full flex items-center justify-center mx-auto mb-6 bounce-subtle">
-              <svg
-                className="w-10 h-10 text-destructive"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <AlertCircle className="w-10 h-10 text-destructive" />
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-3">
               {isNotFound ? t("notFound") : t("oops")}

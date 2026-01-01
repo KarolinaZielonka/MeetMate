@@ -2,82 +2,117 @@
 
 import { useParams } from "next/navigation"
 import { useTranslations } from "next-intl"
-import { EventPageError } from "@/components/EventPageError"
-import { EventPageSkeleton } from "@/components/EventPageSkeleton"
+import { useEffect } from "react"
 import { AdminControls } from "@/components/event/AdminControls"
 import { AvailabilitySection } from "@/components/event/AvailabilitySection"
+import { PasswordDialog } from "@/components/event/dialogs/PasswordDialog"
 import { EventHeader } from "@/components/event/EventHeader"
+import { EventPageError } from "@/components/event/EventPageError"
+import { EventPageSkeleton } from "@/components/event/EventPageSkeleton"
 import { JoinEventForm } from "@/components/event/JoinEventForm"
 import { OptimalDatesDisplay } from "@/components/event/OptimalDatesDisplay"
-import { PasswordDialog } from "@/components/event/PasswordDialog"
 import { ParticipantList } from "@/components/participants/ParticipantList"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useAvailabilityManagement } from "@/hooks/useAvailabilityManagement"
-import { useEventData } from "@/hooks/useEventData"
 import { usePasswordProtection } from "@/hooks/usePasswordProtection"
 import { useRealtimeEvent } from "@/hooks/useRealtimeEvent"
 import { getSession, isParticipant } from "@/lib/utils/session"
+import { useEventStore } from "@/store/eventStore"
 
 export default function EventPage() {
   const params = useParams()
   const shareUrl = params.shareUrl as string
   const t = useTranslations("eventPage")
 
-  // Custom hooks for state management
   const {
     event,
-    setEvent,
     isLoading,
     error,
     userRole,
     setUserRole,
-    refreshTrigger,
-    triggerRefresh,
-  } = useEventData(shareUrl)
-
-  const { isPasswordVerified, showPasswordDialog, handlePasswordSuccess } =
-    usePasswordProtection(event)
-
-  const {
+    fetchEvent,
+    fetchParticipants,
     availabilitySelections,
     setAvailabilitySelections,
     isSubmittingAvailability,
     isEditingAvailability,
-    hasSubmitted,
-    setIsEditingAvailability,
-    handleSubmitAvailability,
-    handleCancelEdit,
-  } = useAvailabilityManagement(event, refreshTrigger, triggerRefresh)
+    hasSubmittedAvailability,
+    fetchAvailability,
+    submitAvailability,
+    startEditingAvailability,
+    cancelEditingAvailability,
+  } = useEventStore()
+
+  const tAvailability = useTranslations("eventPage.availability")
+  const tParticipants = useTranslations("eventPage.participants")
+
+  // Fetch event and participants on mount
+  useEffect(() => {
+    if (shareUrl) {
+      fetchEvent(shareUrl, t)
+      fetchParticipants(shareUrl, tParticipants)
+    }
+  }, [shareUrl, fetchEvent, fetchParticipants, t, tParticipants])
+
+  // Fetch availability when participant session exists
+  useEffect(() => {
+    if (event && userRole === "participant") {
+      const session = getSession(event.id)
+      if (session?.participantId) {
+        fetchAvailability(event.id, session.participantId)
+      }
+    }
+  }, [event, userRole, fetchAvailability])
+
+  const { isPasswordVerified, showPasswordDialog, handlePasswordSuccess } =
+    usePasswordProtection(event)
+
+  // Refresh handler for real-time updates
+  const handleRefresh = () => {
+    if (event && shareUrl) {
+      fetchEvent(shareUrl, t)
+      const session = getSession(event.id)
+      if (session?.participantId) {
+        fetchAvailability(event.id, session.participantId)
+      }
+    }
+  }
 
   // Real-time subscriptions
   useRealtimeEvent({
     eventId: event?.id || "",
     showToasts: true,
-    onParticipantJoin: triggerRefresh,
-    onParticipantUpdate: triggerRefresh,
+    onParticipantJoin: handleRefresh,
+    onParticipantUpdate: handleRefresh,
   })
 
   // Handle successful join
   const handleJoinSuccess = () => {
-    triggerRefresh()
+    handleRefresh()
     const session = getSession(event?.id || "")
     if (session) {
       setUserRole(session.role)
     }
   }
 
-  // Handle event locked
+  // Handle event locked/reopened
   const handleEventLocked = () => {
-    triggerRefresh()
-    // Re-fetch event to update is_locked status
-    fetch(`/api/events/${shareUrl}`)
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.data) {
-          setEvent(result.data)
-        }
-      })
-      .catch((err) => console.error("Error refreshing event:", err))
+    handleRefresh()
+  }
+
+  // Handle availability submission
+  const handleSubmitAvailability = async () => {
+    if (!event) return
+    const session = getSession(event.id)
+    if (!session?.participantId) return
+    await submitAvailability(session.participantId, tAvailability)
+  }
+
+  // Handle cancel editing
+  const handleCancelEdit = () => {
+    if (!event) return
+    const session = getSession(event.id)
+    if (!session?.participantId) return
+    cancelEditingAvailability(event.id, session.participantId)
   }
 
   // Loading state
@@ -143,11 +178,7 @@ export default function EventPage() {
             )}
 
             {/* Participant List */}
-            <ParticipantList
-              shareUrl={shareUrl}
-              eventId={event.id}
-              refreshTrigger={refreshTrigger}
-            />
+            <ParticipantList eventId={event.id} />
 
             {/* Optimal Dates Display Section */}
             <OptimalDatesDisplay
@@ -165,11 +196,11 @@ export default function EventPage() {
                 endDate={new Date(event.end_date)}
                 availabilitySelections={availabilitySelections}
                 onSelectionChange={setAvailabilitySelections}
-                hasSubmitted={hasSubmitted}
+                hasSubmitted={hasSubmittedAvailability}
                 isEditingAvailability={isEditingAvailability}
                 isSubmittingAvailability={isSubmittingAvailability}
                 onSubmit={handleSubmitAvailability}
-                onEdit={() => setIsEditingAvailability(true)}
+                onEdit={startEditingAvailability}
                 onCancel={handleCancelEdit}
               />
             )}

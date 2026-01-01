@@ -1,4 +1,4 @@
-# MeetSync - Group Scheduling Made Simple
+# MeetMate - Group Scheduling Made Simple
 
 > Find time together, without the hassle. No sign-up required.
 
@@ -15,7 +15,7 @@ Existing group scheduling tools suffer from:
 - **High friction** requiring accounts and logins
 - **Poor user experience** with no real-time updates
 
-MeetSync solves these problems with a clean, modern interface that works seamlessly on any device.
+MeetMate solves these problems with a clean, modern interface that works seamlessly on any device.
 
 ## ✨ Key Features
 
@@ -78,8 +78,8 @@ MeetSync solves these problems with a clean, modern interface that works seamles
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/meetsync.git
-cd meetsync
+git clone https://github.com/yourusername/meetmate.git
+cd meetmate
 ```
 
 2. **Install dependencies**

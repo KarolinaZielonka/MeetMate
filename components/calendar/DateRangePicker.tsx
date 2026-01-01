@@ -1,17 +1,16 @@
 "use client"
 
-import { useState, useMemo, useEffect, useCallback } from "react"
-
-import { useTranslations } from "next-intl"
+import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useTranslations } from "next-intl"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { MonthCalendar } from "./MonthCalendar"
-import { useSwipeNavigation } from "@/hooks/useSwipeNavigation"
 import { useDateSelection } from "@/hooks/useDateSelection"
-import type { DateRangePickerProps } from "./types"
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation"
 import { cn } from "@/lib/utils"
 import { Instructions } from "./components/Instructions"
+import { MonthCalendar } from "./MonthCalendar"
+import type { DateRangePickerProps } from "./types"
 
 export function DateRangePicker({
   startDate,

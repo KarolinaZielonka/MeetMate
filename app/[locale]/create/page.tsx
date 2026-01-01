@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { useRouter } from "@/i18n/routing"
 import { getDateRangeLength, validateDateRange } from "@/lib/utils/dates"
-import { initializeSession, updateSessionAsParticipant } from "@/lib/utils/session"
+import { initializeSession } from "@/lib/utils/session"
 
 export default function CreateEventPage() {
   const router = useRouter()
@@ -87,13 +87,6 @@ export default function CreateEventPage() {
       return
     }
 
-    // Validate date range
-    const dateValidation = validateDateRange(formData.startDate, formData.endDate)
-    if (!dateValidation.valid) {
-      setError(dateValidation.error || t("errors.invalidDate"))
-      return
-    }
-
     setIsLoading(true)
 
     try {
@@ -126,17 +119,17 @@ export default function CreateEventPage() {
       const eventId = result.data.id
       const shareUrl = result.data.share_url
 
-      // Initialize admin session first
-      initializeSession(eventId, true) // true = isCreator/admin
-
-      // If creator provided a name and a participant was created, update session with participant info
-      if (result.data.participant) {
-        updateSessionAsParticipant(
-          eventId,
-          result.data.participant.participant_id,
-          result.data.participant.session_token
-        )
-      }
+      // Initialize admin session with participant data (single write)
+      initializeSession(
+        eventId,
+        true, // isCreator/admin
+        result.data.participant
+          ? {
+              participantId: result.data.participant.participant_id,
+              sessionToken: result.data.participant.session_token,
+            }
+          : undefined
+      )
 
       // Show success toast
       toast.success(t("successMessage"))

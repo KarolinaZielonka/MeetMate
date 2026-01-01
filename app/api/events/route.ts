@@ -8,7 +8,7 @@ import {
 } from "@/lib/api"
 import { hashPassword } from "@/lib/utils/auth"
 import { formatDateForAPI, parseDate, validateDateRange } from "@/lib/utils/dates"
-import { generateUniqueShareUrl } from "@/lib/utils/urlGenerator"
+import { generateShareUrl } from "@/lib/utils/urlGenerator"
 
 /**
  * Request body type for event creation
@@ -114,10 +114,7 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
     const parsedStartDate = parseDate(body.start_date)
     const parsedEndDate = parseDate(body.end_date)
 
-    // Generate unique share URL
-    const shareUrl = await generateUniqueShareUrl()
-
-    // Hash password if provided
+    // Hash password if provided (do this once before retry loop)
     let passwordHash: string | null = null
     if (body.password && typeof body.password === "string" && body.password.length > 0) {
       try {
@@ -132,23 +129,53 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
     const formattedStartDate = formatDateForAPI(parsedStartDate)
     const formattedEndDate = formatDateForAPI(parsedEndDate)
 
-    // Insert event into database
-    const { data: event, error: eventError } = await client
-      .from("events")
-      .insert({
-        name: body.name.trim(),
-        start_date: formattedStartDate,
-        end_date: formattedEndDate,
-        share_url: shareUrl,
-        password_hash: passwordHash,
-        creator_name: body.creator_name?.trim() || null,
-        is_locked: false,
-        calculated_date: null,
-      })
-      .select("id, share_url, name, start_date, end_date, creator_name, is_locked")
-      .single()
+    // Insert event into database with retry on URL collision
+    // Max retries = 5 (collision probability is <1% so this is very safe)
+    let event: {
+      id: string
+      share_url: string
+      name: string
+      start_date: string
+      end_date: string
+      creator_name: string | null
+      is_locked: boolean
+    } | null = null
+    let eventError: { code?: string; message?: string } | null = null
+    const maxRetries = 5
 
-    if (eventError) {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      const shareUrl = generateShareUrl()
+
+      const result = await client
+        .from("events")
+        .insert({
+          name: body.name.trim(),
+          start_date: formattedStartDate,
+          end_date: formattedEndDate,
+          share_url: shareUrl,
+          password_hash: passwordHash,
+          creator_name: body.creator_name?.trim() || null,
+          is_locked: false,
+          calculated_date: null,
+        })
+        .select("id, share_url, name, start_date, end_date, creator_name, is_locked")
+        .single()
+
+      event = result.data
+      eventError = result.error
+
+      // Check if error is a unique constraint violation on share_url
+      if (eventError?.code === "23505" && eventError?.message?.includes("share_url")) {
+        // URL collision - retry with new URL
+        console.log(`Share URL collision on attempt ${attempt + 1}, retrying...`)
+        continue
+      }
+
+      // Success or non-collision error - break out of retry loop
+      break
+    }
+
+    if (eventError || !event) {
       console.error("Database error creating event:", eventError)
       throw new ApiError("Failed to create event. Please try again.", 500)
     }

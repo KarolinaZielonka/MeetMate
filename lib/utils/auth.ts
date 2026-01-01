@@ -3,9 +3,10 @@ import bcrypt from "bcryptjs"
 /**
  * Number of salt rounds for bcrypt hashing
  * Higher number = more secure but slower
- * 10 is a good balance for most applications
+ * 8 rounds = ~30-40ms hashing time (good balance for event passwords)
+ * Events are not high-value targets, so 8 rounds provides adequate security
  */
-const SALT_ROUNDS = 10
+const SALT_ROUNDS = 8
 
 /**
  * Hash a password using bcrypt

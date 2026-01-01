@@ -1,5 +1,5 @@
 /**
- * Session management for MeetSync
+ * Session management for MeetMate
  * No user accounts - sessions are event-scoped and stored in localStorage
  */
 
@@ -30,12 +30,21 @@ function getAccessTokenKey(eventId: string): string {
 /**
  * Initialize a new session for an event
  * Used when creating an event (admin) or joining as a participant
+ * Can optionally include participant data to avoid double-write
  */
-export function initializeSession(eventId: string, isCreator: boolean = false): Session {
+export function initializeSession(
+  eventId: string,
+  isCreator: boolean = false,
+  participantData?: { participantId: string; sessionToken: string }
+): Session {
   const session: Session = {
     eventId,
     role: isCreator ? "admin" : "visitor",
     createdAt: Date.now(),
+    ...(participantData && {
+      participantId: participantData.participantId,
+      sessionToken: participantData.sessionToken,
+    }),
   }
 
   saveSession(eventId, session)

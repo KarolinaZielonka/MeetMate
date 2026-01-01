@@ -1,4 +1,4 @@
--- MeetSync Initial Database Schema
+-- MeetMate Initial Database Schema
 -- This migration creates the core tables for the application
 
 -- Enable UUID extension

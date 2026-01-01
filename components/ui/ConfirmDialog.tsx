@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode } from "react"
+import type { ReactNode } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -72,14 +72,10 @@ export function ConfirmDialog({
             {icon}
             {title}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-base">
-            {description}
-          </AlertDialogDescription>
+          <AlertDialogDescription className="text-base">{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>
-            {cancelText}
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>{cancelText}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isLoading}

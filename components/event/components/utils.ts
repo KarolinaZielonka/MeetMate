@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format } from "date-fns"
 
 /**
  * Formats a date string for display
@@ -7,12 +7,12 @@ import { format } from "date-fns";
  * @returns Formatted date string
  */
 export function formatDate(dateString: string, short = false): string {
-	try {
-		if (short) {
-			return format(new Date(dateString), "EEE, MMM d, yyyy");
-		}
-		return format(new Date(dateString), "EEEE, MMMM d, yyyy");
-	} catch {
-		return dateString;
-	}
+  try {
+    if (short) {
+      return format(new Date(dateString), "EEE, MMM d, yyyy")
+    }
+    return format(new Date(dateString), "EEEE, MMMM d, yyyy")
+  } catch {
+    return dateString
+  }
 }

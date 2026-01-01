@@ -1,4 +1,4 @@
-// Core type definitions for MeetSync
+// Core type definitions for MeetMate
 
 export type AvailabilityStatus = "available" | "maybe" | "unavailable"
 
@@ -10,11 +10,11 @@ export interface Event {
   name: string
   start_date: string
   end_date: string
-  password_hash?: string
-  creator_name?: string
+  creator_name: string | null
   is_locked: boolean
-  calculated_date?: string
+  calculated_date: string | null
   share_url: string
+  has_password: boolean
 }
 
 export interface Participant {
