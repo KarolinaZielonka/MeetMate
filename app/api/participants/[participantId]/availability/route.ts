@@ -1,50 +1,50 @@
-import { supabase } from "@/lib/supabase/client"
-import { NextResponse } from "next/server"
+import {
+  combineValidations,
+  createApiHandler,
+  fetchSingleRecord,
+  validateRequired,
+  validateUUID,
+} from "@/lib/api"
 import type { AvailabilityStatus } from "@/types"
+
+/**
+ * Availability map response type
+ */
+type AvailabilityMapResponse = Record<string, AvailabilityStatus>
 
 /**
  * GET /api/participants/[participantId]/availability
  * Fetch availability for a specific participant
- *
- * Response: {
- *   data: Record<string, AvailabilityStatus> | null,
- *   error: string | null
- * }
  */
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ participantId: string }> }
-) {
-  try {
-    const { participantId } = await params
+export const GET = createApiHandler<never, AvailabilityMapResponse>({
+  // Validate params
+  validate: async (_body, params) => {
+    return combineValidations(
+      validateRequired({ participantId: params.participantId }, ["participantId"]),
+      validateUUID(params.participantId, "participantId")
+    )
+  },
 
-    if (!participantId) {
-      return NextResponse.json({ data: null, error: "participantId is required" }, { status: 400 })
-    }
-
+  // Main handler logic
+  handler: async (_body, params, client) => {
     // Verify participant exists
-    const { data: participant, error: participantError } = await supabase
-      .from("participants")
-      .select("id")
-      .eq("id", participantId)
-      .single()
-
-    if (participantError || !participant) {
-      return NextResponse.json({ data: null, error: "Participant not found" }, { status: 404 })
-    }
+    await fetchSingleRecord<{ id: string }>(
+      client,
+      "participants",
+      "id",
+      params.participantId,
+      "id"
+    )
 
     // Fetch availability records
-    const { data: availabilityRecords, error: availabilityError } = await supabase
+    const { data: availabilityRecords, error: availabilityError } = await client
       .from("availability")
       .select("date, status")
-      .eq("participant_id", participantId)
+      .eq("participant_id", params.participantId)
 
     if (availabilityError) {
       console.error("Availability fetch error:", availabilityError)
-      return NextResponse.json(
-        { data: null, error: "Failed to fetch availability" },
-        { status: 500 }
-      )
+      throw new Error("Failed to fetch availability")
     }
 
     // Convert array to map: { "2024-01-15": "available", ... }
@@ -53,12 +53,16 @@ export async function GET(
       availabilityMap[record.date] = record.status as AvailabilityStatus
     }
 
-    return NextResponse.json({
-      data: availabilityMap,
-      error: null,
-    })
-  } catch (error) {
-    console.error("Availability fetch error:", error)
-    return NextResponse.json({ data: null, error: "Internal server error" }, { status: 500 })
-  }
-}
+    return availabilityMap
+  },
+
+  // Success status
+  successStatus: 200,
+
+  // Custom error messages
+  errorMessages: {
+    validation: "Invalid participant ID",
+    notFound: "Participant not found",
+    serverError: "Failed to fetch availability",
+  },
+})

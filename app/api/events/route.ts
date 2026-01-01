@@ -1,43 +1,84 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase/client"
+import type { NextRequest } from "next/server"
+import {
+  ApiError,
+  combineValidations,
+  createApiHandler,
+  validateRequired,
+  validateString,
+} from "@/lib/api"
 import { hashPassword } from "@/lib/utils/auth"
 import { formatDateForAPI, parseDate, validateDateRange } from "@/lib/utils/dates"
 import { generateUniqueShareUrl } from "@/lib/utils/urlGenerator"
 
 /**
+ * Request body type for event creation
+ */
+interface CreateEventBody {
+  name: string
+  start_date: string
+  end_date: string
+  creator_name?: string
+  password?: string
+}
+
+/**
+ * Response type for event creation
+ */
+interface CreateEventResponse {
+  id: string
+  share_url: string
+  name: string
+  start_date: string
+  end_date: string
+  creator_name: string | null
+  is_locked: boolean
+  participant: {
+    participant_id: string
+    session_token: string
+  } | null
+}
+
+/**
  * POST /api/events
  * Create a new event
  */
-export async function POST(request: NextRequest) {
-  try {
+export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
+  // Parse request body
+  parseBody: async (request: NextRequest) => {
     const body = await request.json()
-    const { name, start_date, end_date, creator_name, password } = body
+    return {
+      name: body.name,
+      start_date: body.start_date,
+      end_date: body.end_date,
+      creator_name: body.creator_name,
+      password: body.password,
+    }
+  },
 
+  // Validate inputs
+  validate: async (body, _params) => {
     // Validate required fields
-    if (!name || typeof name !== "string") {
-      return NextResponse.json({ data: null, error: "Event name is required" }, { status: 400 })
-    }
+    const requiredValidation = validateRequired(
+      { name: body.name, start_date: body.start_date, end_date: body.end_date },
+      ["name", "start_date", "end_date"]
+    )
 
-    if (name.length < 1 || name.length > 255) {
-      return NextResponse.json(
-        { data: null, error: "Event name must be between 1 and 255 characters" },
-        { status: 400 }
-      )
-    }
+    // Validate string lengths
+    const nameValidation = validateString(body.name, "name", { minLength: 1, maxLength: 255 })
 
-    if (!start_date || !end_date) {
-      return NextResponse.json(
-        { data: null, error: "Start date and end date are required" },
-        { status: 400 }
-      )
-    }
+    const creatorNameValidation = body.creator_name
+      ? validateString(body.creator_name, "creator_name", { minLength: 1, maxLength: 100 })
+      : { valid: true }
 
-    // Validate creator name if provided
-    if (creator_name && (creator_name.length < 1 || creator_name.length > 100)) {
-      return NextResponse.json(
-        { data: null, error: "Creator name must be between 1 and 100 characters" },
-        { status: 400 }
-      )
+    // Combine validations
+    const combinedValidation = combineValidations(
+      requiredValidation,
+      nameValidation,
+      creatorNameValidation
+    )
+
+    if (!combinedValidation.valid) {
+      return combinedValidation
     }
 
     // Validate date range
@@ -45,34 +86,45 @@ export async function POST(request: NextRequest) {
     let parsedEndDate: Date
 
     try {
-      parsedStartDate = parseDate(start_date)
-      parsedEndDate = parseDate(end_date)
+      parsedStartDate = parseDate(body.start_date)
+      parsedEndDate = parseDate(body.end_date)
     } catch (_error) {
-      return NextResponse.json(
-        { data: null, error: "Invalid date format. Please use ISO date strings (YYYY-MM-DD)" },
-        { status: 400 }
-      )
+      return {
+        valid: false,
+        error: "Invalid date format. Please use ISO date strings (YYYY-MM-DD)",
+        status: 400,
+      }
     }
 
     const dateValidation = validateDateRange(parsedStartDate, parsedEndDate)
     if (!dateValidation.valid) {
-      return NextResponse.json({ data: null, error: dateValidation.error }, { status: 400 })
+      return {
+        valid: false,
+        error: dateValidation.error || "Invalid date range",
+        status: 400,
+      }
     }
+
+    return { valid: true }
+  },
+
+  // Main handler logic
+  handler: async (body, _params, client) => {
+    // Parse dates
+    const parsedStartDate = parseDate(body.start_date)
+    const parsedEndDate = parseDate(body.end_date)
 
     // Generate unique share URL
     const shareUrl = await generateUniqueShareUrl()
 
     // Hash password if provided
     let passwordHash: string | null = null
-    if (password && typeof password === "string" && password.length > 0) {
+    if (body.password && typeof body.password === "string" && body.password.length > 0) {
       try {
-        passwordHash = await hashPassword(password)
+        passwordHash = await hashPassword(body.password)
       } catch (error) {
         console.error("Error hashing password:", error)
-        return NextResponse.json(
-          { data: null, error: "Failed to process password" },
-          { status: 500 }
-        )
+        throw new ApiError("Failed to process password", 500)
       }
     }
 
@@ -81,39 +133,36 @@ export async function POST(request: NextRequest) {
     const formattedEndDate = formatDateForAPI(parsedEndDate)
 
     // Insert event into database
-    const { data, error } = await supabase
+    const { data: event, error: eventError } = await client
       .from("events")
       .insert({
-        name: name.trim(),
+        name: body.name.trim(),
         start_date: formattedStartDate,
         end_date: formattedEndDate,
         share_url: shareUrl,
         password_hash: passwordHash,
-        creator_name: creator_name?.trim() || null,
+        creator_name: body.creator_name?.trim() || null,
         is_locked: false,
         calculated_date: null,
       })
       .select("id, share_url, name, start_date, end_date, creator_name, is_locked")
       .single()
 
-    if (error) {
-      console.error("Database error creating event:", error)
-      return NextResponse.json(
-        { data: null, error: "Failed to create event. Please try again." },
-        { status: 500 }
-      )
+    if (eventError) {
+      console.error("Database error creating event:", eventError)
+      throw new ApiError("Failed to create event. Please try again.", 500)
     }
 
     // Automatically create a participant record for the creator if they provided a name
-    let participantData = null
-    if (creator_name && creator_name.trim().length > 0) {
+    let participantData: { participant_id: string; session_token: string } | null = null
+    if (body.creator_name && body.creator_name.trim().length > 0) {
       const sessionToken = crypto.randomUUID()
 
-      const { data: participant, error: participantError } = await supabase
+      const { data: participant, error: participantError } = await client
         .from("participants")
         .insert({
-          event_id: data.id,
-          name: creator_name.trim(),
+          event_id: event.id,
+          name: body.creator_name.trim(),
           session_token: sessionToken,
           has_submitted: false,
         })
@@ -129,24 +178,24 @@ export async function POST(request: NextRequest) {
     }
 
     // Return success response
-    return NextResponse.json(
-      {
-        data: {
-          id: data.id,
-          share_url: data.share_url,
-          name: data.name,
-          start_date: data.start_date,
-          end_date: data.end_date,
-          creator_name: data.creator_name,
-          is_locked: data.is_locked,
-          participant: participantData,
-        },
-        error: null,
-      },
-      { status: 201 }
-    )
-  } catch (error) {
-    console.error("Unexpected error in POST /api/events:", error)
-    return NextResponse.json({ data: null, error: "An unexpected error occurred" }, { status: 500 })
-  }
-}
+    return {
+      id: event.id,
+      share_url: event.share_url,
+      name: event.name,
+      start_date: event.start_date,
+      end_date: event.end_date,
+      creator_name: event.creator_name,
+      is_locked: event.is_locked,
+      participant: participantData,
+    }
+  },
+
+  // Success status
+  successStatus: 201,
+
+  // Custom error messages
+  errorMessages: {
+    validation: "Invalid event data",
+    serverError: "Failed to create event. Please try again.",
+  },
+})

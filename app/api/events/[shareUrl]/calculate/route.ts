@@ -1,47 +1,40 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase/client";
-import { calculateOptimalDates } from "@/lib/utils/dateCalculation";
+import { createApiHandler, fetchSingleRecord, validateRequired } from "@/lib/api"
+import { calculateOptimalDates } from "@/lib/utils/dateCalculation"
+import type { DateScore } from "@/types"
 
-export async function GET(
-	request: Request,
-	{ params }: { params: Promise<{ shareUrl: string }> },
-) {
-	try {
-		const { shareUrl } = await params;
+/**
+ * GET /api/events/[shareUrl]/calculate
+ * Calculate optimal dates for an event based on participant availability
+ */
+export const GET = createApiHandler<never, DateScore[]>({
+  // Validate params
+  validate: async (_body, params) => {
+    return validateRequired({ shareUrl: params.shareUrl }, ["shareUrl"])
+  },
 
-		if (!shareUrl) {
-			return NextResponse.json(
-				{ data: null, error: "Share URL is required" },
-				{ status: 400 },
-			);
-		}
+  // Main handler logic
+  handler: async (_body, params, client) => {
+    // Fetch the event to verify it exists
+    const event = await fetchSingleRecord<{ id: string; is_locked: boolean }>(
+      client,
+      "events",
+      "share_url",
+      params.shareUrl,
+      "id, is_locked"
+    )
 
-		// Fetch the event
-		const { data: event, error: eventError } = await supabase
-			.from("events")
-			.select("id, is_locked")
-			.eq("share_url", shareUrl)
-			.single();
+    // Calculate optimal dates
+    const dateScores = await calculateOptimalDates(event.id)
 
-		if (eventError || !event) {
-			return NextResponse.json(
-				{ data: null, error: "Event not found" },
-				{ status: 404 },
-			);
-		}
+    return dateScores
+  },
 
-		// Calculate optimal dates
-		const dateScores = await calculateOptimalDates(event.id);
+  // Success status
+  successStatus: 200,
 
-		return NextResponse.json({ data: dateScores, error: null });
-	} catch (error) {
-		console.error("Error calculating optimal dates:", error);
-		return NextResponse.json(
-			{
-				data: null,
-				error: "Failed to calculate optimal dates. Please try again.",
-			},
-			{ status: 500 },
-		);
-	}
-}
+  // Custom error messages
+  errorMessages: {
+    notFound: "Event not found",
+    serverError: "Failed to calculate optimal dates. Please try again.",
+  },
+})

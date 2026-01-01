@@ -11,7 +11,7 @@ import { useSwipeNavigation } from "@/hooks/useSwipeNavigation"
 import { useDateSelection } from "@/hooks/useDateSelection"
 import type { DateRangePickerProps } from "./types"
 import { cn } from "@/lib/utils"
-import { Instructions } from "./Instructions"
+import { Instructions } from "./components/Instructions"
 
 export function DateRangePicker({
   startDate,

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { getSession, isParticipant } from "@/lib/utils/session"
@@ -7,14 +8,9 @@ import type { EventData, UseAvailabilityManagementResult } from "./types"
 export function useAvailabilityManagement(
   event: EventData | null,
   refreshTrigger: number,
-  onAvailabilityUpdate: () => void,
-  translations: {
-    errorSubmit: string
-    noSelections: string
-    successSubmit: string
-    successUpdate: string
-  }
+  onAvailabilityUpdate: () => void
 ): UseAvailabilityManagementResult {
+  const t = useTranslations("eventPage.availability")
   const [availabilitySelections, setAvailabilitySelections] = useState<
     Map<string, AvailabilityStatus>
   >(new Map())
@@ -58,12 +54,12 @@ export function useAvailabilityManagement(
     const session = getSession(event.id)
 
     if (!session?.participantId) {
-      toast.error(translations.errorSubmit)
+      toast.error(t("errorSubmit"))
       return
     }
 
     if (availabilitySelections.size === 0) {
-      toast.error(translations.noSelections)
+      toast.error(t("noSelections"))
       return
     }
 
@@ -88,16 +84,16 @@ export function useAvailabilityManagement(
       const result = await response.json()
 
       if (response.ok && result.data?.success) {
-        toast.success(hasSubmitted ? translations.successUpdate : translations.successSubmit)
+        toast.success(hasSubmitted ? t("successUpdate") : t("successSubmit"))
         setHasSubmitted(true)
         setIsEditingAvailability(false)
         onAvailabilityUpdate()
       } else {
-        toast.error(result.error || translations.errorSubmit)
+        toast.error(result.error || t("errorSubmit"))
       }
     } catch (err) {
       console.error("Error submitting availability:", err)
-      toast.error(translations.errorSubmit)
+      toast.error(t("errorSubmit"))
     } finally {
       setIsSubmittingAvailability(false)
     }

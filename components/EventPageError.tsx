@@ -1,23 +1,16 @@
+import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useRouter } from "@/i18n/routing"
 
 interface EventPageErrorProps {
-  error: string
-  notFoundMessage: string
-  isNotFound: boolean
-  goHomeText: string
-  oopsText: string
+  error?: string
+  isNotFound?: boolean
 }
 
-export function EventPageError({
-  error,
-  notFoundMessage,
-  isNotFound,
-  goHomeText,
-  oopsText,
-}: EventPageErrorProps) {
+export function EventPageError({ error, isNotFound = false }: EventPageErrorProps) {
   const router = useRouter()
+  const t = useTranslations("eventPage.errors")
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-12 px-4">
@@ -40,18 +33,28 @@ export function EventPageError({
               </svg>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-3">
-              {isNotFound ? notFoundMessage : oopsText}
+              {isNotFound ? t("notFound") : t("oops")}
             </h1>
             <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">
-              {error || notFoundMessage}
+              {error || t("notFoundMessage")}
             </p>
-            <Button
-              onClick={() => router.push("/")}
-              size="lg"
-              className="bg-gradient-primary hover:opacity-90 hover-lift"
-            >
-              {goHomeText}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                onClick={() => router.push("/")}
+                size="lg"
+                className="bg-gradient-primary hover:opacity-90 hover-lift"
+              >
+                {t("goHome")}
+              </Button>
+              <Button
+                onClick={() => window.location.reload()}
+                size="lg"
+                variant="outline"
+                className="hover-lift"
+              >
+                {t("refreshPage")}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

@@ -1,36 +1,38 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase/client"
+import { createApiHandler, fetchSingleRecord, validateRequired } from "@/lib/api"
+
+/**
+ * Participant response type
+ */
+interface ParticipantResponse {
+  id: string
+  name: string
+  has_submitted: boolean
+  created_at: string
+}
 
 /**
  * GET /api/events/[shareUrl]/participants
  * Fetch all participants for an event
- *
- * Returns: { data: Participant[], error: null } | { data: null, error: string }
  */
-export async function GET(
-  _request: NextRequest,
-  { params }: { params: Promise<{ shareUrl: string }> }
-) {
-  try {
-    const { shareUrl } = await params
+export const GET = createApiHandler<never, ParticipantResponse[]>({
+  // Validate params
+  validate: async (_body, params) => {
+    return validateRequired({ shareUrl: params.shareUrl }, ["shareUrl"])
+  },
 
-    if (!shareUrl) {
-      return NextResponse.json({ data: null, error: "Share URL is required" }, { status: 400 })
-    }
-
+  // Main handler logic
+  handler: async (_body, params, client) => {
     // First, get the event ID from share URL
-    const { data: event, error: eventError } = await supabase
-      .from("events")
-      .select("id")
-      .eq("share_url", shareUrl)
-      .single()
-
-    if (eventError || !event) {
-      return NextResponse.json({ data: null, error: "Event not found" }, { status: 404 })
-    }
+    const event = await fetchSingleRecord<{ id: string }>(
+      client,
+      "events",
+      "share_url",
+      params.shareUrl,
+      "id"
+    )
 
     // Fetch all participants for this event
-    const { data: participants, error: participantsError } = await supabase
+    const { data: participants, error: participantsError } = await client
       .from("participants")
       .select("id, name, has_submitted, created_at")
       .eq("event_id", event.id)
@@ -38,21 +40,18 @@ export async function GET(
 
     if (participantsError) {
       console.error("Error fetching participants:", participantsError)
-      return NextResponse.json(
-        { data: null, error: "Failed to fetch participants" },
-        { status: 500 }
-      )
+      throw new Error("Failed to fetch participants")
     }
 
-    return NextResponse.json(
-      {
-        data: participants || [],
-        error: null,
-      },
-      { status: 200 }
-    )
-  } catch (error) {
-    console.error("Unexpected error in GET /api/events/[shareUrl]/participants:", error)
-    return NextResponse.json({ data: null, error: "Internal server error" }, { status: 500 })
-  }
-}
+    return participants || []
+  },
+
+  // Success status
+  successStatus: 200,
+
+  // Custom error messages
+  errorMessages: {
+    notFound: "Event not found",
+    serverError: "Failed to fetch participants",
+  },
+})

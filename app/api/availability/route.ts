@@ -1,108 +1,154 @@
-import { NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase/client"
+import type { NextRequest } from "next/server"
+import {
+  ApiError,
+  createApiHandler,
+  fetchSingleRecord,
+  validateDateFormat,
+  validateRequired,
+} from "@/lib/api"
 import type { AvailabilityStatus } from "@/types"
+
+/**
+ * Date entry in availability submission
+ */
+interface DateEntry {
+  date: string
+  status: AvailabilityStatus
+}
+
+/**
+ * Body type for availability submission
+ */
+interface AvailabilityBody {
+  participant_id: string
+  dates: DateEntry[]
+}
+
+/**
+ * Response type for availability submission
+ */
+interface AvailabilityResponse {
+  success: boolean
+}
 
 /**
  * POST /api/availability
  * Submit or update participant availability
- *
- * Body: {
- *   participant_id: string (UUID)
- *   dates: Array<{ date: string (YYYY-MM-DD), status: AvailabilityStatus }>
- * }
- *
- * Response: { data: { success: boolean }, error: string | null }
  */
-export async function POST(request: Request) {
-  try {
+export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
+  // Parse request body
+  parseBody: async (request: NextRequest) => {
     const body = await request.json()
-    const { participant_id, dates } = body
+    return {
+      participant_id: body.participant_id,
+      dates: body.dates || [],
+    }
+  },
 
-    // Validation
-    if (!participant_id || typeof participant_id !== "string") {
-      return NextResponse.json({ data: null, error: "participant_id is required" }, { status: 400 })
+  // Validate inputs
+  validate: async (body, _params) => {
+    // Validate required fields
+    const requiredValidation = validateRequired({ participant_id: body.participant_id }, [
+      "participant_id",
+    ])
+
+    if (!requiredValidation.valid) {
+      return requiredValidation
     }
 
-    if (!Array.isArray(dates) || dates.length === 0) {
-      return NextResponse.json(
-        { data: null, error: "dates array is required and cannot be empty" },
-        { status: 400 }
-      )
+    // Validate participant_id is a string
+    if (typeof body.participant_id !== "string") {
+      return {
+        valid: false,
+        error: "participant_id must be a string",
+        status: 400,
+      }
     }
 
-    // Validate date format and status
+    // Validate dates array
+    if (!Array.isArray(body.dates) || body.dates.length === 0) {
+      return {
+        valid: false,
+        error: "dates array is required and cannot be empty",
+        status: 400,
+      }
+    }
+
+    // Validate each date entry
     const validStatuses: AvailabilityStatus[] = ["available", "maybe", "unavailable"]
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 
-    for (const dateEntry of dates) {
-      if (!dateEntry.date || !dateRegex.test(dateEntry.date)) {
-        return NextResponse.json(
-          {
-            data: null,
-            error: `Invalid date format: ${dateEntry.date}. Expected YYYY-MM-DD`,
-          },
-          { status: 400 }
-        )
+    for (const dateEntry of body.dates) {
+      // Validate date format
+      const dateValidation = validateDateFormat(dateEntry.date, "date")
+      if (!dateValidation.valid) {
+        return {
+          valid: false,
+          error: `Invalid date format: ${dateEntry.date}. Expected YYYY-MM-DD`,
+          status: 400,
+        }
       }
 
+      // Validate status
       if (!validStatuses.includes(dateEntry.status)) {
-        return NextResponse.json(
-          {
-            data: null,
-            error: `Invalid status: ${dateEntry.status}. Must be available, maybe, or unavailable`,
-          },
-          { status: 400 }
-        )
+        return {
+          valid: false,
+          error: `Invalid status: ${dateEntry.status}. Must be available, maybe, or unavailable`,
+          status: 400,
+        }
       }
     }
 
-    // Verify participant exists
-    const { data: participant, error: participantError } = await supabase
-      .from("participants")
-      .select("id, event_id")
-      .eq("id", participant_id)
-      .single()
+    return { valid: true }
+  },
 
-    if (participantError || !participant) {
-      return NextResponse.json({ data: null, error: "Participant not found" }, { status: 404 })
-    }
+  // Main handler logic
+  handler: async (body, _params, client) => {
+    // Verify participant exists
+    await fetchSingleRecord<{ id: string; event_id: string }>(
+      client,
+      "participants",
+      "id",
+      body.participant_id,
+      "id, event_id"
+    )
 
     // Upsert availability records (insert or update on conflict)
-    const availabilityRecords = dates.map((dateEntry) => ({
-      participant_id,
+    const availabilityRecords = body.dates.map((dateEntry) => ({
+      participant_id: body.participant_id,
       date: dateEntry.date,
       status: dateEntry.status,
     }))
 
-    const { error: upsertError } = await supabase.from("availability").upsert(availabilityRecords, {
+    const { error: upsertError } = await client.from("availability").upsert(availabilityRecords, {
       onConflict: "participant_id,date",
     })
 
     if (upsertError) {
       console.error("Availability upsert error:", upsertError)
-      return NextResponse.json(
-        { data: null, error: "Failed to save availability" },
-        { status: 500 }
-      )
+      throw new ApiError("Failed to save availability", 500)
     }
 
     // Update participant has_submitted status
-    const { error: updateError } = await supabase
+    const { error: updateError } = await client
       .from("participants")
       .update({ has_submitted: true })
-      .eq("id", participant_id)
+      .eq("id", body.participant_id)
 
     if (updateError) {
       console.error("Participant update error:", updateError)
       // Non-critical error, availability is already saved
     }
 
-    return NextResponse.json({
-      data: { success: true },
-      error: null,
-    })
-  } catch (error) {
-    console.error("Availability submission error:", error)
-    return NextResponse.json({ data: null, error: "Internal server error" }, { status: 500 })
-  }
-}
+    return { success: true }
+  },
+
+  // Success status
+  successStatus: 200,
+
+  // Custom error messages
+  errorMessages: {
+    validation: "Invalid availability data",
+    notFound: "Participant not found",
+    serverError: "Failed to save availability",
+  },
+})

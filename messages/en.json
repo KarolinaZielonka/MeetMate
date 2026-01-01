@@ -145,7 +145,8 @@
       "notFound": "Event Not Found",
       "notFoundMessage": "Unable to load event. Please check the link and try again.",
       "oops": "Oops!",
-      "goHome": "Go to Homepage"
+      "goHome": "Go to Homepage",
+      "refreshPage": "Refresh Page"
     }
   },
   "aboutPage": {

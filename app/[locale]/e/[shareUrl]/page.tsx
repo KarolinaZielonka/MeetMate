@@ -4,19 +4,19 @@ import { useParams } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { EventPageError } from "@/components/EventPageError"
 import { EventPageSkeleton } from "@/components/EventPageSkeleton"
+import { AdminControls } from "@/components/event/AdminControls"
+import { AvailabilitySection } from "@/components/event/AvailabilitySection"
 import { EventHeader } from "@/components/event/EventHeader"
 import { JoinEventForm } from "@/components/event/JoinEventForm"
 import { OptimalDatesDisplay } from "@/components/event/OptimalDatesDisplay"
 import { PasswordDialog } from "@/components/event/PasswordDialog"
 import { ParticipantList } from "@/components/participants/ParticipantList"
-import { AvailabilitySection } from "@/components/event/AvailabilitySection"
-import { AdminControls } from "@/components/event/AdminControls"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { getSession, isParticipant } from "@/lib/utils/session"
-import { useRealtimeEvent } from "@/hooks/useRealtimeEvent"
+import { useAvailabilityManagement } from "@/hooks/useAvailabilityManagement"
 import { useEventData } from "@/hooks/useEventData"
 import { usePasswordProtection } from "@/hooks/usePasswordProtection"
-import { useAvailabilityManagement } from "@/hooks/useAvailabilityManagement"
+import { useRealtimeEvent } from "@/hooks/useRealtimeEvent"
+import { getSession, isParticipant } from "@/lib/utils/session"
 
 export default function EventPage() {
   const params = useParams()
@@ -33,10 +33,7 @@ export default function EventPage() {
     setUserRole,
     refreshTrigger,
     triggerRefresh,
-  } = useEventData(shareUrl, {
-    notFound: t("errors.notFound"),
-    notFoundMessage: t("errors.notFoundMessage"),
-  })
+  } = useEventData(shareUrl)
 
   const { isPasswordVerified, showPasswordDialog, handlePasswordSuccess } =
     usePasswordProtection(event)
@@ -50,12 +47,7 @@ export default function EventPage() {
     setIsEditingAvailability,
     handleSubmitAvailability,
     handleCancelEdit,
-  } = useAvailabilityManagement(event, refreshTrigger, triggerRefresh, {
-    errorSubmit: t("availability.errorSubmit"),
-    noSelections: t("availability.noSelections"),
-    successSubmit: t("availability.successSubmit"),
-    successUpdate: t("availability.successUpdate"),
-  })
+  } = useAvailabilityManagement(event, refreshTrigger, triggerRefresh)
 
   // Real-time subscriptions
   useRealtimeEvent({
@@ -95,15 +87,7 @@ export default function EventPage() {
 
   // Error state
   if (error || !event) {
-    return (
-      <EventPageError
-        error={error || t("errors.notFoundMessage")}
-        notFoundMessage={t("errors.notFound")}
-        isNotFound={error === t("errors.notFound")}
-        goHomeText={t("errors.goHome")}
-        oopsText={t("errors.oops")}
-      />
-    )
+    return <EventPageError error={error || undefined} isNotFound={error === t("errors.notFound")} />
   }
 
   return (

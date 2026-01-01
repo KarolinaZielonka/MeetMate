@@ -1,63 +1,79 @@
-import { type NextRequest, NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 import { v4 as uuidv4 } from "uuid"
-import { supabase } from "@/lib/supabase/client"
+import {
+  ApiError,
+  combineValidations,
+  createApiHandler,
+  fetchSingleRecord,
+  validateRequired,
+  validateString,
+  validateUUID,
+} from "@/lib/api"
+
+/**
+ * Request body type for participant creation
+ */
+interface CreateParticipantBody {
+  event_id: string
+  name: string
+}
+
+/**
+ * Response type for participant creation
+ */
+interface CreateParticipantResponse {
+  id: string
+  session_token: string
+}
 
 /**
  * POST /api/participants
  * Create a new participant for an event
- *
- * Body: { event_id: string, name: string }
- * Returns: { data: { id: string, session_token: string }, error: null } | { data: null, error: string }
  */
-export async function POST(request: NextRequest) {
-  try {
+export const POST = createApiHandler<CreateParticipantBody, CreateParticipantResponse>({
+  // Parse request body
+  parseBody: async (request: NextRequest) => {
     const body = await request.json()
-    const { event_id, name } = body
-
-    // Validation
-    if (!event_id || typeof event_id !== "string") {
-      return NextResponse.json({ data: null, error: "Event ID is required" }, { status: 400 })
+    return {
+      event_id: body.event_id,
+      name: body.name,
     }
+  },
 
-    if (!name || typeof name !== "string" || name.trim().length === 0) {
-      return NextResponse.json({ data: null, error: "Name is required" }, { status: 400 })
-    }
+  // Validate inputs
+  validate: async (body, _params) => {
+    return combineValidations(
+      validateRequired({ event_id: body.event_id, name: body.name }, ["event_id", "name"]),
+      validateUUID(body.event_id, "event_id"),
+      validateString(body.name, "name", { minLength: 1, maxLength: 100 })
+    )
+  },
 
-    if (name.trim().length > 100) {
-      return NextResponse.json(
-        { data: null, error: "Name must be 100 characters or less" },
-        { status: 400 }
-      )
-    }
-
-    // Verify event exists
-    const { data: event, error: eventError } = await supabase
-      .from("events")
-      .select("id, is_locked")
-      .eq("id", event_id)
-      .single()
-
-    if (eventError || !event) {
-      return NextResponse.json({ data: null, error: "Event not found" }, { status: 404 })
-    }
+  // Main handler logic
+  handler: async (body, _params, client) => {
+    // Verify event exists and is not locked
+    const event = await fetchSingleRecord<{ id: string; is_locked: boolean }>(
+      client,
+      "events",
+      "id",
+      body.event_id,
+      "id, is_locked"
+    )
 
     // Check if event is locked
     if (event.is_locked) {
-      return NextResponse.json(
-        { data: null, error: "This event is locked and no longer accepting participants" },
-        { status: 403 }
-      )
+      throw new ApiError("This event is locked and no longer accepting participants", 403)
     }
 
     // Generate unique session token (UUID v4)
     const sessionToken = uuidv4()
 
     // Insert participant
-    const { data: participant, error: insertError } = await supabase
+    const { data: participant, error: insertError } = await client
       .from("participants")
       .insert({
-        event_id,
-        name: name.trim(),
+        event_id: body.event_id,
+        name: body.name.trim(),
         session_token: sessionToken,
         has_submitted: false,
       })
@@ -66,24 +82,22 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error("Error inserting participant:", insertError)
-      return NextResponse.json(
-        { data: null, error: "Failed to create participant" },
-        { status: 500 }
-      )
+      throw new ApiError("Failed to create participant", 500)
     }
 
-    return NextResponse.json(
-      {
-        data: {
-          id: participant.id,
-          session_token: participant.session_token,
-        },
-        error: null,
-      },
-      { status: 201 }
-    )
-  } catch (error) {
-    console.error("Unexpected error in POST /api/participants:", error)
-    return NextResponse.json({ data: null, error: "Internal server error" }, { status: 500 })
-  }
-}
+    return {
+      id: participant.id,
+      session_token: participant.session_token,
+    }
+  },
+
+  // Success status
+  successStatus: 201,
+
+  // Custom error messages
+  errorMessages: {
+    validation: "Invalid participant data",
+    notFound: "Event not found",
+    serverError: "Failed to create participant",
+  },
+})

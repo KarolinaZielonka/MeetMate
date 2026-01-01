@@ -145,7 +145,8 @@
       "notFound": "Nie znaleziono wydarzenia",
       "notFoundMessage": "Nie można załadować wydarzenia. Sprawdź link i spróbuj ponownie.",
       "oops": "Ups!",
-      "goHome": "Przejdź do strony głównej"
+      "goHome": "Przejdź do strony głównej",
+      "refreshPage": "Odśwież stronę"
     }
   },
   "aboutPage": {

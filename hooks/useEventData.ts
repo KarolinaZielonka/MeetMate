@@ -1,15 +1,11 @@
+import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { getSession } from "@/lib/utils/session"
 import type { UserRole } from "@/types"
 import type { EventData, UseEventDataResult } from "./types"
 
-export function useEventData(
-  shareUrl: string,
-  translations: {
-    notFound: string
-    notFoundMessage: string
-  }
-): UseEventDataResult {
+export function useEventData(shareUrl: string): UseEventDataResult {
+  const t = useTranslations("eventPage.errors")
   const [event, setEvent] = useState<EventData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -29,9 +25,9 @@ export function useEventData(
 
         if (!response.ok || result.error) {
           if (response.status === 404) {
-            setError(translations.notFound)
+            setError(t("notFound"))
           } else {
-            setError(result.error || translations.notFoundMessage)
+            setError(result.error || t("notFoundMessage"))
           }
           setIsLoading(false)
           return
@@ -48,7 +44,7 @@ export function useEventData(
         setIsLoading(false)
       } catch (err) {
         console.error("Error fetching event:", err)
-        setError(translations.notFoundMessage)
+        setError(t("notFoundMessage"))
         setIsLoading(false)
       }
     }
@@ -56,7 +52,7 @@ export function useEventData(
     if (shareUrl) {
       fetchEvent()
     }
-  }, [shareUrl, translations.notFound, translations.notFoundMessage])
+  }, [shareUrl, t])
 
   return {
     event,

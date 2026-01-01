@@ -1,91 +1,103 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase/client";
-import { supabaseAdmin } from "@/lib/supabase/server";
+import type { NextRequest } from "next/server"
+import {
+  ApiError,
+  combineValidations,
+  createApiHandler,
+  fetchSingleRecord,
+  validateDateFormat,
+  validateRequired,
+} from "@/lib/api"
 
-export async function POST(
-	request: Request,
-	{ params }: { params: Promise<{ shareUrl: string }> },
-) {
-	try {
-		const { shareUrl } = await params;
-		const body = await request.json();
-		const { chosen_date } = body;
-
-		if (!shareUrl) {
-			return NextResponse.json(
-				{ data: null, error: "Share URL is required" },
-				{ status: 400 },
-			);
-		}
-
-		if (!chosen_date) {
-			return NextResponse.json(
-				{ data: null, error: "Chosen date is required" },
-				{ status: 400 },
-			);
-		}
-
-		// Validate date format (YYYY-MM-DD)
-		const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-		if (!dateRegex.test(chosen_date)) {
-			return NextResponse.json(
-				{ data: null, error: "Invalid date format. Expected YYYY-MM-DD" },
-				{ status: 400 },
-			);
-		}
-
-		// Fetch the event
-		const { data: event, error: eventError } = await supabase
-			.from("events")
-			.select("id, is_locked")
-			.eq("share_url", shareUrl)
-			.single();
-
-		if (eventError || !event) {
-			return NextResponse.json(
-				{ data: null, error: "Event not found" },
-				{ status: 404 },
-			);
-		}
-
-		// Check if event is already locked
-		if (event.is_locked) {
-			return NextResponse.json(
-				{ data: null, error: "Event is already locked" },
-				{ status: 400 },
-			);
-		}
-
-		// Note: Session verification removed as getSession only works client-side (localStorage)
-		// The share URL acts as the authentication mechanism - only those with the URL can access
-		// In a future update, we should add an admin_token field to the events table for proper verification
-
-		// Lock the event and set the calculated date
-		// Use supabaseAdmin to bypass RLS for UPDATE operations
-		const { data: updatedEvent, error: updateError } = await supabaseAdmin
-			.from("events")
-			.update({
-				is_locked: true,
-				calculated_date: chosen_date,
-			})
-			.eq("id", event.id)
-			.select()
-			.single();
-
-		if (updateError) {
-			console.error("Error locking event:", updateError);
-			return NextResponse.json(
-				{ data: null, error: "Failed to lock event. Please try again." },
-				{ status: 500 },
-			);
-		}
-
-		return NextResponse.json({ data: updatedEvent, error: null });
-	} catch (error) {
-		console.error("Error locking event:", error);
-		return NextResponse.json(
-			{ data: null, error: "Failed to lock event. Please try again." },
-			{ status: 500 },
-		);
-	}
+/**
+ * Body type for lock event request
+ */
+interface LockEventBody {
+  chosen_date: string
 }
+
+/**
+ * Response type for lock event
+ */
+interface LockEventResponse {
+  id: string
+  name: string
+  is_locked: boolean
+  calculated_date: string
+  [key: string]: unknown
+}
+
+/**
+ * POST /api/events/[shareUrl]/lock
+ * Lock event with chosen date
+ */
+export const POST = createApiHandler<LockEventBody, LockEventResponse>({
+  // Parse request body
+  parseBody: async (request: NextRequest) => {
+    const body = await request.json()
+    return {
+      chosen_date: body.chosen_date,
+    }
+  },
+
+  // Validate inputs
+  validate: async (body, params) => {
+    // Validate required fields
+    const requiredValidation = validateRequired(
+      { shareUrl: params.shareUrl, chosen_date: body.chosen_date },
+      ["shareUrl", "chosen_date"]
+    )
+
+    // Validate date format
+    const dateValidation = validateDateFormat(body.chosen_date, "chosen_date")
+
+    return combineValidations(requiredValidation, dateValidation)
+  },
+
+  // Main handler logic
+  handler: async (body, params, client) => {
+    // Fetch the event
+    const event = await fetchSingleRecord<{ id: string; is_locked: boolean }>(
+      client,
+      "events",
+      "share_url",
+      params.shareUrl,
+      "id, is_locked"
+    )
+
+    // Check if event is already locked
+    if (event.is_locked) {
+      throw new ApiError("Event is already locked", 400)
+    }
+
+    // Lock the event and set the calculated date
+    const { data: updatedEvent, error: updateError } = await client
+      .from("events")
+      .update({
+        is_locked: true,
+        calculated_date: body.chosen_date,
+      })
+      .eq("id", event.id)
+      .select()
+      .single()
+
+    if (updateError) {
+      console.error("Error locking event:", updateError)
+      throw new ApiError("Failed to lock event. Please try again.", 500)
+    }
+
+    return updatedEvent as LockEventResponse
+  },
+
+  // Use admin client to bypass RLS for UPDATE operations
+  useAdminClient: true,
+
+  // Success status
+  successStatus: 200,
+
+  // Custom error messages
+  errorMessages: {
+    validation: "Invalid request data",
+    notFound: "Event not found",
+    serverError: "Failed to lock event. Please try again.",
+  },
+})

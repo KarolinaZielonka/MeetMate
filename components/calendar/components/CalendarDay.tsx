@@ -2,8 +2,8 @@
 
 import type { AvailabilityStatus } from "@/types"
 import { cn } from "@/lib/utils"
-import type { CalendarDay as CalendarDayType } from "./types"
-import { getDateStyles } from "./utils/calendarUtils"
+import type { CalendarDay as CalendarDayType } from "@/components/calendar/types"
+import { getDateStyles } from "@/components/calendar/utils/calendarUtils"
 
 interface CalendarDayProps {
   day: CalendarDayType
