@@ -29,7 +29,7 @@
     --muted-foreground: 240 3.8% 46.1%;
 
     /* Accent Color - Warm Amber (friendly, energetic) */
-    --accent: 30 89% 55%; /* amber-400 - CTAs and highlights */
+    --accent: 42 90% 50%; /* amber-400 - CTAs and highlights */
     --accent-foreground: 26 83% 14%;
 
     /* Destructive/Error States */
@@ -206,6 +206,77 @@
 
   .dark .bg-gradient-accent {
     background: linear-gradient(135deg, #fdc74c 0%, #fbb82b 100%);
+  }
+
+  /* Feature card gradient backgrounds - colorful, theme-aware */
+
+  /* Purple gradient - creativity, innovation */
+  .gradient-purple {
+    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 50%, #ddd6fe 100%);
+  }
+
+  .dark .gradient-purple {
+    background: linear-gradient(135deg, hsl(270 8% 12%) 0%, hsl(270 10% 10%) 50%, hsl(260 8% 12%) 100%);
+  }
+
+  /* Blue gradient - trust, reliability */
+  .gradient-blue {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #dbeafe 100%);
+  }
+
+  .dark .gradient-blue {
+    background: linear-gradient(135deg, hsl(217 8% 12%) 0%, hsl(217 10% 10%) 50%, hsl(210 8% 12%) 100%);
+  }
+
+  /* Green gradient - growth, success */
+  .gradient-green {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #d1fae5 100%);
+  }
+
+  .dark .gradient-green {
+    background: linear-gradient(135deg, hsl(150 8% 12%) 0%, hsl(150 10% 10%) 50%, hsl(160 8% 12%) 100%);
+  }
+
+  /* Orange gradient - energy, enthusiasm */
+  .gradient-orange {
+    background: linear-gradient(135deg, #fed7aa 0%, #fdba74 50%, #fed7aa 100%);
+  }
+
+  .dark .gradient-orange {
+    background: linear-gradient(135deg, hsl(30 8% 12%) 0%, hsl(30 10% 10%) 50%, hsl(25 8% 12%) 100%);
+  }
+
+  /* Icon background colors matching gradients */
+  .icon-bg-purple {
+    background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%);
+  }
+
+  .dark .icon-bg-purple {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  }
+
+  .icon-bg-blue {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  }
+
+  .dark .icon-bg-blue {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  }
+
+  .icon-bg-green {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  }
+
+  .dark .icon-bg-green {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  }
+
+  .icon-bg-orange {
+    background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  }
+
+  .dark .icon-bg-orange {
+    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
   }
 
   /* Availability state utilities with dark mode support */

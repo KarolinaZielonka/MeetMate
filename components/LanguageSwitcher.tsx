@@ -47,9 +47,7 @@ export function LanguageSwitcher() {
           aria-label="Change language"
         >
           <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline-block">
-            {languages[locale].flag} {languages[locale].name}
-          </span>
+          <span className="hidden sm:inline-block">{languages[locale].name}</span>
           <span className="sm:hidden">{languages[locale].flag}</span>
         </Button>
       </DropdownMenuTrigger>
