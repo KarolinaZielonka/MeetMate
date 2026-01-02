@@ -17,7 +17,7 @@ interface CreateEventBody {
   name: string
   start_date: string
   end_date: string
-  creator_name?: string
+  creator_name: string
   password?: string
 }
 
@@ -59,16 +59,22 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
   validate: async (body, _params) => {
     // Validate required fields
     const requiredValidation = validateRequired(
-      { name: body.name, start_date: body.start_date, end_date: body.end_date },
-      ["name", "start_date", "end_date"]
+      {
+        name: body.name,
+        start_date: body.start_date,
+        end_date: body.end_date,
+        creator_name: body.creator_name,
+      },
+      ["name", "start_date", "end_date", "creator_name"]
     )
 
     // Validate string lengths
     const nameValidation = validateString(body.name, "name", { minLength: 1, maxLength: 255 })
 
-    const creatorNameValidation = body.creator_name
-      ? validateString(body.creator_name, "creator_name", { minLength: 1, maxLength: 100 })
-      : { valid: true }
+    const creatorNameValidation = validateString(body.creator_name, "creator_name", {
+      minLength: 1,
+      maxLength: 100,
+    })
 
     // Combine validations
     const combinedValidation = combineValidations(

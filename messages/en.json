@@ -21,26 +21,36 @@
     "english": "English",
     "polish": "Polski"
   },
+  "themeToggle": {
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode",
+    "loading": "Loading theme toggle"
+  },
   "homepage": {
     "badge": "No sign-up required",
     "title": "Find Time",
     "titleAccent": " Together",
-    "subtitle": "Coordinate group schedules in seconds. Share a link, pick dates, find what works.",
+    "titles": [
+      { "main": "Find Time", "accent": " Together" },
+      { "main": "Schedule", "accent": " Smarter" },
+      { "main": "Meet", "accent": " Better" }
+    ],
+    "subtitle": "The modern way to coordinate group schedules. No accounts, no clutter - just share a link and find what works.",
     "createEventButton": "Create Free Event",
     "howItWorksButton": "How It Works",
-    "socialProof": "Simple scheduling for teams, friends, and communities",
+    "socialProof": "Simple scheduling for friends, teams, and communities",
     "features": {
       "fast": {
-        "title": "Lightning Fast",
-        "description": "Create and share events in under 30 seconds. No registration, no friction."
+        "title": "Zero Friction",
+        "description": "Create events in under 30 seconds. Share a link. Done. No registration, no downloads, no hassle."
       },
       "realtime": {
-        "title": "Real-Time Updates",
-        "description": "See responses as they arrive. Live updates keep everyone in sync."
+        "title": "Live Updates",
+        "description": "Watch responses arrive in real-time. Everyone stays in sync as availability comes in."
       },
       "smart": {
-        "title": "Smart & Simple",
-        "description": "Automatically finds the best dates. Optional password protection included."
+        "title": "Smart Scheduling",
+        "description": "Automatically calculates the best dates based on everyone's availability. Add password protection if needed."
       }
     }
   },
@@ -58,6 +68,7 @@
     "dateRange": {
       "label": "Date Range",
       "required": "*",
+      "placeholder": "Select date range",
       "startDate": "Start Date",
       "endDate": "End Date",
       "daysInfo": "Date range: {days} days"
@@ -79,6 +90,7 @@
     "errors": {
       "nameRequired": "Event name is required",
       "datesRequired": "Both start and end dates are required",
+      "creatorNameRequired": "Your name is required",
       "invalidDate": "Invalid date format"
     }
   },
@@ -152,6 +164,8 @@
   "aboutPage": {
     "title": "How It Works",
     "subtitle": "Three simple steps to coordinate any group",
+    "whyTitle": "Why MeetMate?",
+    "whySubtitle": "Everything you need, nothing you don't",
     "steps": {
       "step1": {
         "title": "Create Your Event",
@@ -165,6 +179,11 @@
         "title": "Find the Perfect Time",
         "description": "See optimal dates ranked automatically. Lock in your meeting when ready."
       }
+    },
+    "features": {
+      "noSignup": "No sign-up required",
+      "realtime": "Live updates",
+      "secure": "Optional password protection"
     }
   },
   "validation": {

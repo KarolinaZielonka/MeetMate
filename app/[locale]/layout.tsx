@@ -2,7 +2,6 @@ import { Inter } from "next/font/google"
 import { notFound } from "next/navigation"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
-import { FloatingAboutButton } from "@/components/FloatingAboutButton"
 import { Header } from "@/components/Header"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { locales } from "@/i18n"
@@ -40,7 +39,7 @@ export default async function LocaleLayout({
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
@@ -48,7 +47,6 @@ export default async function LocaleLayout({
             <Toaster />
             <Header />
             {children}
-            <FloatingAboutButton />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

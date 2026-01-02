@@ -1,54 +1,53 @@
+import { Calendar, Sparkles, Users } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { AboutFeatures } from "@/components/about/AboutFeatures"
+import { AboutHero } from "@/components/about/AboutHero"
+import { StepCard } from "@/components/about/StepCard"
 
 export default function AboutPage() {
   const t = useTranslations("aboutPage")
 
+  const steps = [
+    {
+      icon: Calendar,
+      title: t("steps.step1.title"),
+      description: t("steps.step1.description"),
+      gradient: "gradient-blue" as const,
+      iconBg: "icon-bg-blue" as const,
+    },
+    {
+      icon: Users,
+      title: t("steps.step2.title"),
+      description: t("steps.step2.description"),
+      gradient: "gradient-purple" as const,
+      iconBg: "icon-bg-purple" as const,
+    },
+    {
+      icon: Sparkles,
+      title: t("steps.step3.title"),
+      description: t("steps.step3.description"),
+      gradient: "gradient-green" as const,
+      iconBg: "icon-bg-green" as const,
+    },
+  ]
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 pt-20 pb-24 bg-background">
-      {/* How It Works Section */}
-      <section className="pb-24 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12 fade-in">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{t("title")}</h2>
-            <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
-          </div>
-
-          <div className="space-y-8">
-            {/* Step 1 */}
-            <div className="flex gap-6 items-start group">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg transition-smooth group-hover:scale-110 group-hover:shadow-xl">
-                1
+    <main className="min-h-screen bg-background">
+      <AboutHero />
+      <section className="pb-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="relative space-y-6">
+            <div className="absolute left-7 top-16 bottom-16 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500 opacity-20 hidden lg:block" />
+            {steps.map((step) => (
+              <div key={step.title} className="relative">
+                <StepCard {...step} />
               </div>
-              <div className="flex-1 transition-smooth group-hover:translate-x-2">
-                <h3 className="text-xl font-bold text-foreground mb-2">{t("steps.step1.title")}</h3>
-                <p className="text-muted-foreground">{t("steps.step1.description")}</p>
-              </div>
-            </div>
-
-            {/* Step 2 */}
-            <div className="flex gap-6 items-start group">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg transition-smooth group-hover:scale-110 group-hover:shadow-xl">
-                2
-              </div>
-              <div className="flex-1 transition-smooth group-hover:translate-x-2">
-                <h3 className="text-xl font-bold text-foreground mb-2">{t("steps.step2.title")}</h3>
-                <p className="text-muted-foreground">{t("steps.step2.description")}</p>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="flex gap-6 items-start group">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg transition-smooth group-hover:scale-110 group-hover:shadow-xl">
-                3
-              </div>
-              <div className="flex-1 transition-smooth group-hover:translate-x-2">
-                <h3 className="text-xl font-bold text-foreground mb-2">{t("steps.step3.title")}</h3>
-                <p className="text-muted-foreground">{t("steps.step3.description")}</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
+
+      <AboutFeatures />
     </main>
   )
 }

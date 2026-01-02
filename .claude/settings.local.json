@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(pnpm create:*)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --eslint)",
+      "Bash(done)",
+      "Bash(ls:*)"
+    ]
+  }
+}

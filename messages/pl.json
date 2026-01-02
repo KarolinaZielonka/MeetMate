@@ -21,26 +21,36 @@
     "english": "English",
     "polish": "Polski"
   },
+  "themeToggle": {
+    "switchToLight": "Przełącz na jasny motyw",
+    "switchToDark": "Przełącz na ciemny motyw",
+    "loading": "Ładowanie przełącznika motywu"
+  },
   "homepage": {
     "badge": "Bez rejestracji",
     "title": "Znajdź czas",
     "titleAccent": " razem",
-    "subtitle": "Koordynuj grupowe harmonogramy w sekundach. Udostępnij link, wybierz daty, znajdź co działa.",
+    "titles": [
+      { "main": "Wspólny", "accent": " Czas" },
+      { "main": "Lepsze", "accent": " Planowanie" },
+      { "main": "Łatwiejsze", "accent": " Spotkania" }
+    ],
+    "subtitle": "Nowoczesny sposób na koordynację grupowych terminów. Bez kont, bez bałaganu - po prostu udostępnij link i znajdź termin.",
     "createEventButton": "Utwórz darmowe wydarzenie",
     "howItWorksButton": "Jak to działa",
-    "socialProof": "Proste planowanie dla zespołów, przyjaciół i społeczności",
+    "socialProof": "Proste planowanie dla przyjaciół, zespołów i społeczności",
     "features": {
       "fast": {
-        "title": "Błyskawicznie szybkie",
-        "description": "Twórz i udostępniaj wydarzenia w mniej niż 30 sekund. Bez rejestracji, bez przeszkód."
+        "title": "Bez zbędnych kroków",
+        "description": "Stwórz wydarzenie w pół minuty. Wyślij link i po sprawie. Bez zakładania konta, bez instalacji, bez kombinowania."
       },
       "realtime": {
-        "title": "Aktualizacje w czasie rzeczywistym",
-        "description": "Zobacz odpowiedzi w miarę ich napływania. Aktualizacje na żywo utrzymują wszystkich w synchronizacji."
+        "title": "Na bieżąco",
+        "description": "Zobacz odpowiedzi w momencie ich pojawiania się. Wszyscy widzą to samo – kto się zgłosił i kiedy jest dostępny."
       },
       "smart": {
-        "title": "Inteligentne i proste",
-        "description": "Automatycznie znajduje najlepsze daty. Opcjonalna ochrona hasłem w zestawie."
+        "title": "Mądre dopasowanie",
+        "description": "Automatycznie znajdzie termin, który pasuje wszystkim. Możesz też zabezpieczyć wydarzenie hasłem."
       }
     }
   },
@@ -58,6 +68,7 @@
     "dateRange": {
       "label": "Zakres dat",
       "required": "*",
+      "placeholder": "Wybierz zakres dat",
       "startDate": "Data rozpoczęcia",
       "endDate": "Data zakończenia",
       "daysInfo": "Zakres dat: {days} dni"
@@ -79,6 +90,7 @@
     "errors": {
       "nameRequired": "Nazwa wydarzenia jest wymagana",
       "datesRequired": "Wymagane są obie daty: rozpoczęcia i zakończenia",
+      "creatorNameRequired": "Twoje imię jest wymagane",
       "invalidDate": "Nieprawidłowy format daty"
     }
   },
@@ -152,6 +164,8 @@
   "aboutPage": {
     "title": "Jak to działa",
     "subtitle": "Trzy proste kroki do koordynacji dowolnej grupy",
+    "whyTitle": "Dlaczego MeetMate?",
+    "whySubtitle": "Wszystko czego potrzebujesz, nic więcej",
     "steps": {
       "step1": {
         "title": "Utwórz swoje wydarzenie",
@@ -165,6 +179,11 @@
         "title": "Znajdź idealny czas",
         "description": "Zobacz optymalne daty automatycznie uszeregowane. Zablokuj spotkanie, gdy będziesz gotowy."
       }
+    },
+    "features": {
+      "noSignup": "Bez rejestracji",
+      "realtime": "Aktualizacje na żywo",
+      "secure": "Opcjonalna ochrona hasłem"
     }
   },
   "validation": {

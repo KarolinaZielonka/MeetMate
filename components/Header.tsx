@@ -20,8 +20,7 @@ export function Header() {
           <span className="text-2xl font-bold text-foreground transition-smooth">MeetMate</span>
         </Link>
 
-        {/* Right side: Theme Toggle + Language Switcher + CTA */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1">
           <ThemeToggle />
           <LanguageSwitcher />
 
