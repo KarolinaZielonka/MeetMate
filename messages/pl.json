@@ -291,5 +291,20 @@
     "errorReopen": "Nie udało się otworzyć ponownie wydarzenia. Spróbuj ponownie.",
     "successDelete": "Wydarzenie zostało pomyślnie usunięte. Przekierowywanie...",
     "errorDelete": "Nie udało się usunąć wydarzenia. Spróbuj ponownie."
+  },
+  "errors": {
+    "boundary": {
+      "title": "Coś poszło nie tak",
+      "description": "Napotkaliśmy nieoczekiwany błąd. Nie martw się - Twoje dane są bezpieczne.",
+      "tryAgain": "Spróbuj ponownie",
+      "goHome": "Strona główna",
+      "persistsMessage": "Jeśli problem będzie się powtarzał, spróbuj odświeżyć stronę lub skontaktuj się z pomocą techniczną."
+    },
+    "notFound": {
+      "title": "Nie znaleziono strony",
+      "description": "Strona, której szukasz, nie istnieje. Mogła zostać przeniesiona lub usunięta.",
+      "goHome": "Strona główna",
+      "helpText": "Jeśli kliknąłeś link, aby się tu dostać, wydarzenie mogło zostać usunięte lub link jest nieprawidłowy."
+    }
   }
 }

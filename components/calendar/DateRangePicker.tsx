@@ -219,26 +219,28 @@ export function DateRangePicker({
       {/* Progress Indicators (dots) - only show if more than monthsPerView */}
       {totalMonths > monthsPerView && (
         <div className="flex justify-center gap-2 mt-6">
-          {Array.from({ length: Math.ceil(totalMonths / monthsPerView) }).map((_, index) => (
-            <button
-              key={index * monthsPerView}
-              type="button"
-              onClick={() => {
-                const newIndex = index * monthsPerView
-                if (newIndex <= maxIndex) {
-                  setSwipeDirection(newIndex > currentMonthIndex ? "left" : "right")
-                  setCurrentMonthIndex(newIndex)
-                }
-              }}
-              className={cn(
-                "h-2 w-2 rounded-full transition-all duration-200",
-                Math.floor(currentMonthIndex / monthsPerView) === index
-                  ? "bg-primary"
-                  : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-              )}
-              aria-label={`Go to ${isMobile ? "month" : "months"} ${index * monthsPerView + 1}`}
-            />
-          ))}
+          {Array.from({ length: Math.ceil(totalMonths / monthsPerView) }).map((_, index) => {
+            const monthIndex = index * monthsPerView
+            return (
+              <button
+                key={`month-indicator-${monthIndex}`}
+                type="button"
+                onClick={() => {
+                  if (monthIndex <= maxIndex) {
+                    setSwipeDirection(monthIndex > currentMonthIndex ? "left" : "right")
+                    setCurrentMonthIndex(monthIndex)
+                  }
+                }}
+                className={cn(
+                  "h-2 w-2 rounded-full transition-all duration-200",
+                  Math.floor(currentMonthIndex / monthsPerView) === index
+                    ? "bg-primary"
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                )}
+                aria-label={`Go to ${isMobile ? "month" : "months"} ${monthIndex + 1}`}
+              />
+            )
+          })}
         </div>
       )}
       <Instructions readonly={readonly} />

@@ -2,6 +2,7 @@ import { Inter } from "next/font/google"
 import { notFound } from "next/navigation"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
+import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { Header } from "@/components/Header"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { locales } from "@/i18n"
@@ -44,9 +45,11 @@ export default async function LocaleLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider messages={messages}>
-            <Toaster />
-            <Header />
-            {children}
+            <ErrorBoundary>
+              <Toaster />
+              <Header />
+              {children}
+            </ErrorBoundary>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

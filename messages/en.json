@@ -291,5 +291,20 @@
     "errorReopen": "Failed to reopen event. Please try again.",
     "successDelete": "Event deleted successfully. Redirecting...",
     "errorDelete": "Failed to delete event. Please try again."
+  },
+  "errors": {
+    "boundary": {
+      "title": "Something Went Wrong",
+      "description": "We encountered an unexpected error. Don't worry - your data is safe.",
+      "tryAgain": "Try Again",
+      "goHome": "Go to Homepage",
+      "persistsMessage": "If this problem persists, please try refreshing the page or contact support."
+    },
+    "notFound": {
+      "title": "Page Not Found",
+      "description": "The page you're looking for doesn't exist. It may have been moved or deleted.",
+      "goHome": "Go to Homepage",
+      "helpText": "If you followed a link to get here, the event may have been deleted or the link is incorrect."
+    }
   }
 }

@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { type NextRequest, NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase/client"
 import { supabaseAdmin } from "@/lib/supabase/server"
-import type { ValidationResult } from "./validation"
+import type { ValidationResult } from "./schemas"
 
 /**
  * Standard API response format

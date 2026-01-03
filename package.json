@@ -39,6 +39,7 @@
     "supabase": "^2.70.5",
     "tailwind-merge": "^2.5.5",
     "uuid": "^13.0.0",
+    "zod": "^4.3.4",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
