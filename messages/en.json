@@ -16,6 +16,10 @@
     "createEvent": "Create Event",
     "about": "About"
   },
+  "footer": {
+    "createdWith": "Created with",
+    "by": "by"
+  },
   "languageSwitcher": {
     "label": "Language",
     "english": "English",

@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { locales } from "@/i18n"
 import "../globals.css"
 import { Toaster } from "@/components/ui/sonner"
+import { Footer } from "@/components/Footer"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -51,6 +52,7 @@ export default async function LocaleLayout({
               <Toaster />
               <Header />
               {children}
+              <Footer />
             </ErrorBoundary>
           </NextIntlClientProvider>
         </ThemeProvider>

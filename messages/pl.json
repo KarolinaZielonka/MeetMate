@@ -16,6 +16,10 @@
     "createEvent": "Utwórz wydarzenie",
     "about": "O nas"
   },
+  "footer": {
+    "createdWith": "Stworzone z",
+    "by": "przez"
+  },
   "languageSwitcher": {
     "label": "Język",
     "english": "English",
