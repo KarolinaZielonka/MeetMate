@@ -35,9 +35,6 @@ export function MonthCalendar({
 
   return (
     <div className="w-full space-y-3">
-      {/* Month and year header */}
-      <h3 className="text-center text-lg font-semibold text-foreground">{monthName}</h3>
-
       {/* Day of week headers */}
       <div className="grid grid-cols-7 gap-1 mb-2">
         {getWeekdayKeys().map((weekdayKey) => (

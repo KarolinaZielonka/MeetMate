@@ -61,7 +61,7 @@ export const DateScoreItem = memo(function DateScoreItem({
             variant="outline"
             size="sm"
             onClick={() => onLockClick(dateScore.date)}
-            className="w-full sm:w-auto h-10 sm:h-9"
+            className="w-full sm:w-auto min-h-11"
           >
             <Lock className="mr-2 h-4 w-4" />
             {t("lockButton")}

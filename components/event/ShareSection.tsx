@@ -61,7 +61,7 @@ export function ShareSection({ shareUrl }: ShareSectionProps) {
         </div>
         <Button
           onClick={handleCopyLink}
-          className={`${copySuccess ? "bg-green-600 hover:bg-green-700" : "bg-gradient-primary hover:opacity-90"} shadow-md transition-smooth hover-lift min-w-[120px]`}
+          className={`${copySuccess ? "bg-green-600 hover:bg-green-700" : "bg-gradient-primary hover:opacity-90"} shadow-md transition-smooth hover-lift w-full sm:w-auto sm:min-w-[120px]`}
         >
           {copySuccess ? (
             <>

@@ -33,7 +33,7 @@ export function FeaturesSection() {
   return (
     <section className="pb-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature) => (
             <FeatureCard key={feature.title} feature={feature} />
           ))}

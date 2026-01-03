@@ -192,15 +192,6 @@ export function DateRangePicker({
           >
             {visibleMonths.map((monthData) => (
               <div key={`${monthData.year}-${monthData.month}`}>
-                {/* Desktop: Show month name above each calendar */}
-                {!isMobile && (
-                  <div className="mb-4 text-center font-semibold text-lg">
-                    {new Date(monthData.year, monthData.month, 1).toLocaleDateString("en-US", {
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </div>
-                )}
                 <MonthCalendar
                   year={monthData.year}
                   month={monthData.month}
@@ -232,13 +223,22 @@ export function DateRangePicker({
                   }
                 }}
                 className={cn(
-                  "h-2 w-2 rounded-full transition-all duration-200",
+                  "min-h-11 min-w-11 rounded-full transition-all duration-200 flex items-center justify-center",
                   Math.floor(currentMonthIndex / monthsPerView) === index
                     ? "bg-primary"
                     : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
                 )}
                 aria-label={`Go to ${isMobile ? "month" : "months"} ${monthIndex + 1}`}
-              />
+              >
+                <span
+                  className={cn(
+                    "h-2 w-2 rounded-full",
+                    Math.floor(currentMonthIndex / monthsPerView) === index
+                      ? "bg-primary-foreground"
+                      : "bg-current"
+                  )}
+                />
+              </button>
             )
           })}
         </div>

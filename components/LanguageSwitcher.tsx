@@ -42,7 +42,7 @@ export function LanguageSwitcher() {
         <Button
           variant="ghost"
           size="sm"
-          className="gap-2 transition-smooth"
+          className="gap-2 transition-smooth min-h-11"
           disabled={isPending}
           aria-label="Change language"
         >

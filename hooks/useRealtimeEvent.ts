@@ -167,7 +167,7 @@ export function useRealtimeEvent({
         channelRef.current = null
       }
     }
-  }, [eventId, onParticipantJoin, onParticipantUpdate, showToasts])
+  }, [eventId, onParticipantJoin, onParticipantUpdate, showToasts, refreshParticipants])
 
   return {
     isConnected: channelRef.current !== null,
