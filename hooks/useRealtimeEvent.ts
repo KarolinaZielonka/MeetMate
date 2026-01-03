@@ -46,7 +46,7 @@ export function useRealtimeEvent({
       // Fetch updated participants list
       const { data: participants, error } = await supabase
         .from("participants")
-        .select("id, name, has_submitted, created_at, session_token")
+        .select("id, event_id, name, has_submitted, created_at, session_token, joined_at")
         .eq("event_id", eventId)
         .order("created_at", { ascending: true })
 

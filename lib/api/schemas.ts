@@ -32,9 +32,7 @@ export const availabilitySchema = z.object({
     .array(
       z.object({
         date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
-        status: z.enum(["available", "maybe", "unavailable"], {
-          errorMap: () => ({ message: "Status must be available, maybe, or unavailable" }),
-        }),
+        status: z.enum(["available", "maybe", "unavailable"]),
       })
     )
     .min(1, "At least one date selection is required"),
@@ -65,7 +63,7 @@ export const uuidSchema = z.object({
  * Helper: Convert Zod error to API response format
  */
 export function formatZodError(error: z.ZodError): string {
-  const firstError = error.errors[0]
+  const firstError = error.issues[0]
   return firstError?.message || "Validation failed"
 }
 
@@ -82,7 +80,7 @@ export interface ValidationResult {
  * Helper: Convert Zod validation to ValidationResult
  */
 export function zodToValidationResult<T>(
-  result: z.SafeParseReturnType<T, T>
+  result: { success: true; data: T } | { success: false; error: z.ZodError }
 ): ValidationResult & { data?: T } {
   if (result.success) {
     return { valid: true, data: result.data }
