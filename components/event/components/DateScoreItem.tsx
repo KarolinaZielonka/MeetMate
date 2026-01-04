@@ -26,7 +26,7 @@ export const DateScoreItem = memo(function DateScoreItem({
   const percentage = Math.round(dateScore.score * 100)
 
   return (
-    <div className="rounded-lg border p-3 sm:p-4 transition-colors hover:bg-accent">
+    <div className="rounded-lg border p-3 sm:p-4 transition-smooth hover:bg-muted/50">
       <div className="space-y-3">
         {/* Date and Badge */}
         <div className="flex items-center gap-2 flex-wrap">

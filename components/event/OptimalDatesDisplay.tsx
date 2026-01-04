@@ -19,7 +19,7 @@ interface OptimalDatesDisplayProps {
   onEventLocked?: () => void
 }
 
-const MAX_DISPLAYED_DATES = 5
+const MAX_DISPLAYED_DATES = 3
 
 export function OptimalDatesDisplay({ shareUrl, onEventLocked }: OptimalDatesDisplayProps) {
   const t = useTranslations("optimalDates")

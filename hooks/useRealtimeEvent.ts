@@ -1,7 +1,7 @@
 "use client"
 
 import type { RealtimeChannel } from "@supabase/supabase-js"
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { toast } from "sonner"
 import { supabase } from "@/lib/supabase/client"
 import { useEventStore } from "@/store/eventStore"
@@ -10,15 +10,17 @@ interface UseRealtimeEventOptions {
   eventId: string
   onParticipantJoin?: (participantName: string) => void
   onParticipantUpdate?: (participantName: string) => void
+  onEventLocked?: () => void
+  onEventReopened?: () => void
   showToasts?: boolean
 }
 
 /**
  * Hook to subscribe to real-time updates for an event
  *
- * Subscribes to the participants table and listens for:
- * - INSERT: New participant joins
- * - UPDATE: Participant submits/updates availability
+ * Subscribes to:
+ * - participants table: New joins and availability submissions
+ * - events table: Lock state changes
  *
  * @param options - Configuration options
  */
@@ -26,43 +28,75 @@ export function useRealtimeEvent({
   eventId,
   onParticipantJoin,
   onParticipantUpdate,
+  onEventLocked,
+  onEventReopened,
   showToasts = true,
 }: UseRealtimeEventOptions) {
   const channelRef = useRef<RealtimeChannel | null>(null)
   const setParticipants = useEventStore((state) => state.setParticipants)
+  const setEvent = useEventStore((state) => state.setEvent)
 
   // Helper function to refresh participants list
-  const refreshParticipants = async (eventId: string) => {
-    try {
-      // Fetch event's share_url first
-      const { data: event } = await supabase
-        .from("events")
-        .select("share_url")
-        .eq("id", eventId)
-        .single()
+  const refreshParticipants = useCallback(
+    async (eventId: string) => {
+      try {
+        // Fetch event's share_url first
+        const { data: event } = await supabase
+          .from("events")
+          .select("share_url")
+          .eq("id", eventId)
+          .single()
 
-      if (!event) return
+        if (!event) return
 
-      // Fetch updated participants list
-      const { data: participants, error } = await supabase
-        .from("participants")
-        .select("id, event_id, name, has_submitted, created_at, session_token, joined_at")
-        .eq("event_id", eventId)
-        .order("created_at", { ascending: true })
+        // Fetch updated participants list
+        const { data: participants, error } = await supabase
+          .from("participants")
+          .select("id, event_id, name, has_submitted, created_at, session_token, joined_at")
+          .eq("event_id", eventId)
+          .order("created_at", { ascending: true })
 
-      if (error) {
-        console.error("Error fetching participants:", error)
-        return
+        if (error) {
+          console.error("Error fetching participants:", error)
+          return
+        }
+
+        // Update Zustand store
+        if (participants) {
+          setParticipants(participants)
+        }
+      } catch (error) {
+        console.error("Error refreshing participants:", error)
       }
+    },
+    [setParticipants]
+  )
 
-      // Update Zustand store
-      if (participants) {
-        setParticipants(participants)
+  // Helper function to refresh event data
+  const refreshEvent = useCallback(
+    async (eventId: string) => {
+      try {
+        const { data: event, error } = await supabase
+          .from("events")
+          .select("*")
+          .eq("id", eventId)
+          .single()
+
+        if (error) {
+          console.error("Error fetching event:", error)
+          return
+        }
+
+        // Update Zustand store
+        if (event) {
+          setEvent(event)
+        }
+      } catch (error) {
+        console.error("Error refreshing event:", error)
       }
-    } catch (error) {
-      console.error("Error refreshing participants:", error)
-    }
-  }
+    },
+    [setEvent]
+  )
 
   useEffect(() => {
     if (!eventId) return
@@ -142,6 +176,57 @@ export function useRealtimeEvent({
           refreshParticipants(eventId)
         }
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "events",
+          filter: `id=eq.${eventId}`,
+        },
+        (payload) => {
+          console.log("Event updated:", payload)
+
+          const updatedEvent = payload.new as {
+            is_locked: boolean
+            calculated_date: string | null
+          }
+          const oldEvent = payload.old as {
+            is_locked: boolean
+            calculated_date: string | null
+          }
+
+          // Check if lock state changed
+          if (updatedEvent.is_locked !== oldEvent.is_locked) {
+            if (updatedEvent.is_locked) {
+              // Event was locked
+              onEventLocked?.()
+
+              if (showToasts) {
+                toast.success("Event locked by admin", {
+                  description: updatedEvent.calculated_date
+                    ? `Chosen date: ${new Date(updatedEvent.calculated_date).toLocaleDateString()}`
+                    : undefined,
+                  duration: 4000,
+                })
+              }
+            } else {
+              // Event was reopened
+              onEventReopened?.()
+
+              if (showToasts) {
+                toast.info("Event reopened by admin", {
+                  description: "You can now edit your availability again",
+                  duration: 4000,
+                })
+              }
+            }
+          }
+
+          // Refresh event data
+          refreshEvent(eventId)
+        }
+      )
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {
           console.log(`Subscribed to real-time updates for event ${eventId}`)
@@ -167,7 +252,16 @@ export function useRealtimeEvent({
         channelRef.current = null
       }
     }
-  }, [eventId, onParticipantJoin, onParticipantUpdate, showToasts, refreshParticipants])
+  }, [
+    eventId,
+    onParticipantJoin,
+    onParticipantUpdate,
+    onEventLocked,
+    onEventReopened,
+    showToasts,
+    refreshParticipants,
+    refreshEvent,
+  ])
 
   return {
     isConnected: channelRef.current !== null,

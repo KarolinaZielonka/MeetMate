@@ -21,7 +21,7 @@ export function DateRangePicker({
   className,
 }: DateRangePickerProps) {
   const t = useTranslations("calendar")
-  const { availability, selectDate, setAvailabilityMap } = useDateSelection(initialAvailability)
+  const { availability, selectDate } = useDateSelection(initialAvailability)
 
   // Current viewing index (0 = first month in range)
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0)
@@ -71,13 +71,6 @@ export function DateRangePicker({
       onAvailabilityChange(availability)
     }
   }, [availability, onAvailabilityChange])
-
-  // Update availability if initial data changes
-  useEffect(() => {
-    if (initialAvailability) {
-      setAvailabilityMap(initialAvailability)
-    }
-  }, [initialAvailability, setAvailabilityMap])
 
   const handlePrevious = useCallback(() => {
     if (currentMonthIndex > 0) {

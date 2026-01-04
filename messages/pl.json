@@ -109,6 +109,20 @@
       "title": "Wydarzenie zablokowane",
       "chosenDate": "Wybrana data: {date}"
     },
+    "heatmap": {
+      "title": "Przegląd dostępności",
+      "description": "Wizualne podsumowanie dostępności wszystkich na pierwszy rzut oka",
+      "viewIndividual": "Widok indywidualny",
+      "viewHeatmap": "Widok mapy ciepła",
+      "participants": "Uczestnicy",
+      "legend": {
+        "title": "Legenda",
+        "noData": "Brak danych",
+        "available": "Dostępny",
+        "maybe": "Może",
+        "unavailable": "Niedostępny"
+      }
+    },
     "share": {
       "label": "Udostępnij to wydarzenie uczestnikom",
       "copyButton": "Kopiuj link",

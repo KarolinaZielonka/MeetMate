@@ -4,6 +4,7 @@ import { UserPlus } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useEffect } from "react"
+import { AvailabilityHeatmap } from "@/components/calendar/AvailabilityHeatmap"
 import { AdminControls } from "@/components/event/AdminControls"
 import { AvailabilitySection } from "@/components/event/AvailabilitySection"
 import { PasswordDialog } from "@/components/event/dialogs/PasswordDialog"
@@ -26,6 +27,7 @@ export default function EventPage() {
 
   const {
     event,
+    participants,
     isLoading,
     error,
     userRole,
@@ -128,11 +130,13 @@ export default function EventPage() {
 
             <ParticipantList eventId={event.id} />
 
-            <OptimalDatesDisplay shareUrl={shareUrl} onEventLocked={handleRefresh} />
-
             {isParticipant(event.id) && !event.is_locked && (
               <AvailabilitySection eventId={event.id} />
             )}
+
+            <AvailabilityHeatmap event={event} participants={participants} />
+
+            <OptimalDatesDisplay shareUrl={shareUrl} onEventLocked={handleRefresh} />
 
             {userRole === "admin" && (
               <AdminControls shareUrl={shareUrl} onEventReopened={handleRefresh} />

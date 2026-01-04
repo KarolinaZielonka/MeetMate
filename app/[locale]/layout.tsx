@@ -7,8 +7,8 @@ import { Header } from "@/components/Header"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { locales } from "@/i18n"
 import "../globals.css"
-import { Toaster } from "@/components/ui/sonner"
 import { Footer } from "@/components/Footer"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({
   subsets: ["latin"],

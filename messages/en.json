@@ -109,6 +109,20 @@
       "title": "Event Locked",
       "chosenDate": "Chosen date: {date}"
     },
+    "heatmap": {
+      "title": "Availability Overview",
+      "description": "Visual summary of everyone's availability at a glance",
+      "viewIndividual": "View Individual",
+      "viewHeatmap": "View Heatmap",
+      "participants": "Participants",
+      "legend": {
+        "title": "Legend",
+        "noData": "No data",
+        "available": "Available",
+        "maybe": "Maybe",
+        "unavailable": "Unavailable"
+      }
+    },
     "share": {
       "label": "Share this event with participants",
       "copyButton": "Copy Link",

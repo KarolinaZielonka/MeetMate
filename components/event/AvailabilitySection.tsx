@@ -16,7 +16,6 @@ export function AvailabilitySection({ eventId }: AvailabilitySectionProps) {
   const t = useTranslations("eventPage.availability")
   const tCommon = useTranslations("common")
 
-  // Get all state and actions from Zustand
   const {
     event,
     availabilitySelections,

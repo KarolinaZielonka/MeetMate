@@ -1,11 +1,13 @@
 "use client"
 
-import { Info } from "lucide-react"
+import { ChevronDown, Info } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useState } from "react"
 import LegendItem from "./LegendItem"
 
 export function Instructions({ readonly = false }: { readonly?: boolean }) {
   const t = useTranslations("calendar")
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <>
@@ -22,40 +24,52 @@ export function Instructions({ readonly = false }: { readonly?: boolean }) {
             </div>
           </div>
 
-          {/* Instructions */}
-          <div className="border-t border-border pt-4">
-            <div className="text-sm font-medium mb-2 text-foreground flex items-center gap-2">
-              <Info className="w-4 h-4" />
-              {t("howToUse")}:
-            </div>
-            <div className="text-xs text-muted-foreground space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-background px-2 py-0.5 rounded">1x {t("tap")}</span>
-                <span>→</span>
-                <span className="text-green-600 dark:text-green-400 font-medium">
-                  {t("available")}
-                </span>
+          {/* Collapsible Instructions */}
+          <div className="border-t border-border pt-3">
+            <button
+              type="button"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="w-full text-sm font-medium text-foreground flex items-center justify-between hover:text-primary transition-smooth"
+            >
+              <span className="flex items-center gap-2">
+                <Info className="w-4 h-4" />
+                {t("howToUse")}
+              </span>
+              <ChevronDown
+                className={`w-4 h-4 transition-smooth ${isExpanded ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {isExpanded && (
+              <div className="mt-3 text-xs text-muted-foreground space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono bg-background px-2 py-0.5 rounded">1x {t("tap")}</span>
+                  <span>→</span>
+                  <span className="text-green-600 dark:text-green-400 font-medium">
+                    {t("available")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono bg-background px-2 py-0.5 rounded">2x {t("tap")}</span>
+                  <span>→</span>
+                  <span className="text-orange-600 dark:text-orange-400 font-medium">
+                    {t("maybe")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono bg-background px-2 py-0.5 rounded">3x {t("tap")}</span>
+                  <span>→</span>
+                  <span className="text-red-600 dark:text-red-400 font-medium">
+                    {t("unavailable")}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono bg-background px-2 py-0.5 rounded">4x {t("tap")}</span>
+                  <span>→</span>
+                  <span className="text-muted-foreground font-medium">{t("unselected")}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-background px-2 py-0.5 rounded">2x {t("tap")}</span>
-                <span>→</span>
-                <span className="text-orange-600 dark:text-orange-400 font-medium">
-                  {t("maybe")}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-background px-2 py-0.5 rounded">3x {t("tap")}</span>
-                <span>→</span>
-                <span className="text-red-600 dark:text-red-400 font-medium">
-                  {t("unavailable")}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono bg-background px-2 py-0.5 rounded">4x {t("tap")}</span>
-                <span>→</span>
-                <span className="text-muted-foreground font-medium">{t("unselected")}</span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       )}
