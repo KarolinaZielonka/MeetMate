@@ -32,18 +32,9 @@ export default function EventPage() {
     setUserRole,
     fetchEvent,
     fetchParticipants,
-    availabilitySelections,
-    setAvailabilitySelections,
-    isSubmittingAvailability,
-    isEditingAvailability,
-    hasSubmittedAvailability,
     fetchAvailability,
-    submitAvailability,
-    startEditingAvailability,
-    cancelEditingAvailability,
   } = useEventStore()
 
-  const tAvailability = useTranslations("eventPage.availability")
   const tParticipants = useTranslations("eventPage.participants")
 
   // Fetch event and participants on mount
@@ -95,40 +86,16 @@ export default function EventPage() {
     }
   }
 
-  // Handle event locked/reopened
-  const handleEventLocked = () => {
-    handleRefresh()
-  }
-
-  // Handle availability submission
-  const handleSubmitAvailability = async () => {
-    if (!event) return
-    const session = getSession(event.id)
-    if (!session?.participantId) return
-    await submitAvailability(session.participantId, tAvailability)
-  }
-
-  // Handle cancel editing
-  const handleCancelEdit = () => {
-    if (!event) return
-    const session = getSession(event.id)
-    if (!session?.participantId) return
-    cancelEditingAvailability(event.id, session.participantId)
-  }
-
-  // Loading state
   if (isLoading) {
     return <EventPageSkeleton />
   }
 
-  // Error state
   if (error || !event) {
     return <EventPageError error={error || undefined} isNotFound={error === t("errors.notFound")} />
   }
 
   return (
     <>
-      {/* Password Dialog */}
       {event.has_password && (
         <PasswordDialog
           shareUrl={shareUrl}
@@ -137,18 +104,11 @@ export default function EventPage() {
         />
       )}
 
-      {/* Main Content - Only show if password is verified or not required */}
       {isPasswordVerified && (
         <div className="min-h-screen bg-background pt-24 pb-12 px-4">
           <div className="max-w-6xl mx-auto space-y-6">
-            {/* Event Header Card */}
-            <EventHeader
-              event={event}
-              userRole={userRole}
-              shareUrl={typeof window !== "undefined" ? window.location.href : ""}
-            />
+            <EventHeader event={event} userRole={userRole} shareUrl={window.location.href} />
 
-            {/* Join Event Section */}
             {!isParticipant(event.id) && !event.is_locked && (
               <Card className="shadow-lg border-none slide-up">
                 <CardHeader>
@@ -166,41 +126,16 @@ export default function EventPage() {
               </Card>
             )}
 
-            {/* Participant List */}
             <ParticipantList eventId={event.id} />
 
-            {/* Optimal Dates Display Section */}
-            <OptimalDatesDisplay
-              shareUrl={shareUrl}
-              isAdmin={userRole === "admin"}
-              isLocked={event.is_locked}
-              calculatedDate={event.calculated_date}
-              onEventLocked={handleEventLocked}
-            />
+            <OptimalDatesDisplay shareUrl={shareUrl} onEventLocked={handleRefresh} />
 
-            {/* Availability Selection Section */}
             {isParticipant(event.id) && !event.is_locked && (
-              <AvailabilitySection
-                startDate={new Date(event.start_date)}
-                endDate={new Date(event.end_date)}
-                availabilitySelections={availabilitySelections}
-                onSelectionChange={setAvailabilitySelections}
-                hasSubmitted={hasSubmittedAvailability}
-                isEditingAvailability={isEditingAvailability}
-                isSubmittingAvailability={isSubmittingAvailability}
-                onSubmit={handleSubmitAvailability}
-                onEdit={startEditingAvailability}
-                onCancel={handleCancelEdit}
-              />
+              <AvailabilitySection eventId={event.id} />
             )}
 
-            {/* Admin Controls */}
             {userRole === "admin" && (
-              <AdminControls
-                shareUrl={shareUrl}
-                isLocked={event.is_locked}
-                onEventReopened={handleEventLocked}
-              />
+              <AdminControls shareUrl={shareUrl} onEventReopened={handleRefresh} />
             )}
           </div>
         </div>

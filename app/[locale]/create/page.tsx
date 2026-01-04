@@ -1,19 +1,62 @@
 "use client"
 
 import { useTranslations } from "next-intl"
+import { toast } from "sonner"
 import { AlertMessage } from "@/components/create-event/AlertMessage"
 import { EventDetailsSection } from "@/components/create-event/EventDetailsSection"
 import { OptionalSettingsSection } from "@/components/create-event/OptionalSettingsSection"
 import { SubmitButton } from "@/components/create-event/SubmitButton"
+import { SkeletonForm } from "@/components/skeletons"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { useCreateEventForm } from "@/hooks/useCreateEventForm"
+import { useRouter } from "@/i18n/routing"
+import { useCreateEventStore } from "@/store/createEventStore"
 
 export default function CreateEventPage() {
+  const router = useRouter()
   const t = useTranslations("createEvent")
+  const tApi = useTranslations("api")
 
-  const { formData, isLoading, validation, handleChange, handleDateChange, handleSubmit } =
-    useCreateEventForm()
+  const { formData, isLoading, validation, setFormField, setDateRange, createEvent } =
+    useCreateEventStore()
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormField(name as keyof typeof formData, value)
+  }
+
+  const handleDateChange = (startDate: string, endDate: string) => {
+    setDateRange(startDate, endDate)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const result = await createEvent(t, tApi)
+
+    if (!result.success) {
+      // Error toast is shown based on validation.error
+      if (validation.error) {
+        toast.error(validation.error)
+      }
+      return
+    }
+
+    toast.success(t("successMessage"))
+    if (result.shareUrl) {
+      router.push(`/e/${result.shareUrl}`)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background pt-24 pb-12 px-4">
+        <div className="max-w-2xl mx-auto">
+          <SkeletonForm fields={10} shimmer />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-12 px-4">

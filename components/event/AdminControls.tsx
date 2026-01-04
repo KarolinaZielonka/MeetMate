@@ -7,17 +7,20 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEventStore } from "@/store/eventStore"
 import { DeleteEventDialog, ReopenEventDialog } from "./dialogs"
 
 interface AdminControlsProps {
   shareUrl: string
-  isLocked: boolean
   onEventReopened?: () => void
 }
 
-export function AdminControls({ shareUrl, isLocked, onEventReopened }: AdminControlsProps) {
+export function AdminControls({ shareUrl, onEventReopened }: AdminControlsProps) {
   const t = useTranslations("adminControls")
   const router = useRouter()
+
+  const { event } = useEventStore()
+  const isLocked = event?.is_locked ?? false
   const [isReopening, setIsReopening] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [showReopenDialog, setShowReopenDialog] = useState(false)

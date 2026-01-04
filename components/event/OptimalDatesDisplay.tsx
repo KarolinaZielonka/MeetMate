@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useEventLock } from "@/hooks/useEventLock"
 import { useOptimalDates } from "@/hooks/useOptimalDates"
+import { useEventStore } from "@/store/eventStore"
 import { DateScoreItem } from "./components/DateScoreItem"
 import { EmptyState } from "./components/EmptyState"
 import { LockConfirmationDialog } from "./components/LockConfirmationDialog"
@@ -15,22 +16,19 @@ import { LockedEventCard } from "./components/LockedEventCard"
 
 interface OptimalDatesDisplayProps {
   shareUrl: string
-  isAdmin: boolean
-  isLocked: boolean
-  calculatedDate: string | null
   onEventLocked?: () => void
 }
 
 const MAX_DISPLAYED_DATES = 5
 
-export function OptimalDatesDisplay({
-  shareUrl,
-  isAdmin,
-  isLocked,
-  calculatedDate,
-  onEventLocked,
-}: OptimalDatesDisplayProps) {
+export function OptimalDatesDisplay({ shareUrl, onEventLocked }: OptimalDatesDisplayProps) {
   const t = useTranslations("optimalDates")
+
+  const { event, userRole } = useEventStore()
+
+  const isAdmin = userRole === "admin"
+  const isLocked = event?.is_locked ?? false
+  const calculatedDate = event?.calculated_date ?? null
 
   // Custom hooks for data and locking functionality
   const { dateScores, loading, fetchOptimalDates } = useOptimalDates(shareUrl, t)

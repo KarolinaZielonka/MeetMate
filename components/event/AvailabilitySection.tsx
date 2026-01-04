@@ -5,35 +5,46 @@ import { useTranslations } from "next-intl"
 import { DateRangePicker } from "@/components/calendar/DateRangePicker"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { AvailabilityStatus } from "@/types"
+import { getSession } from "@/lib/utils/session"
+import { useEventStore } from "@/store/eventStore"
 
 interface AvailabilitySectionProps {
-  startDate: Date
-  endDate: Date
-  availabilitySelections: Map<string, AvailabilityStatus>
-  onSelectionChange: (selections: Map<string, AvailabilityStatus>) => void
-  hasSubmitted: boolean
-  isEditingAvailability: boolean
-  isSubmittingAvailability: boolean
-  onSubmit: () => void
-  onEdit: () => void
-  onCancel: () => void
+  eventId: string
 }
 
-export function AvailabilitySection({
-  startDate,
-  endDate,
-  availabilitySelections,
-  onSelectionChange,
-  hasSubmitted,
-  isEditingAvailability,
-  isSubmittingAvailability,
-  onSubmit,
-  onEdit,
-  onCancel,
-}: AvailabilitySectionProps) {
+export function AvailabilitySection({ eventId }: AvailabilitySectionProps) {
   const t = useTranslations("eventPage.availability")
   const tCommon = useTranslations("common")
+
+  // Get all state and actions from Zustand
+  const {
+    event,
+    availabilitySelections,
+    setAvailabilitySelections,
+    hasSubmittedAvailability,
+    isEditingAvailability,
+    isSubmittingAvailability,
+    submitAvailability,
+    startEditingAvailability,
+    cancelEditingAvailability,
+  } = useEventStore()
+
+  // Get participant session
+  const session = getSession(eventId)
+  const participantId = session?.participantId
+
+  // Don't render if no event or no participant session
+  if (!event || !participantId) {
+    return null
+  }
+
+  const handleSubmit = async () => {
+    await submitAvailability(participantId, t)
+  }
+
+  const handleCancel = () => {
+    cancelEditingAvailability(eventId, participantId)
+  }
   return (
     <Card className="shadow-lg border-none slide-up">
       <CardHeader>
@@ -47,36 +58,40 @@ export function AvailabilitySection({
       </CardHeader>
       <CardContent className="space-y-6">
         <DateRangePicker
-          startDate={startDate}
-          endDate={endDate}
-          onAvailabilityChange={onSelectionChange}
+          startDate={new Date(event.start_date)}
+          endDate={new Date(event.end_date)}
+          onAvailabilityChange={setAvailabilitySelections}
           initialAvailability={availabilitySelections}
-          readonly={hasSubmitted && !isEditingAvailability}
+          readonly={hasSubmittedAvailability && !isEditingAvailability}
         />
 
         <div className="flex gap-3">
-          {!hasSubmitted || isEditingAvailability ? (
+          {!hasSubmittedAvailability || isEditingAvailability ? (
             <Button
-              onClick={onSubmit}
+              onClick={handleSubmit}
               disabled={isSubmittingAvailability || availabilitySelections.size === 0}
               className="flex-1 h-12 text-base"
             >
               {isSubmittingAvailability
-                ? hasSubmitted
+                ? hasSubmittedAvailability
                   ? t("updatingButton")
                   : t("submittingButton")
-                : hasSubmitted
+                : hasSubmittedAvailability
                   ? t("updateButton")
                   : t("submitButton")}
             </Button>
           ) : (
-            <Button onClick={onEdit} variant="outline" className="flex-1 h-12 text-base">
+            <Button
+              onClick={startEditingAvailability}
+              variant="outline"
+              className="flex-1 h-12 text-base"
+            >
               {t("editButton")}
             </Button>
           )}
 
           {isEditingAvailability && (
-            <Button onClick={onCancel} variant="ghost" className="h-12">
+            <Button onClick={handleCancel} variant="ghost" className="h-12">
               {tCommon("cancel")}
             </Button>
           )}
