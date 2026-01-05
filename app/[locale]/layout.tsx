@@ -49,9 +49,14 @@ export default async function LocaleLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <NextIntlClientProvider messages={messages}>
             <ErrorBoundary>
+              <a href="#main-content" className="skip-to-main">
+                Skip to main content
+              </a>
               <Toaster />
               <Header />
-              {children}
+              <main id="main-content" tabIndex={-1}>
+                {children}
+              </main>
               <Footer />
             </ErrorBoundary>
           </NextIntlClientProvider>

@@ -12,10 +12,16 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border/50 shadow-soft">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
+      <nav
+        className="container mx-auto px-4 h-16 flex items-center justify-between"
+        aria-label="Main navigation"
+      >
+        <Link href="/" className="flex items-center gap-2 group" aria-label="MeetMate home">
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-medium transition-smooth group-hover:shadow-elevated group-hover:scale-105">
-            <Calendar className="w-5 h-5 text-white transition-smooth group-hover:rotate-12" />
+            <Calendar
+              className="w-5 h-5 text-white transition-smooth group-hover:rotate-12"
+              aria-hidden="true"
+            />
           </div>
           <span className="text-2xl font-bold text-foreground transition-smooth">MeetMate</span>
         </Link>
@@ -34,7 +40,7 @@ export function Header() {
             </Button>
           </div>
         </div>
-      </div>
+      </nav>
     </header>
   )
 }

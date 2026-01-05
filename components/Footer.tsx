@@ -13,11 +13,16 @@ export function Footer() {
         <Link
           href="https://github.com/KarolinaZielonka"
           target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center group"
+          aria-label="Created by kZielonka on GitHub"
         >
           <span className="text-xs text-foreground transition-smooth">{t("createdWith")}</span>
           <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-smooth group-hover:shadow-elevated group-hover:scale-105">
-            <Heart className="w-5 h-5 text-destructive transition-smooth group-hover:rotate-12" />
+            <Heart
+              className="w-5 h-5 text-destructive transition-smooth group-hover:rotate-12"
+              aria-hidden="true"
+            />
           </div>
           <span className="text-xs text-foreground transition-smooth">{t("by")} @kZielonka</span>
         </Link>

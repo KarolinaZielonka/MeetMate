@@ -90,6 +90,7 @@ export function AvailabilityHeatmap({ event, participants }: AvailabilityHeatmap
             aggregatedData={aggregatedData}
             selectedDate={selectedDate}
             onDateSelect={handleDateSelect}
+            participants={participants.length}
           />
         ) : (
           <IndividualView

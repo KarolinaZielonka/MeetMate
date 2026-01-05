@@ -467,6 +467,26 @@
     @apply ring-2 ring-primary/20 border-primary transition-all duration-200;
   }
 
+  /* Keyboard-only focus indicators (focus-visible) */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Remove focus ring for mouse/touch interactions */
+  *:focus:not(:focus-visible) {
+    @apply outline-none ring-0;
+  }
+
+  /* Enhanced button focus for accessibility */
+  button:focus-visible {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Link focus states */
+  a:focus-visible {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background rounded-sm;
+  }
+
   /* Animated button states */
   button {
     @apply transition-smooth;
@@ -488,6 +508,13 @@
 
   .link-animated:hover::after {
     @apply w-full;
+  }
+
+  /* Skip to main content link for screen readers */
+  .skip-to-main {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50;
+    @apply bg-primary text-primary-foreground px-4 py-2 rounded-md;
+    @apply focus:ring-2 focus:ring-primary focus:ring-offset-2;
   }
 }
 
