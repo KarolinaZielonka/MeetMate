@@ -54,7 +54,7 @@ const initialState = {
   participants: [],
   availability: new Map(),
   currentSession: null,
-  isLoading: false,
+  isLoading: true,
   error: null,
   userRole: "visitor" as UserRole,
   availabilitySelections: new Map(),

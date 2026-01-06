@@ -18,7 +18,9 @@
   },
   "footer": {
     "createdWith": "Stworzone z",
-    "by": "przez"
+    "by": "przez",
+    "privacy": "Prywatność",
+    "terms": "Regulamin"
   },
   "languageSwitcher": {
     "label": "Język",
@@ -323,6 +325,196 @@
       "description": "Strona, której szukasz, nie istnieje. Mogła zostać przeniesiona lub usunięta.",
       "goHome": "Strona główna",
       "helpText": "Jeśli kliknąłeś link, aby się tu dostać, wydarzenie mogło zostać usunięte lub link jest nieprawidłowy."
+    }
+  },
+  "privacy": {
+    "title": "Polityka Prywatności",
+    "lastUpdated": "Ostatnia aktualizacja: {date}",
+    "intro": "W MeetMate szanujemy Twoją prywatność i zobowiązujemy się do ochrony Twoich danych osobowych. Ta polityka prywatności wyjaśnia, w jaki sposób zbieramy, wykorzystujemy i przechowujemy Twoje informacje zgodnie z RODO (Ogólne Rozporządzenie o Ochronie Danych) i CCPA (Kalifornijska Ustawa o Ochronie Prywatności Konsumentów).",
+    "sections": {
+      "dataCollection": {
+        "title": "1. Dane, które zbieramy",
+        "description": "Zbieramy minimalne informacje niezbędne do świadczenia naszej usługi planowania:",
+        "items": {
+          "eventData": "Nazwy wydarzeń i zakresy dat, które tworzysz",
+          "participantNames": "Imiona uczestników wprowadzane podczas dołączania do wydarzeń",
+          "availability": "Wybory dostępności (dostępny, może, niedostępny dla poszczególnych dat)",
+          "sessionTokens": "Unikalne tokeny sesji (UUID) przechowywane w localStorage przeglądarki do zarządzania sesją",
+          "ipAddresses": "Adresy IP dla bezpieczeństwa i zapobiegania nadużyciom (automatycznie logowane przez naszego dostawcę hostingu)",
+          "technicalData": "Typ przeglądarki, typ urządzenia i czasy dostępu w celu poprawy usługi"
+        }
+      },
+      "howWeUse": {
+        "title": "2. Jak wykorzystujemy Twoje dane",
+        "description": "Twoje dane są wykorzystywane wyłącznie do:",
+        "items": {
+          "service": "Świadczenia podstawowej funkcjonalności planowania",
+          "realtime": "Umożliwienia aktualizacji w czasie rzeczywistym, gdy uczestnicy przesyłają dostępność",
+          "optimal": "Obliczania optymalnych dat spotkań na podstawie dostępności uczestników",
+          "security": "Zapobiegania nadużyciom i zapewnienia bezpieczeństwa usługi",
+          "improvement": "Poprawy wydajności usługi i doświadczenia użytkownika"
+        },
+        "noSelling": "Nigdy nie sprzedajemy, nie wynajmujemy ani nie przekazujemy Twoich danych osobowych stronom trzecim."
+      },
+      "dataStorage": {
+        "title": "3. Przechowywanie i bezpieczeństwo danych",
+        "description": "Twoje dane są bezpiecznie przechowywane:",
+        "items": {
+          "encryption": "Wszystkie dane są szyfrowane podczas przesyłania (HTTPS/TLS) i w spoczynku",
+          "database": "Przechowywane w Supabase (PostgreSQL) z branżowymi standardami bezpieczeństwa",
+          "location": "Dane są przechowywane w bezpiecznych centrach danych z fizycznymi i cyfrowymi środkami bezpieczeństwa",
+          "access": "Dostęp do danych jest ograniczony tylko do niezbędnego personelu",
+          "passwords": "Hasła do wydarzeń są haszowane za pomocą bcrypt (nigdy nie są przechowywane w postaci zwykłego tekstu)"
+        }
+      },
+      "dataRetention": {
+        "title": "4. Polityka przechowywania danych",
+        "description": "Automatycznie usuwamy dane wydarzeń po 30 dniach bezczynności, aby zminimalizować przechowywanie danych:",
+        "items": {
+          "automatic": "Wydarzenia i wszystkie powiązane dane (uczestnicy, dostępność) są usuwane 30 dni po dacie zakończenia wydarzenia",
+          "manual": "Twórcy wydarzeń mogą ręcznie usuwać wydarzenia w dowolnym momencie za pomocą panelu administracyjnego",
+          "immediate": "Usunięcie jest natychmiastowe i trwałe - dane nie mogą być odzyskane"
+        }
+      },
+      "localStorage": {
+        "title": "5. Pamięć przeglądarki (localStorage)",
+        "description": "Używamy localStorage Twojej przeglądarki do przechowywania tokenów sesji:",
+        "items": {
+          "purpose": "Tokeny sesji pozwalają na edycję dostępności po powrocie do wydarzenia",
+          "format": "Przechowywane z wzorcem klucza: session_[eventId]",
+          "control": "Możesz wyczyścić te dane w dowolnym momencie za pomocą ustawień przeglądarki",
+          "noTracking": "Nie używamy plików cookie do śledzenia ani reklam"
+        }
+      },
+      "yourRights": {
+        "title": "6. Twoje prawa (RODO i CCPA)",
+        "description": "Masz następujące prawa dotyczące swoich danych:",
+        "items": {
+          "access": "Prawo dostępu: Poproś o kopię swoich danych osobowych",
+          "rectification": "Prawo do sprostowania: Popraw nieprawidłowe dane",
+          "erasure": "Prawo do usunięcia: Poproś o usunięcie swoich danych (twórcy wydarzeń mogą usuwać wydarzenia bezpośrednio)",
+          "portability": "Prawo do przenoszenia danych: Otrzymaj swoje dane w ustrukturyzowanym formacie",
+          "object": "Prawo do sprzeciwu: Sprzeciw wobec przetwarzania danych",
+          "restrict": "Prawo do ograniczenia: Poproś o ograniczone przetwarzanie swoich danych",
+          "withdraw": "Prawo do wycofania zgody: Wycofaj zgodę w dowolnym momencie"
+        },
+        "exercise": "Aby skorzystać z tych praw, skontaktuj się z nami pod adresem e-mail podanym poniżej."
+      },
+      "thirdParty": {
+        "title": "7. Usługi stron trzecich",
+        "description": "Korzystamy z następujących usług stron trzecich:",
+        "items": {
+          "supabase": {
+            "name": "Supabase (Baza danych i czas rzeczywisty)",
+            "purpose": "Bezpieczne przechowywanie danych i synchronizacja w czasie rzeczywistym",
+            "link": "Polityka prywatności: https://supabase.com/privacy"
+          },
+          "vercel": {
+            "name": "Vercel (Hosting)",
+            "purpose": "Hosting aplikacji i dostarczanie treści",
+            "link": "Polityka prywatności: https://vercel.com/legal/privacy-policy"
+          }
+        },
+        "note": "Te usługi mogą mieć dostęp do danych technicznych (adresy IP, logi żądań) w ramach swojej infrastruktury."
+      },
+      "noAccounts": {
+        "title": "8. Brak kont użytkowników",
+        "description": "MeetMate nie wymaga kont użytkowników ani uwierzytelniania. Nie musisz podawać adresów e-mail, numerów telefonów ani tworzyć haseł, aby korzystać z naszej usługi. Cały udział jest anonimowy, z wyjątkiem imion, które zdecydujesz się podać podczas dołączania do wydarzeń."
+      },
+      "children": {
+        "title": "9. Prywatność dzieci",
+        "description": "MeetMate nie jest skierowany do dzieci poniżej 13 roku życia. Nie zbieramy świadomie danych osobowych od dzieci. Jeśli uważasz, że dziecko przekazało nam dane osobowe, skontaktuj się z nami, aby poprosić o usunięcie."
+      },
+      "changes": {
+        "title": "10. Zmiany w tej polityce",
+        "description": "Możemy od czasu do czasu aktualizować tę politykę prywatności. Zmiany zostaną opublikowane na tej stronie z zaktualizowaną datą rewizji. Dalsze korzystanie z MeetMate po zmianach stanowi akceptację zaktualizowanej polityki."
+      }
+    }
+  },
+  "terms": {
+    "title": "Regulamin Usługi",
+    "lastUpdated": "Ostatnia aktualizacja: {date}",
+    "intro": "Korzystając z MeetMate, akceptujesz niniejszy Regulamin Usługi. Przeczytaj go uważnie.",
+    "sections": {
+      "acceptance": {
+        "title": "1. Akceptacja warunków",
+        "description": "Uzyskując dostęp do MeetMate lub korzystając z niego, zgadzasz się być związany niniejszym Regulaminem Usługi i naszą Polityką Prywatności. Jeśli się nie zgadzasz, nie korzystaj z naszej usługi."
+      },
+      "description": {
+        "title": "2. Opis usługi",
+        "description": "MeetMate to darmowe, internetowe narzędzie do planowania grupowego, które umożliwia użytkownikom:",
+        "items": {
+          "create": "Tworzenie wydarzeń planujących bez konieczności zakładania kont użytkowników",
+          "share": "Udostępnianie linków do wydarzeń uczestnikom",
+          "coordinate": "Koordynowanie dostępności wielu osób",
+          "calculate": "Automatyczne obliczanie optymalnych dat spotkań"
+        }
+      },
+      "userResponsibilities": {
+        "title": "3. Obowiązki użytkownika",
+        "description": "Korzystając z MeetMate, zgadzasz się:",
+        "items": {
+          "accurate": "Podawać dokładne informacje podczas tworzenia wydarzeń lub uczestnictwa",
+          "lawful": "Korzystać z usługi tylko w celach zgodnych z prawem",
+          "respectful": "Nie nadużywać, nie nękać ani nie szkodzić innym użytkownikom",
+          "noSpam": "Nie używać usługi do spamu, phishingu ani złośliwych działań",
+          "security": "Zachować bezpieczeństwo i poufność haseł do wydarzeń",
+          "noAutomation": "Nie używać zautomatyzowanych narzędzi do nadużywania usługi (boty, skrapery)"
+        }
+      },
+      "prohibited": {
+        "title": "4. Zakazane działania",
+        "description": "Nie możesz:",
+        "items": {
+          "violate": "Naruszać żadnych przepisów prawa ani regulacji",
+          "infringe": "Naruszać praw własności intelektualnej",
+          "malicious": "Przesyłać złośliwego kodu ani wirusów",
+          "interfere": "Zakłócać ani przerywać działania usługi",
+          "impersonate": "Podszywać się pod innych ani podawać fałszywych informacji",
+          "collect": "Zbierać danych użytkowników bez zgody"
+        }
+      },
+      "intellectualProperty": {
+        "title": "5. Własność intelektualna",
+        "description": "MeetMate oraz jego oryginalne treści, funkcje i funkcjonalności są własnością dostawcy usług i są chronione przez międzynarodowe prawa autorskie, znaki towarowe i inne prawa własności intelektualnej."
+      },
+      "disclaimer": {
+        "title": "6. Wyłączenie gwarancji",
+        "description": "MeetMate jest dostarczany 'tak jak jest' i 'w miarę dostępności' bez żadnych gwarancji, czy to wyraźnych, czy dorozumianych. Nie gwarantujemy, że:",
+        "items": {
+          "uninterrupted": "Usługa będzie nieprzerwana lub wolna od błędów",
+          "secure": "Usługa będzie całkowicie bezpieczna",
+          "accurate": "Wszystkie informacje będą dokładne lub wiarygodne",
+          "bugs": "Wady zostaną naprawione"
+        }
+      },
+      "limitation": {
+        "title": "7. Ograniczenie odpowiedzialności",
+        "description": "W maksymalnym zakresie dozwolonym przez prawo, MeetMate i jego operatorzy nie ponoszą odpowiedzialności za jakiekolwiek pośrednie, przypadkowe, specjalne lub wynikowe szkody wynikające z korzystania z usługi lub niemożności z niej korzystania."
+      },
+      "dataLoss": {
+        "title": "8. Utrata danych",
+        "description": "Nie ponosimy odpowiedzialności za utratę danych wynikającą z:",
+        "items": {
+          "technical": "Awarii technicznych lub konserwacji systemu",
+          "deletion": "Automatycznego usuwania po 30-dniowym okresie przechowywania",
+          "userAction": "Usunięcia wydarzenia zainicjowanego przez użytkownika",
+          "localStorage": "Utraty tokenów sesji z wyczyszczenia danych przeglądarki"
+        },
+        "backup": "Zalecamy zachowanie własnych zapisów ważnych szczegółów wydarzeń."
+      },
+      "termination": {
+        "title": "9. Rozwiązanie",
+        "description": "Zastrzegamy sobie prawo do zawieszenia lub zakończenia dostępu do MeetMate dla użytkowników, którzy naruszają niniejszy Regulamin Usługi lub angażują się w nadużywające zachowania. Użytkownicy mogą w dowolnym momencie zaprzestać korzystania z usługi."
+      },
+      "changes": {
+        "title": "10. Zmiany w warunkach",
+        "description": "Możemy w dowolnym momencie modyfikować niniejszy Regulamin Usługi. Zmiany zostaną opublikowane na tej stronie z zaktualizowaną datą. Dalsze korzystanie po zmianach stanowi akceptację zmodyfikowanych warunków."
+      },
+      "governing": {
+        "title": "11. Prawo właściwe",
+        "description": "Niniejszy Regulamin Usługi podlega i jest interpretowany zgodnie z obowiązującym prawem, bez względu na zasady kolizji prawa."
+      }
     }
   }
 }

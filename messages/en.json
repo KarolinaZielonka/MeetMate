@@ -18,7 +18,9 @@
   },
   "footer": {
     "createdWith": "Created with",
-    "by": "by"
+    "by": "by",
+    "privacy": "Privacy",
+    "terms": "Terms"
   },
   "languageSwitcher": {
     "label": "Language",
@@ -323,6 +325,196 @@
       "description": "The page you're looking for doesn't exist. It may have been moved or deleted.",
       "goHome": "Go to Homepage",
       "helpText": "If you followed a link to get here, the event may have been deleted or the link is incorrect."
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: {date}",
+    "intro": "At MeetMate, we respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and store your information in compliance with GDPR (General Data Protection Regulation) and CCPA (California Consumer Privacy Act).",
+    "sections": {
+      "dataCollection": {
+        "title": "1. Data We Collect",
+        "description": "We collect minimal information necessary to provide our scheduling service:",
+        "items": {
+          "eventData": "Event names and date ranges you create",
+          "participantNames": "Participant names entered when joining events",
+          "availability": "Availability selections (available, maybe, unavailable dates)",
+          "sessionTokens": "Unique session tokens (UUIDs) stored in your browser's localStorage for session management",
+          "ipAddresses": "IP addresses for security and abuse prevention (automatically logged by our hosting provider)",
+          "technicalData": "Browser type, device type, and access times for service improvement"
+        }
+      },
+      "howWeUse": {
+        "title": "2. How We Use Your Data",
+        "description": "Your data is used exclusively for:",
+        "items": {
+          "service": "Providing the core scheduling functionality",
+          "realtime": "Enabling real-time updates when participants submit availability",
+          "optimal": "Calculating optimal meeting dates based on participant availability",
+          "security": "Preventing abuse and ensuring service security",
+          "improvement": "Improving service performance and user experience"
+        },
+        "noSelling": "We never sell, rent, or trade your personal information to third parties."
+      },
+      "dataStorage": {
+        "title": "3. Data Storage and Security",
+        "description": "Your data is stored securely:",
+        "items": {
+          "encryption": "All data is encrypted in transit (HTTPS/TLS) and at rest",
+          "database": "Stored in Supabase (PostgreSQL) with industry-standard security practices",
+          "location": "Data is stored in secure data centers with physical and digital security measures",
+          "access": "Access to data is restricted to essential personnel only",
+          "passwords": "Event passwords are hashed using bcrypt (never stored in plain text)"
+        }
+      },
+      "dataRetention": {
+        "title": "4. Data Retention Policy",
+        "description": "We automatically delete event data after 30 days of inactivity to minimize data storage:",
+        "items": {
+          "automatic": "Events and all associated data (participants, availability) are deleted 30 days after the event's end date",
+          "manual": "Event creators can manually delete events at any time through the admin controls",
+          "immediate": "Deletion is immediate and permanent - data cannot be recovered"
+        }
+      },
+      "localStorage": {
+        "title": "5. Browser Storage (localStorage)",
+        "description": "We use your browser's localStorage to store session tokens:",
+        "items": {
+          "purpose": "Session tokens allow you to edit your availability when returning to an event",
+          "format": "Stored with key pattern: session_[eventId]",
+          "control": "You can clear this data anytime through your browser settings",
+          "noTracking": "We do not use cookies for tracking or advertising"
+        }
+      },
+      "yourRights": {
+        "title": "6. Your Rights (GDPR & CCPA)",
+        "description": "You have the following rights regarding your data:",
+        "items": {
+          "access": "Right to access: Request a copy of your personal data",
+          "rectification": "Right to rectification: Correct inaccurate data",
+          "erasure": "Right to erasure: Request deletion of your data (event creators can delete events directly)",
+          "portability": "Right to data portability: Receive your data in a structured format",
+          "object": "Right to object: Object to data processing",
+          "restrict": "Right to restriction: Request restricted processing of your data",
+          "withdraw": "Right to withdraw consent: Withdraw consent at any time"
+        },
+        "exercise": "To exercise these rights, please contact us at the email below."
+      },
+      "thirdParty": {
+        "title": "7. Third-Party Services",
+        "description": "We use the following third-party services:",
+        "items": {
+          "supabase": {
+            "name": "Supabase (Database & Real-time)",
+            "purpose": "Secure data storage and real-time synchronization",
+            "link": "Privacy Policy: https://supabase.com/privacy"
+          },
+          "vercel": {
+            "name": "Vercel (Hosting)",
+            "purpose": "Application hosting and content delivery",
+            "link": "Privacy Policy: https://vercel.com/legal/privacy-policy"
+          }
+        },
+        "note": "These services may have access to technical data (IP addresses, request logs) as part of their infrastructure."
+      },
+      "noAccounts": {
+        "title": "8. No User Accounts",
+        "description": "MeetMate does not require user accounts or authentication. You do not need to provide email addresses, phone numbers, or create passwords to use our service. All participation is anonymous except for the names you choose to provide when joining events."
+      },
+      "children": {
+        "title": "9. Children's Privacy",
+        "description": "MeetMate is not directed at children under 13 years of age. We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please contact us to request deletion."
+      },
+      "changes": {
+        "title": "10. Changes to This Policy",
+        "description": "We may update this privacy policy from time to time. Changes will be posted on this page with an updated revision date. Continued use of MeetMate after changes constitutes acceptance of the updated policy."
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: {date}",
+    "intro": "By using MeetMate, you agree to these Terms of Service. Please read them carefully.",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "description": "By accessing or using MeetMate, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, do not use our service."
+      },
+      "description": {
+        "title": "2. Service Description",
+        "description": "MeetMate is a free, web-based group scheduling tool that allows users to:",
+        "items": {
+          "create": "Create scheduling events without requiring user accounts",
+          "share": "Share event links with participants",
+          "coordinate": "Coordinate availability across multiple people",
+          "calculate": "Automatically calculate optimal meeting dates"
+        }
+      },
+      "userResponsibilities": {
+        "title": "3. User Responsibilities",
+        "description": "When using MeetMate, you agree to:",
+        "items": {
+          "accurate": "Provide accurate information when creating events or participating",
+          "lawful": "Use the service only for lawful purposes",
+          "respectful": "Not abuse, harass, or harm other users",
+          "noSpam": "Not use the service for spam, phishing, or malicious activities",
+          "security": "Keep event passwords secure and confidential",
+          "noAutomation": "Not use automated tools to abuse the service (bots, scrapers)"
+        }
+      },
+      "prohibited": {
+        "title": "4. Prohibited Activities",
+        "description": "You may not:",
+        "items": {
+          "violate": "Violate any laws or regulations",
+          "infringe": "Infringe on intellectual property rights",
+          "malicious": "Upload malicious code or viruses",
+          "interfere": "Interfere with or disrupt the service",
+          "impersonate": "Impersonate others or provide false information",
+          "collect": "Collect user data without consent"
+        }
+      },
+      "intellectualProperty": {
+        "title": "5. Intellectual Property",
+        "description": "MeetMate and its original content, features, and functionality are owned by the service provider and are protected by international copyright, trademark, and other intellectual property laws."
+      },
+      "disclaimer": {
+        "title": "6. Disclaimer of Warranties",
+        "description": "MeetMate is provided 'as is' and 'as available' without warranties of any kind, either express or implied. We do not guarantee that:",
+        "items": {
+          "uninterrupted": "The service will be uninterrupted or error-free",
+          "secure": "The service will be completely secure",
+          "accurate": "All information will be accurate or reliable",
+          "bugs": "Defects will be corrected"
+        }
+      },
+      "limitation": {
+        "title": "7. Limitation of Liability",
+        "description": "To the maximum extent permitted by law, MeetMate and its operators shall not be liable for any indirect, incidental, special, or consequential damages arising from your use or inability to use the service."
+      },
+      "dataLoss": {
+        "title": "8. Data Loss",
+        "description": "We are not responsible for data loss resulting from:",
+        "items": {
+          "technical": "Technical failures or system maintenance",
+          "deletion": "Automatic deletion after 30-day retention period",
+          "userAction": "User-initiated event deletion",
+          "localStorage": "Loss of session tokens from browser data clearing"
+        },
+        "backup": "We recommend keeping your own records of important event details."
+      },
+      "termination": {
+        "title": "9. Termination",
+        "description": "We reserve the right to suspend or terminate access to MeetMate for users who violate these Terms of Service or engage in abusive behavior. Users may stop using the service at any time."
+      },
+      "changes": {
+        "title": "10. Changes to Terms",
+        "description": "We may modify these Terms of Service at any time. Changes will be posted on this page with an updated date. Continued use after changes constitutes acceptance of the modified terms."
+      },
+      "governing": {
+        "title": "11. Governing Law",
+        "description": "These Terms of Service are governed by and construed in accordance with applicable laws, without regard to conflict of law principles."
+      }
     }
   }
 }

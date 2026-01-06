@@ -42,7 +42,6 @@ export default function CreateEventPage() {
       return
     }
 
-    toast.success(t("successMessage"))
     if (result.shareUrl) {
       router.push(`/e/${result.shareUrl}`)
     }
