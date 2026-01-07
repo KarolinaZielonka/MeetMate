@@ -6,8 +6,10 @@ import {
   validateRequired,
   validateString,
 } from "@/lib/api"
+import { applyRateLimit, eventCreationLimiter, getClientIp } from "@/lib/ratelimit"
 import { hashPassword } from "@/lib/utils/auth"
 import { formatDateForAPI, parseDate, validateDateRange } from "@/lib/utils/dates"
+import { verifyTurnstileToken } from "@/lib/utils/turnstile"
 import { generateShareUrl } from "@/lib/utils/urlGenerator"
 
 /**
@@ -19,6 +21,7 @@ interface CreateEventBody {
   end_date: string
   creator_name: string
   password?: string
+  captcha_token?: string
 }
 
 /**
@@ -52,11 +55,44 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       end_date: body.end_date,
       creator_name: body.creator_name,
       password: body.password,
+      captcha_token: body.captcha_token,
     }
   },
 
   // Validate inputs
-  validate: async (body, _params) => {
+  validate: async (body, _params, request) => {
+    // Verify CAPTCHA token if configured
+    if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+      if (!body.captcha_token) {
+        return {
+          valid: false,
+          error: "CAPTCHA verification is required",
+          status: 400,
+        }
+      }
+
+      const captchaValid = await verifyTurnstileToken(body.captcha_token)
+      if (!captchaValid) {
+        return {
+          valid: false,
+          error: "CAPTCHA verification failed. Please try again.",
+          status: 400,
+        }
+      }
+    }
+
+    // Apply rate limiting (5 events per hour per IP)
+    const clientIp = getClientIp(request)
+    const rateLimitResult = await applyRateLimit(eventCreationLimiter, clientIp)
+
+    if (!rateLimitResult.success) {
+      return {
+        valid: false,
+        error: rateLimitResult.error || "Too many requests. Please try again later.",
+        status: 429,
+      }
+    }
+
     // Validate required fields
     const requiredValidation = validateRequired(
       {

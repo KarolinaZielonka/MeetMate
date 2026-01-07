@@ -7,6 +7,7 @@ import { EventDetailsSection } from "@/components/create-event/EventDetailsSecti
 import { OptionalSettingsSection } from "@/components/create-event/OptionalSettingsSection"
 import { SubmitButton } from "@/components/create-event/SubmitButton"
 import { SkeletonForm } from "@/components/skeletons"
+import { Turnstile } from "@/components/Turnstile"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { useRouter } from "@/i18n/routing"
@@ -27,6 +28,15 @@ export default function CreateEventPage() {
 
   const handleDateChange = (startDate: string, endDate: string) => {
     setDateRange(startDate, endDate)
+  }
+
+  const handleCaptchaVerify = (token: string) => {
+    setFormField("captchaToken", token)
+  }
+
+  const handleCaptchaError = () => {
+    setFormField("captchaToken", "")
+    toast.error(t("errors.captchaFailed"))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,6 +96,8 @@ export default function CreateEventPage() {
               {validation.warning && <AlertMessage type="warning" message={validation.warning} />}
 
               {validation.error && <AlertMessage type="error" message={validation.error} />}
+
+              <Turnstile onVerify={handleCaptchaVerify} onError={handleCaptchaError} />
 
               <SubmitButton isLoading={isLoading} isDisabled={isLoading || !!validation.error} />
             </form>

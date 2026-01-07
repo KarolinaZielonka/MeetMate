@@ -5,7 +5,6 @@
 A modern, mobile-first web application for coordinating group availability without requiring user accounts. Built for friends organizing social events who are tired of outdated scheduling tools.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
 ## 🎯 Problem Statement
 
@@ -40,7 +39,6 @@ MeetMate solves these problems with a clean, modern interface that works seamles
 - 📅 Calendar integration (Google, Apple, Outlook)
 - 🔄 Recurring events
 - 💬 Event comments and chat
-- 🌙 Dark mode
 
 ## 🏗️ Tech Stack
 
@@ -84,7 +82,7 @@ cd meetmate
 
 2. **Install dependencies**
 ```bash
-pnpm install
+npm install
 ```
 
 3. **Set up environment variables**
@@ -93,30 +91,80 @@ cp .env.example .env.local
 ```
 
 Edit `.env.local` with your credentials:
+
+**Required Variables:**
 ```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+# Supabase Configuration
+# Get these from: https://supabase.com/dashboard/project/_/settings/api
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 
-# App Configuration
+# Application Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# Optional: AI Integration (Phase 2)
-ANTHROPIC_API_KEY=your_anthropic_key
 ```
+
+**Optional Variables:**
+```env
+# Rate Limiting (Upstash Redis)
+# If not set, rate limiting will be disabled (development only)
+# For production, you MUST configure Upstash Redis for security
+# Get these from: https://console.upstash.com/redis
+UPSTASH_REDIS_REST_URL=https://your-redis-instance.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your-redis-token-here
+
+# Cloudflare Turnstile (CAPTCHA)
+# If not set, CAPTCHA will be disabled (not recommended for production)
+# Get these from: https://dash.cloudflare.com/?to=/:account/turnstile
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-turnstile-site-key-here
+TURNSTILE_SECRET_KEY=your-turnstile-secret-key-here
+
+# AI Integration (Phase 2 - Future Feature)
+# Get this from: https://console.anthropic.com/
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
+```
+
+**Setting up Upstash Redis for Rate Limiting:**
+1. Create a free account at [Upstash](https://console.upstash.com/)
+2. Create a new Redis database (choose a region close to your deployment)
+3. Copy the `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` from the database details
+4. Add them to your `.env.local` file
+
+**Rate Limits (when Redis is configured):**
+- Event creation: 5 events per hour per IP
+- Participant joins: 10 joins per hour per IP
+- Availability submissions: 20 submissions per hour per IP
+- Password verification: 5 attempts per 15 minutes per IP (strict to prevent brute force)
+
+**Setting up Cloudflare Turnstile (CAPTCHA):**
+1. Create a free account at [Cloudflare](https://dash.cloudflare.com/)
+2. Navigate to **Turnstile** in the dashboard
+3. Click "Add Site"
+4. Configure your site:
+   - **Widget Mode**: Managed (recommended) or Non-Interactive
+   - **Domains**: Add `localhost` for development and your production domain
+5. Copy the **Site Key** and **Secret Key**
+6. Add them to your `.env.local` file:
+   - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` = Site Key
+   - `TURNSTILE_SECRET_KEY` = Secret Key
+
+**Why Turnstile?**
+- ✅ **Free and privacy-friendly** - Better than reCAPTCHA
+- ✅ **No tracking** - Respects user privacy
+- ✅ **Lightweight** - Minimal impact on page load
+- ✅ **Prevents bot spam** - Stops automated event creation abuse
 
 4. **Set up the database**
 ```bash
 # Run Supabase migrations
-pnpm run db:migrate
+npm run db:migrate
 
 # Or manually run the SQL from /supabase/migrations/001_initial_schema.sql
 ```
 
 5. **Run the development server**
 ```bash
-pnpm run dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the app.
@@ -141,29 +189,6 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 - Enables real-time availability aggregation
 
 See full schema in [`/supabase/migrations/001_initial_schema.sql`](./supabase/migrations/001_initial_schema.sql)
-
-## 🎨 Design System
-
-### Colors
-```
-Primary (Blue):   #3B82F6
-Success (Green):  #10B981
-Warning (Orange): #F59E0B
-Error (Red):      #EF4444
-Neutral (Gray):   Tailwind Gray scale
-```
-
-### Typography
-- **Font Family**: Inter (system fallback)
-- **Heading Scale**: 2xl → xl → lg → base
-- **Body**: base (16px)
-- **Small**: sm (14px)
-
-### Spacing
-Follows Tailwind's spacing scale (4px increments)
-
-### Components
-All UI components built with shadcn/ui for consistency and accessibility
 
 ## 📄 License
 

@@ -97,7 +97,9 @@
       "nameRequired": "Nazwa wydarzenia jest wymagana",
       "datesRequired": "Wymagane są obie daty: rozpoczęcia i zakończenia",
       "creatorNameRequired": "Twoje imię jest wymagane",
-      "invalidDate": "Nieprawidłowy format daty"
+      "invalidDate": "Nieprawidłowy format daty",
+      "captchaRequired": "Proszę ukończyć weryfikację CAPTCHA",
+      "captchaFailed": "Weryfikacja CAPTCHA nie powiodła się. Spróbuj ponownie."
     }
   },
   "eventPage": {

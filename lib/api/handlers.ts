@@ -21,7 +21,11 @@ export interface ApiHandlerConfig<TBody = unknown, TResult = unknown> {
   /** Parse and validate route params */
   parseParams?: (params: unknown) => Promise<Record<string, string>>
   /** Validate the parsed body and params */
-  validate?: (body: TBody, params: Record<string, string>) => Promise<ValidationResult>
+  validate?: (
+    body: TBody,
+    params: Record<string, string>,
+    request: NextRequest
+  ) => Promise<ValidationResult>
   /** Main handler logic */
   handler: (body: TBody, params: Record<string, string>, client: SupabaseClient) => Promise<TResult>
   /** Use admin client (bypasses RLS) - default: false */
@@ -76,7 +80,7 @@ export function createApiHandler<TBody = unknown, TResult = unknown>(
 
       // Validate inputs
       if (config.validate) {
-        const validation = await config.validate(body, params)
+        const validation = await config.validate(body, params, request)
         if (!validation.valid) {
           return NextResponse.json(
             {

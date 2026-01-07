@@ -9,6 +9,7 @@ import {
   validateString,
   validateUUID,
 } from "@/lib/api"
+import { applyRateLimit, getClientIp, participantJoinLimiter } from "@/lib/ratelimit"
 
 /**
  * Request body type for participant creation
@@ -41,7 +42,19 @@ export const POST = createApiHandler<CreateParticipantBody, CreateParticipantRes
   },
 
   // Validate inputs
-  validate: async (body, _params) => {
+  validate: async (body, _params, request) => {
+    // Apply rate limiting (10 joins per hour per IP)
+    const clientIp = getClientIp(request)
+    const rateLimitResult = await applyRateLimit(participantJoinLimiter, clientIp)
+
+    if (!rateLimitResult.success) {
+      return {
+        valid: false,
+        error: rateLimitResult.error || "Too many requests. Please try again later.",
+        status: 429,
+      }
+    }
+
     return combineValidations(
       validateRequired({ event_id: body.event_id, name: body.name }, ["event_id", "name"]),
       validateUUID(body.event_id, "event_id"),

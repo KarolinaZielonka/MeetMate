@@ -22,7 +22,9 @@ export function LegalSection({
     <section className="bg-card border border-border rounded-xl p-6">
       {Icon ? (
         <div className="flex items-start gap-3 mb-4">
-          <div className={`w-10 h-10 rounded-lg ${iconBgClass} flex items-center justify-center flex-shrink-0`}>
+          <div
+            className={`w-10 h-10 rounded-lg ${iconBgClass} flex items-center justify-center flex-shrink-0`}
+          >
             <Icon className={`w-5 h-5 ${iconColorClass}`} />
           </div>
           <div className="flex-1">

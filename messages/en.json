@@ -97,7 +97,9 @@
       "nameRequired": "Event name is required",
       "datesRequired": "Both start and end dates are required",
       "creatorNameRequired": "Your name is required",
-      "invalidDate": "Invalid date format"
+      "invalidDate": "Invalid date format",
+      "captchaRequired": "Please complete the CAPTCHA verification",
+      "captchaFailed": "CAPTCHA verification failed. Please try again."
     }
   },
   "eventPage": {

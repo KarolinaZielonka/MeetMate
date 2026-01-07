@@ -20,7 +20,7 @@ import {
 export interface LegalSectionConfig {
   key: string
   icon?: LucideIcon
-  iconVariant?: "default" | "destructive"
+  iconVariant?: "primary" | "destructive"
   hasBulletList?: boolean
   bulletListItemKeys?: string[]
   bulletVariant?: "default" | "destructive"

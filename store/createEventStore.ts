@@ -8,6 +8,7 @@ interface FormData {
   endDate: string
   creatorName: string
   password: string
+  captchaToken: string
 }
 
 interface ValidationState {
@@ -38,6 +39,7 @@ const initialFormData: FormData = {
   endDate: "",
   creatorName: "",
   password: "",
+  captchaToken: "",
 }
 
 const initialValidation: ValidationState = {
@@ -109,6 +111,12 @@ export const useCreateEventStore = create<CreateEventState>((set, get) => ({
       return false
     }
 
+    // Only validate CAPTCHA if the site key is configured
+    if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !formData.captchaToken) {
+      set({ validation: { error: t("errors.captchaRequired"), warning: null } })
+      return false
+    }
+
     return true
   },
 
@@ -136,6 +144,7 @@ export const useCreateEventStore = create<CreateEventState>((set, get) => ({
           end_date: formData.endDate,
           creator_name: formData.creatorName.trim(),
           password: formData.password || undefined,
+          captcha_token: formData.captchaToken || undefined,
         }),
       })
 

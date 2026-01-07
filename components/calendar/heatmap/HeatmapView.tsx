@@ -17,7 +17,7 @@ export function HeatmapView({
   aggregatedData,
   selectedDate,
   onDateSelect,
-  participants
+  participants,
 }: HeatmapViewProps) {
   const getHeatmapColor = (dateData: DateAggregation): string => {
     if (dateData.total === 0) {

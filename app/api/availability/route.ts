@@ -6,6 +6,7 @@ import {
   validateDateFormat,
   validateRequired,
 } from "@/lib/api"
+import { applyRateLimit, availabilitySubmissionLimiter, getClientIp } from "@/lib/ratelimit"
 import type { AvailabilityStatus } from "@/types"
 
 /**
@@ -46,7 +47,19 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
   },
 
   // Validate inputs
-  validate: async (body, _params) => {
+  validate: async (body, _params, request) => {
+    // Apply rate limiting (20 submissions per hour per IP)
+    const clientIp = getClientIp(request)
+    const rateLimitResult = await applyRateLimit(availabilitySubmissionLimiter, clientIp)
+
+    if (!rateLimitResult.success) {
+      return {
+        valid: false,
+        error: rateLimitResult.error || "Too many requests. Please try again later.",
+        status: 429,
+      }
+    }
+
     // Validate required fields
     const requiredValidation = validateRequired({ participant_id: body.participant_id }, [
       "participant_id",

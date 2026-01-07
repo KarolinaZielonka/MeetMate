@@ -8,6 +8,7 @@ import {
   validateRequired,
   validateString,
 } from "@/lib/api"
+import { applyRateLimit, getClientIp, passwordVerificationLimiter } from "@/lib/ratelimit"
 import { verifyPassword } from "@/lib/utils/auth"
 
 /**
@@ -40,7 +41,20 @@ export const POST = createApiHandler<VerifyPasswordBody, VerifyPasswordResponse>
   },
 
   // Validate inputs
-  validate: async (body, params) => {
+  validate: async (body, params, request) => {
+    // Apply rate limiting (5 attempts per 15 minutes per IP)
+    // Stricter limit to prevent brute force attacks
+    const clientIp = getClientIp(request)
+    const rateLimitResult = await applyRateLimit(passwordVerificationLimiter, clientIp)
+
+    if (!rateLimitResult.success) {
+      return {
+        valid: false,
+        error: rateLimitResult.error || "Too many password attempts. Please try again later.",
+        status: 429,
+      }
+    }
+
     return combineValidations(
       validateRequired({ shareUrl: params.shareUrl, password: body.password }, [
         "shareUrl",
