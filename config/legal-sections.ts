@@ -23,10 +23,10 @@ export interface LegalSectionConfig {
   iconVariant?: "primary" | "destructive"
   hasBulletList?: boolean
   bulletListItemKeys?: string[]
-  bulletVariant?: "default" | "destructive"
+  bulletVariant?: "primary" | "destructive"
   hasHighlight?: boolean
   highlightKey?: string
-  highlightVariant?: "default" | "muted"
+  highlightVariant?: "primary" | "muted"
   hasServiceCards?: boolean
 }
 
@@ -51,7 +51,7 @@ export const privacySections: LegalSectionConfig[] = [
     bulletListItemKeys: ["service", "realtime", "optimal", "security", "improvement"],
     hasHighlight: true,
     highlightKey: "noSelling",
-    highlightVariant: "default",
+    highlightVariant: "primary",
   },
   {
     key: "dataStorage",

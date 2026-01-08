@@ -49,20 +49,14 @@ export function createApiHandler<TBody = unknown, TResult = unknown>(
 ) {
   return async (
     request: NextRequest,
-    context: { params?: Promise<Record<string, string>> | Record<string, string> }
+    context: { params: Promise<Record<string, string>> }
   ): Promise<NextResponse<ApiResponse<TResult>>> => {
     try {
-      // Parse route params
-      let params: Record<string, string> = {}
-      if (context.params) {
-        // Handle both Promise and direct params
-        params = context.params instanceof Promise ? await context.params : context.params
+      // Parse route params - In Next.js 15, params is always a Promise
+      const params = await context.params
 
-        // Apply custom param parsing if provided
-        if (config.parseParams) {
-          params = await config.parseParams(params)
-        }
-      }
+      // Apply custom param parsing if provided
+      const finalParams = config.parseParams ? await config.parseParams(params) : params
 
       // Parse request body (for POST/PUT/PATCH)
       let body = {} as TBody
@@ -80,7 +74,7 @@ export function createApiHandler<TBody = unknown, TResult = unknown>(
 
       // Validate inputs
       if (config.validate) {
-        const validation = await config.validate(body, params, request)
+        const validation = await config.validate(body, finalParams, request)
         if (!validation.valid) {
           return NextResponse.json(
             {
@@ -96,7 +90,7 @@ export function createApiHandler<TBody = unknown, TResult = unknown>(
       const client = config.useAdminClient ? supabaseAdmin : supabase
 
       // Execute handler
-      const result = await config.handler(body, params, client)
+      const result = await config.handler(body, finalParams, client)
 
       // Return success response
       return NextResponse.json(
