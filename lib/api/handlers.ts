@@ -49,12 +49,12 @@ export function createApiHandler<TBody = unknown, TResult = unknown>(
 ) {
   return async (
     request: NextRequest,
-    context?: { params?: Promise<Record<string, string>> | Record<string, string> }
+    context: { params?: Promise<Record<string, string>> | Record<string, string> }
   ): Promise<NextResponse<ApiResponse<TResult>>> => {
     try {
       // Parse route params
       let params: Record<string, string> = {}
-      if (context?.params) {
+      if (context.params) {
         // Handle both Promise and direct params
         params = context.params instanceof Promise ? await context.params : context.params
 
