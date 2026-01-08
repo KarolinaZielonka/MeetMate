@@ -49,7 +49,7 @@ export function createApiHandler<TBody = unknown, TResult = unknown>(
 ) {
   return async (
     request: NextRequest,
-    context?: { params: Promise<Record<string, string>> | Record<string, string> }
+    context?: { params?: Promise<Record<string, string>> | Record<string, string> }
   ): Promise<NextResponse<ApiResponse<TResult>>> => {
     try {
       // Parse route params
