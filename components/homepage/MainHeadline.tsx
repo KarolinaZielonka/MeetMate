@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 export function MainHeadline() {
   const t = useTranslations("homepage")
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0)
+  const [mounted, setMounted] = useState(false)
 
   const titleVariations = [
     { main: t("titles.0.main"), accent: t("titles.0.accent") },
@@ -14,14 +15,21 @@ export function MainHeadline() {
     { main: t("titles.2.main"), accent: t("titles.2.accent") },
   ]
 
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // Rotate through titles every 4 seconds
   useEffect(() => {
+    if (!mounted) return
+
     const interval = setInterval(() => {
       setCurrentTitleIndex((prev) => (prev + 1) % titleVariations.length)
     }, 4000)
 
     return () => clearInterval(interval)
-  }, [titleVariations.length])
+  }, [titleVariations.length, mounted])
 
   const currentTitle = titleVariations[currentTitleIndex]
 
@@ -50,7 +58,7 @@ export function MainHeadline() {
   const renderAnimatedText = (text: string, startIndex: number, className?: string) => {
     return text.split("").map((char, index) => (
       <motion.span
-        key={`${char}-${startIndex}`}
+        key={`${currentTitleIndex}-${startIndex}-${index}-${char}`}
         custom={startIndex + index}
         initial="hidden"
         animate="visible"
@@ -62,6 +70,24 @@ export function MainHeadline() {
         {char === " " ? "\u00A0" : char}
       </motion.span>
     ))
+  }
+
+  // Prevent hydration mismatch by rendering static content until mounted
+  if (!mounted) {
+    return (
+      <div className="space-y-4 fade-in">
+        <div className="inline-block">
+          <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
+            {t("badge")}
+          </span>
+        </div>
+
+        <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight min-h-[80px] md:min-h-[120px]">
+          {currentTitle.main}
+          <span className="text-primary">{currentTitle.accent}</span>
+        </h1>
+      </div>
+    )
   }
 
   return (
