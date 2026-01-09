@@ -1,5 +1,6 @@
 "use client"
 
+import { parseDateAsLocal } from "@/lib/utils/dates"
 import type { Participant } from "@/types"
 import type { DateAggregation } from "./types"
 
@@ -24,7 +25,7 @@ export function IndividualView({ dates, participants, aggregatedData }: Individu
                   (p) => p.id === participant.id
                 )?.status
 
-                const dateObj = new Date(date)
+                const dateObj = parseDateAsLocal(date)
                 const dayOfMonth = dateObj.getDate()
 
                 return (

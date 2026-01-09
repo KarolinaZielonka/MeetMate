@@ -1,6 +1,7 @@
 "use client"
 
 import { useTranslations } from "next-intl"
+import { parseDateAsLocal } from "@/lib/utils/dates"
 import type { DateAggregation } from "./types"
 
 interface SelectedDateDetailsProps {
@@ -14,7 +15,7 @@ export function SelectedDateDetails({ selectedDate, dateData }: SelectedDateDeta
   return (
     <div className="border-t border-border pt-4 space-y-2">
       <h4 className="font-semibold text-foreground">
-        {new Date(selectedDate).toLocaleDateString("en-US", {
+        {parseDateAsLocal(selectedDate).toLocaleDateString("en-US", {
           weekday: "long",
           year: "numeric",
           month: "long",

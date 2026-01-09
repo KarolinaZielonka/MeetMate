@@ -13,6 +13,7 @@ import {
   isWeekend,
   MAX_DATE_RANGE,
   parseDate,
+  parseDateAsLocal,
   validateDateRange,
   WARNING_DATE_RANGE,
 } from "@/lib/utils/dates"
@@ -37,6 +38,35 @@ describe("dates utilities", () => {
       expect(result).toBeInstanceOf(Date)
       // Use formatDateForAPI instead of toISOString to avoid timezone issues
       expect(formatDateForAPI(result)).toBe("2026-03-25")
+    })
+  })
+
+  describe("parseDateAsLocal", () => {
+    it("should parse YYYY-MM-DD as local midnight", () => {
+      const result = parseDateAsLocal("2026-01-02")
+      expect(result).toBeInstanceOf(Date)
+      expect(result.getFullYear()).toBe(2026)
+      expect(result.getMonth()).toBe(0) // January (0-indexed)
+      expect(result.getDate()).toBe(2)
+    })
+
+    it("should not shift date due to timezone", () => {
+      // This is the key test - ensures Jan 2nd stays Jan 2nd regardless of timezone
+      const result = parseDateAsLocal("2026-01-02")
+      expect(formatDateForAPI(result)).toBe("2026-01-02")
+    })
+
+    it("should handle year boundaries correctly", () => {
+      const result = parseDateAsLocal("2025-12-31")
+      expect(result.getFullYear()).toBe(2025)
+      expect(result.getMonth()).toBe(11) // December (0-indexed)
+      expect(result.getDate()).toBe(31)
+    })
+
+    it("should handle first day of month correctly", () => {
+      const result = parseDateAsLocal("2026-03-01")
+      expect(result.getDate()).toBe(1)
+      expect(result.getMonth()).toBe(2) // March (0-indexed)
     })
   })
 

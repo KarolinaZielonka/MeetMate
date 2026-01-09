@@ -49,10 +49,10 @@ export function MonthCalendar({
 
       {/* Calendar grid */}
       <div className="grid grid-cols-7 gap-1">
-        {calendarDays.map((day) => {
+        {calendarDays.map((day, index) => {
           // Empty cells for alignment
           if (!day) {
-            return <div key={`empty-${day}`} className="aspect-square" />
+            return <div key={`empty-${index}`} className="aspect-square" />
           }
 
           const status = availability.get(day.date)

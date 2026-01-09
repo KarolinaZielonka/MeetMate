@@ -34,15 +34,15 @@
 
     /* Destructive/Error States */
     --destructive: 0 84.2% 60.2%; /* red-500 */
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 0 72% 30%; /* dark red for text on light backgrounds */
 
     /* Success States */
     --success: 142 76% 36%; /* green-600 */
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 142 76% 20%; /* dark green for text on light backgrounds */
 
     /* Warning States */
     --warning: 38 92% 50%; /* orange-500 */
-    --warning-foreground: 0 0% 100%;
+    --warning-foreground: 26 83% 25%; /* dark orange/brown for text on light backgrounds */
 
     /* Borders & Inputs */
     --border: 240 5.9% 90%;

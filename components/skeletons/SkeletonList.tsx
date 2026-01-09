@@ -48,9 +48,9 @@ export function SkeletonList({
 }: SkeletonListProps) {
   return (
     <div className={cn("space-y-3", className)}>
-      {Array.from({ length: count }).map((_) => (
+      {Array.from({ length: count }).map((_, itemIndex) => (
         <div
-          key={count}
+          key={`skeleton-item-${itemIndex}`}
           className={cn(
             "flex items-center gap-3 p-4 bg-muted rounded-lg",
             !shimmer && "animate-pulse",
@@ -69,7 +69,7 @@ export function SkeletonList({
           <div className="flex-1 space-y-2">
             {Array.from({ length: lines }).map((_, lineIndex) => (
               <Skeleton
-                key={lines}
+                key={`skeleton-line-${lineIndex}`}
                 className={cn(
                   "h-4 rounded",
                   lineIndex === 0 ? "w-1/3" : "w-1/4",

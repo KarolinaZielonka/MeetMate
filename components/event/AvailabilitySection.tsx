@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl"
 import { DateRangePicker } from "@/components/calendar/DateRangePicker"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { parseDateAsLocal } from "@/lib/utils/dates"
 import { getSession } from "@/lib/utils/session"
 import { useEventStore } from "@/store/eventStore"
 
@@ -57,8 +58,8 @@ export function AvailabilitySection({ eventId }: AvailabilitySectionProps) {
       </CardHeader>
       <CardContent className="space-y-6">
         <DateRangePicker
-          startDate={new Date(event.start_date)}
-          endDate={new Date(event.end_date)}
+          startDate={parseDateAsLocal(event.start_date)}
+          endDate={parseDateAsLocal(event.end_date)}
           onAvailabilityChange={setAvailabilitySelections}
           initialAvailability={availabilitySelections}
           readonly={hasSubmittedAvailability && !isEditingAvailability}

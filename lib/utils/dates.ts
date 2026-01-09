@@ -57,12 +57,27 @@ export function formatDateForAPI(date: Date): string {
 /**
  * Parse date from various formats
  * Handles Date objects, ISO strings, and date-only strings
+ *
+ * For YYYY-MM-DD date-only strings, parses as local midnight to avoid timezone issues
  */
 export function parseDate(date: Date | string): Date {
   if (date instanceof Date) {
     return date
   }
+  // Check if it's a date-only string (YYYY-MM-DD format)
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return parseDateAsLocal(date)
+  }
   return parseISO(date)
+}
+
+/**
+ * Parse a YYYY-MM-DD date string as local midnight
+ * Avoids timezone issues when parsing date-only strings
+ */
+export function parseDateAsLocal(dateString: string): Date {
+  const [year, month, day] = dateString.split("-").map(Number)
+  return new Date(year, month - 1, day)
 }
 
 /**

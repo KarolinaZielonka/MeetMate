@@ -49,13 +49,13 @@ export default function EventPage() {
 
   // Fetch availability when participant session exists
   useEffect(() => {
-    if (event && userRole === "participant") {
+    if (event) {
       const session = getSession(event.id)
       if (session?.participantId) {
         fetchAvailability(event.id, session.participantId)
       }
     }
-  }, [event, userRole, fetchAvailability])
+  }, [event, fetchAvailability])
 
   const { isPasswordVerified, showPasswordDialog, handlePasswordSuccess } =
     usePasswordProtection(event)
@@ -77,6 +77,9 @@ export default function EventPage() {
     showToasts: true,
     onParticipantJoin: handleRefresh,
     onParticipantUpdate: handleRefresh,
+    onAvailabilityUpdate: handleRefresh,
+    onEventLocked: handleRefresh,
+    onEventReopened: handleRefresh,
   })
 
   // Handle successful join

@@ -10,6 +10,7 @@ interface UseRealtimeEventOptions {
   eventId: string
   onParticipantJoin?: (participantName: string) => void
   onParticipantUpdate?: (participantName: string) => void
+  onAvailabilityUpdate?: () => void
   onEventLocked?: () => void
   onEventReopened?: () => void
   showToasts?: boolean
@@ -28,6 +29,7 @@ export function useRealtimeEvent({
   eventId,
   onParticipantJoin,
   onParticipantUpdate,
+  onAvailabilityUpdate,
   onEventLocked,
   onEventReopened,
   showToasts = true,
@@ -227,6 +229,21 @@ export function useRealtimeEvent({
           refreshEvent(eventId)
         }
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "availability",
+          filter: `participant_id=in.(SELECT id FROM participants WHERE event_id='${eventId}')`,
+        },
+        (payload) => {
+          console.log("Availability updated:", payload)
+
+          // Call custom callback to refresh availability data
+          onAvailabilityUpdate?.()
+        }
+      )
       .subscribe((status) => {
         if (status === "SUBSCRIBED") {
           console.log(`Subscribed to real-time updates for event ${eventId}`)
@@ -256,6 +273,7 @@ export function useRealtimeEvent({
     eventId,
     onParticipantJoin,
     onParticipantUpdate,
+    onAvailabilityUpdate,
     onEventLocked,
     onEventReopened,
     showToasts,

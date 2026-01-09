@@ -1,5 +1,6 @@
 "use client"
 
+import { parseDateAsLocal } from "@/lib/utils/dates"
 import { Legend } from "./Legend"
 import { SelectedDateDetails } from "./SelectedDateDetails"
 import type { DateAggregation } from "./types"
@@ -46,12 +47,12 @@ export function HeatmapView({
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2">
         {dates.map((date) => {
           const dateData = aggregatedData.get(date)
           if (!dateData) return null
 
-          const dateObj = new Date(date)
+          const dateObj = parseDateAsLocal(date)
           const dayOfWeek = dateObj.toLocaleDateString("en-US", { weekday: "long" })
           const dayOfMonth = dateObj.getDate()
           const monthName = dateObj.toLocaleDateString("en-US", { month: "long" })
@@ -64,8 +65,9 @@ export function HeatmapView({
               onClick={() => onDateSelect(date)}
               className={`
                 ${getHeatmapColor(dateData)}
-                rounded-lg p-3 transition-smooth hover-lift
-                min-h-[44px] cursor-pointer
+                rounded-lg p-2 sm:p-3 transition-smooth hover-lift
+                aspect-square min-h-[44px] w-full cursor-pointer
+                flex flex-col items-center justify-center
                 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
                 ${isSelected ? "ring-2 ring-primary ring-offset-2" : ""}
               `}
@@ -75,10 +77,13 @@ export function HeatmapView({
               <div className="text-xs text-muted-foreground font-medium" aria-hidden="true">
                 {dayOfWeek.slice(0, 3)}
               </div>
-              <div className="text-lg font-bold text-foreground" aria-hidden="true">
+              <div className="text-lg sm:text-xl font-bold text-foreground" aria-hidden="true">
                 {dayOfMonth}
               </div>
-              <div className="text-xs text-foreground font-medium mt-1" aria-hidden="true">
+              <div
+                className="text-xs text-foreground font-medium mt-0.5 sm:mt-1"
+                aria-hidden="true"
+              >
                 {dateData.available}/{participants}
               </div>
             </button>

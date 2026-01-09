@@ -42,7 +42,7 @@ export function SkeletonText({
     <div className={cn("space-y-2", className)}>
       {Array.from({ length: lines }).map((_, i) => (
         <Skeleton
-          key={lines}
+          key={`skeleton-text-${i}`}
           className={cn(
             height,
             widths?.[i] || defaultWidths[i % defaultWidths.length],
