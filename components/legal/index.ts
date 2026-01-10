@@ -1,5 +1,4 @@
 export { BulletList } from "./BulletList"
-export { ContactBox } from "./ContactBox"
 export { HighlightBox } from "./HighlightBox"
 export { IntroSection } from "./IntroSection"
 export { LegalSection } from "./LegalSection"

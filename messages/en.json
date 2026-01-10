@@ -112,7 +112,8 @@
     "locked": {
       "title": "Event Locked",
       "chosenDate": "Chosen date: {date}",
-      "addToCalendar": "Add to Google Calendar"
+      "addToGoogleCalendar": "Add to Google Calendar",
+      "addToAppleCalendar": "Add to Apple Calendar"
     },
     "heatmap": {
       "title": "Availability Overview",
@@ -205,11 +206,6 @@
         "title": "Find the Perfect Time",
         "description": "See optimal dates ranked automatically. Lock in your meeting when ready."
       }
-    },
-    "features": {
-      "noSignup": "No sign-up required",
-      "realtime": "Live updates",
-      "secure": "Optional password protection"
     }
   },
   "validation": {
@@ -403,8 +399,7 @@
           "object": "Right to object: Object to data processing",
           "restrict": "Right to restriction: Request restricted processing of your data",
           "withdraw": "Right to withdraw consent: Withdraw consent at any time"
-        },
-        "exercise": "To exercise these rights, please contact us at the email below."
+        }
       },
       "thirdParty": {
         "title": "7. Third-Party Services",
@@ -427,12 +422,8 @@
         "title": "8. No User Accounts",
         "description": "MeetMate does not require user accounts or authentication. You do not need to provide email addresses, phone numbers, or create passwords to use our service. All participation is anonymous except for the names you choose to provide when joining events."
       },
-      "children": {
-        "title": "9. Children's Privacy",
-        "description": "MeetMate is not directed at children under 13 years of age. We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please contact us to request deletion."
-      },
       "changes": {
-        "title": "10. Changes to This Policy",
+        "title": "9. Changes to This Policy",
         "description": "We may update this privacy policy from time to time. Changes will be posted on this page with an updated revision date. Continued use of MeetMate after changes constitutes acceptance of the updated policy."
       }
     }
@@ -494,12 +485,8 @@
           "bugs": "Defects will be corrected"
         }
       },
-      "limitation": {
-        "title": "7. Limitation of Liability",
-        "description": "To the maximum extent permitted by law, MeetMate and its operators shall not be liable for any indirect, incidental, special, or consequential damages arising from your use or inability to use the service."
-      },
       "dataLoss": {
-        "title": "8. Data Loss",
+        "title": "7. Data Loss",
         "description": "We are not responsible for data loss resulting from:",
         "items": {
           "technical": "Technical failures or system maintenance",
@@ -509,17 +496,9 @@
         },
         "backup": "We recommend keeping your own records of important event details."
       },
-      "termination": {
-        "title": "9. Termination",
-        "description": "We reserve the right to suspend or terminate access to MeetMate for users who violate these Terms of Service or engage in abusive behavior. Users may stop using the service at any time."
-      },
       "changes": {
-        "title": "10. Changes to Terms",
+        "title": "8. Changes to Terms",
         "description": "We may modify these Terms of Service at any time. Changes will be posted on this page with an updated date. Continued use after changes constitutes acceptance of the modified terms."
-      },
-      "governing": {
-        "title": "11. Governing Law",
-        "description": "These Terms of Service are governed by and construed in accordance with applicable laws, without regard to conflict of law principles."
       }
     }
   }

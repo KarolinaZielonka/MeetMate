@@ -1,15 +1,11 @@
 "use client"
 
-import { Calendar, Lock } from "lucide-react"
+import { Lock } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDate } from "./utils"
 
-interface LockedEventCardProps {
-  calculatedDate: string
-}
-
-export function LockedEventCard({ calculatedDate }: LockedEventCardProps) {
+export function LockedEventCard({ calculatedDate }: { calculatedDate: string }) {
   const t = useTranslations("optimalDates")
 
   return (
@@ -26,7 +22,6 @@ export function LockedEventCard({ calculatedDate }: LockedEventCardProps) {
             {t("lockedMessage", { date: formatDate(calculatedDate) })}
           </p>
           <div className="flex items-center gap-2 rounded-lg bg-card border border-border p-4">
-            <Calendar className="h-5 w-5 text-primary" />
             <span className="font-semibold text-lg text-foreground">
               {formatDate(calculatedDate)}
             </span>

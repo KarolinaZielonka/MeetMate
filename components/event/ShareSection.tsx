@@ -4,8 +4,8 @@ import { AnimatePresence, motion } from "framer-motion"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { toast } from "sonner"
-import { generateMessengerUrl, generateWhatsAppUrl } from "@/lib/utils/share"
 import type { ShareConfig } from "@/lib/utils/share"
+import { generateMessengerUrl, generateWhatsAppUrl } from "@/lib/utils/share"
 import { ShareButtonExpanded, ShareButtonInitial, ShareButtonSuccess } from "./share"
 
 type ShareState = "initial" | "expanded" | "success"
@@ -93,7 +93,7 @@ export function ShareSection({ shareUrl, eventName = "Event" }: ShareSectionProp
       )}
 
       <motion.div
-        className="relative z-20 inline-flex"
+        className="relative z-20 w-full md:w-auto md:inline-flex"
         variants={containerVariants}
         initial="initial"
         animate={state}

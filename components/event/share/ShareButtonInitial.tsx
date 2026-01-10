@@ -28,7 +28,7 @@ export function ShareButtonInitial({ onClick }: ShareButtonInitialProps) {
     >
       <Button
         onClick={onClick}
-        className="bg-gradient-primary hover:opacity-90 shadow-md hover-lift min-w-[120px] gap-2"
+        className="bg-gradient-primary hover:opacity-90 shadow-md hover-lift w-full md:w-auto md:min-w-[120px] gap-2"
         asChild
       >
         <motion.button variants={buttonVariants} whileHover="hover" whileTap="tap">

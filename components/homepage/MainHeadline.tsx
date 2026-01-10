@@ -15,12 +15,10 @@ export function MainHeadline() {
     { main: t("titles.2.main"), accent: t("titles.2.accent") },
   ]
 
-  // Prevent hydration mismatch
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Rotate through titles every 4 seconds
   useEffect(() => {
     if (!mounted) return
 
@@ -72,7 +70,6 @@ export function MainHeadline() {
     ))
   }
 
-  // Prevent hydration mismatch by rendering static content until mounted
   if (!mounted) {
     return (
       <div className="space-y-4 fade-in">

@@ -18,14 +18,13 @@ export function LegalSectionRenderer({ section, namespace, t }: LegalSectionRend
       title={t(`${sectionKey}.title`)}
       description={t(`${sectionKey}.description`)}
     >
-      {section.hasBulletList && section.bulletListItemKeys && (
+      {section.bulletListItemKeys && (
         <BulletList
-          variant={section.bulletVariant}
           items={section.bulletListItemKeys.map((key) => t(`${sectionKey}.items.${key}`))}
         />
       )}
 
-      {section.hasHighlight && section.highlightKey && (
+      {section.highlightKey && (
         <div className="mt-4">
           <HighlightBox variant={section.highlightVariant}>
             <p
@@ -59,10 +58,6 @@ export function LegalSectionRenderer({ section, namespace, t }: LegalSectionRend
             <p className="text-sm text-muted-foreground">{t(`${sectionKey}.note`)}</p>
           </HighlightBox>
         </>
-      )}
-
-      {section.key === "yourRights" && namespace === "privacy" && (
-        <p className="text-sm text-muted-foreground mt-4">{t(`${sectionKey}.exercise`)}</p>
       )}
     </LegalSection>
   )

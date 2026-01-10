@@ -28,14 +28,12 @@ export function DateRangePicker({
     onDateChange(startDate, newEndDate)
   }
 
-  // Disable dates before today for start date
   const disableBeforeToday = React.useCallback((date: Date) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     return date < today
   }, [])
 
-  // Disable dates before start date for end date
   const disableBeforeStartDate = React.useCallback(
     (date: Date) => {
       const today = new Date()

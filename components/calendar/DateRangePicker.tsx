@@ -23,12 +23,10 @@ export function DateRangePicker({
   const t = useTranslations("calendar")
   const { availability, selectDate } = useDateSelection(initialAvailability)
 
-  // Current viewing index (0 = first month in range)
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0)
   const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(null)
   const [isMobile, setIsMobile] = useState(false)
 
-  // Generate list of months in the date range
   const monthsInRange = useMemo(() => {
     const months: Array<{ year: number; month: number }> = []
     const current = new Date(startDate)
@@ -54,7 +52,6 @@ export function DateRangePicker({
   const monthsPerView = isMobile ? 1 : 2
   const maxIndex = Math.max(0, totalMonths - monthsPerView)
 
-  // Handle responsive behavior
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768) // md breakpoint
@@ -65,7 +62,6 @@ export function DateRangePicker({
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  // Sync availability changes with parent
   useEffect(() => {
     if (onAvailabilityChange) {
       onAvailabilityChange(availability)
@@ -86,13 +82,11 @@ export function DateRangePicker({
     }
   }, [currentMonthIndex, maxIndex])
 
-  // Swipe navigation
   const swipeHandlers = useSwipeNavigation({
     onSwipeLeft: handleNext,
     onSwipeRight: handlePrevious,
   })
 
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
@@ -106,12 +100,10 @@ export function DateRangePicker({
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [handlePrevious, handleNext])
 
-  // Get currently visible months
   const visibleMonths = useMemo(() => {
     return monthsInRange.slice(currentMonthIndex, currentMonthIndex + monthsPerView)
   }, [monthsInRange, currentMonthIndex, monthsPerView])
 
-  // Get header text
   const headerText = useMemo(() => {
     if (visibleMonths.length === 0) return ""
 
@@ -139,7 +131,6 @@ export function DateRangePicker({
 
   return (
     <div className={cn("w-full", className)}>
-      {/* Navigation Header */}
       <div className="flex items-center justify-between mb-6 px-2">
         <Button
           variant="ghost"
@@ -166,7 +157,6 @@ export function DateRangePicker({
         </Button>
       </div>
 
-      {/* Calendar Grid */}
       <div className="relative overflow-hidden" {...swipeHandlers}>
         <AnimatePresence initial={false} mode="wait">
           <motion.div

@@ -4,9 +4,11 @@ import { Calendar } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { formatDateRange, parseDate } from "@/lib/utils/dates"
-import { LockedEventStatus } from "./LockedEventStatus"
+import { AddToCalendars } from "./AddToCalendars"
 import { RoleBadge } from "./RoleBadge"
 import { ShareSection } from "./ShareSection"
+import { LockedEventCard } from "./components/LockedEventCard"
+import { Separator } from "@/components/ui/separator"
 
 interface EventHeaderProps {
   event: {
@@ -56,12 +58,20 @@ export function EventHeader({ event, userRole, shareUrl }: EventHeaderProps) {
 
       <CardContent className="space-y-4">
         {event.is_locked && event.calculated_date && (
-          <LockedEventStatus
+          <LockedEventCard calculatedDate={event.calculated_date} />
+        )}
+
+        <Separator />
+
+        {event.is_locked && event.calculated_date && (
+          <AddToCalendars
             calculatedDate={event.calculated_date}
             eventName={event.name}
-            eventUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/e/${shareUrl}`}
+            eventUrl={`${window.location.origin}/e/${shareUrl}`}
           />
         )}
+
+        <Separator />
 
         <div className="md:hidden">
           <ShareSection shareUrl={shareUrl} eventName={event.name} />

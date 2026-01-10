@@ -1,4 +1,4 @@
-import { Check, Clock, User } from "lucide-react"
+import { Check, Clock } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 interface Participant {
@@ -32,16 +32,6 @@ export function ParticipantListItem({
       }`}
     >
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-smooth ${
-            isCurrentUser
-              ? "bg-primary/20 border-2 border-primary"
-              : "bg-background border-2 border-muted-foreground/20"
-          }`}
-        >
-          <User className={`w-5 h-5 ${isCurrentUser ? "text-primary" : "text-muted-foreground"}`} />
-        </div>
-
         <div className="flex-1 min-w-0">
           <p
             className={`font-semibold truncate ${
@@ -66,7 +56,7 @@ export function ParticipantListItem({
           </Badge>
         )}
         {participant.has_submitted ? (
-          <Badge variant="default" className="bg-green-500 hover:bg-green-600 hover-scale">
+          <Badge variant="default" className="hover:bg-green-600 bg-green-800 hover-scale">
             <Check className="w-3 h-3 mr-1" />
             {submittedBadgeText}
           </Badge>

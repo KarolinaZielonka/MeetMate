@@ -12,11 +12,11 @@ export function Footer() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <Link href="/privacy" className="hover:text-foreground transition-smooth">
+            <Link href="/privacy" className="hover:text-foreground transition-smooth min-h-0">
               {t("privacy")}
             </Link>
             <span className="text-border">•</span>
-            <Link href="/terms" className="hover:text-foreground transition-smooth">
+            <Link href="/terms" className="hover:text-foreground transition-smooth min-h-0">
               {t("terms")}
             </Link>
           </div>

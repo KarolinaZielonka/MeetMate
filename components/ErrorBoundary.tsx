@@ -26,7 +26,6 @@ class ErrorBoundaryClass extends Component<ErrorBoundaryProps, ErrorBoundaryStat
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to console in development
     if (process.env.NODE_ENV === "development") {
       console.error("ErrorBoundary caught an error:", error, errorInfo)
     }
@@ -97,7 +96,6 @@ function ErrorFallback({ error, onReset }: ErrorFallbackProps) {
   )
 }
 
-// Export wrapper component that can use hooks
 export function ErrorBoundary({ children, fallback }: ErrorBoundaryProps) {
   return <ErrorBoundaryClass fallback={fallback}>{children}</ErrorBoundaryClass>
 }

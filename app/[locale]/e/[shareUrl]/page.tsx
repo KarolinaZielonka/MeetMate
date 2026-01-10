@@ -39,7 +39,6 @@ export default function EventPage() {
 
   const tParticipants = useTranslations("eventPage.participants")
 
-  // Fetch event and participants on mount
   useEffect(() => {
     if (shareUrl) {
       fetchEvent(shareUrl, t)
@@ -47,7 +46,6 @@ export default function EventPage() {
     }
   }, [shareUrl, fetchEvent, fetchParticipants, t, tParticipants])
 
-  // Fetch availability when participant session exists
   useEffect(() => {
     if (event) {
       const session = getSession(event.id)
@@ -60,7 +58,6 @@ export default function EventPage() {
   const { isPasswordVerified, showPasswordDialog, handlePasswordSuccess } =
     usePasswordProtection(event)
 
-  // Refresh handler for real-time updates
   const handleRefresh = () => {
     if (event && shareUrl) {
       fetchEvent(shareUrl, t)
@@ -71,7 +68,6 @@ export default function EventPage() {
     }
   }
 
-  // Real-time subscriptions
   useRealtimeEvent({
     eventId: event?.id || "",
     showToasts: true,
@@ -82,7 +78,6 @@ export default function EventPage() {
     onEventReopened: handleRefresh,
   })
 
-  // Handle successful join
   const handleJoinSuccess = () => {
     handleRefresh()
     const session = getSession(event?.id || "")
@@ -131,17 +126,18 @@ export default function EventPage() {
               </Card>
             )}
 
-            {isParticipant(event.id) && !event.is_locked && (
-              <AvailabilitySection eventId={event.id} />
-            )}
-            <OptimalDatesDisplay shareUrl={shareUrl} onEventLocked={handleRefresh} />
-
-            <AvailabilityHeatmap event={event} participants={participants} />
-
-            <ParticipantList eventId={event.id} />
-
-            {userRole === "admin" && (
-              <AdminControls shareUrl={shareUrl} onEventReopened={handleRefresh} />
+            {isParticipant(event.id) && (
+              <>
+                {!event.is_locked && <AvailabilitySection eventId={event.id} />}
+                {!event.is_locked && (
+                  <OptimalDatesDisplay shareUrl={shareUrl} onEventLocked={handleRefresh} />
+                )}
+                <AvailabilityHeatmap event={event} participants={participants} />
+                <ParticipantList eventId={event.id} />
+                {userRole === "admin" && (
+                  <AdminControls shareUrl={shareUrl} onEventReopened={handleRefresh} />
+                )}
+              </>
             )}
           </div>
         </div>

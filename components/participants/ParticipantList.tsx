@@ -3,18 +3,13 @@
 import { Users } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { SkeletonList } from "@/components/skeletons"
-import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { getSession } from "@/lib/utils/session"
 import { useEventStore } from "@/store/eventStore"
 import { ParticipantListEmpty } from "./ParticipantListEmpty"
 import { ParticipantListItem } from "./ParticipantListItem"
 
-interface ParticipantListProps {
-  eventId: string
-}
-
-export function ParticipantList({ eventId }: ParticipantListProps) {
+export function ParticipantList({ eventId }: { eventId: string }) {
   const t = useTranslations("eventPage.participants")
   const session = getSession(eventId)
   const currentParticipantId = session?.participantId
@@ -29,9 +24,8 @@ export function ParticipantList({ eventId }: ParticipantListProps) {
             <Users className="w-5 h-5 text-white" />
           </div>
           {t("title")}
-          <Badge variant="secondary" className="ml-2 hover-scale">
-            {participants.length}
-          </Badge>
+
+          <div className="bg-muted rounded-full p-2 text-sm">{participants.length}</div>
         </CardTitle>
         <CardDescription className="text-base">{t("description")}</CardDescription>
       </CardHeader>

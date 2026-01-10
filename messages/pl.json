@@ -112,7 +112,8 @@
     "locked": {
       "title": "Wydarzenie zablokowane",
       "chosenDate": "Wybrana data: {date}",
-      "addToCalendar": "Dodaj do Kalendarza Google"
+      "addToGoogleCalendar": "Dodaj do Kalendarza Google",
+      "addToAppleCalendar": "Dodaj do Kalendarza Apple"
     },
     "heatmap": {
       "title": "Przegląd dostępności",
@@ -403,8 +404,7 @@
           "object": "Prawo do sprzeciwu: Sprzeciw wobec przetwarzania danych",
           "restrict": "Prawo do ograniczenia: Poproś o ograniczone przetwarzanie swoich danych",
           "withdraw": "Prawo do wycofania zgody: Wycofaj zgodę w dowolnym momencie"
-        },
-        "exercise": "Aby skorzystać z tych praw, skontaktuj się z nami pod adresem e-mail podanym poniżej."
+        }
       },
       "thirdParty": {
         "title": "7. Usługi stron trzecich",
@@ -427,12 +427,8 @@
         "title": "8. Brak kont użytkowników",
         "description": "MeetMate nie wymaga kont użytkowników ani uwierzytelniania. Nie musisz podawać adresów e-mail, numerów telefonów ani tworzyć haseł, aby korzystać z naszej usługi. Cały udział jest anonimowy, z wyjątkiem imion, które zdecydujesz się podać podczas dołączania do wydarzeń."
       },
-      "children": {
-        "title": "9. Prywatność dzieci",
-        "description": "MeetMate nie jest skierowany do dzieci poniżej 13 roku życia. Nie zbieramy świadomie danych osobowych od dzieci. Jeśli uważasz, że dziecko przekazało nam dane osobowe, skontaktuj się z nami, aby poprosić o usunięcie."
-      },
       "changes": {
-        "title": "10. Zmiany w tej polityce",
+        "title": "9. Zmiany w tej polityce",
         "description": "Możemy od czasu do czasu aktualizować tę politykę prywatności. Zmiany zostaną opublikowane na tej stronie z zaktualizowaną datą rewizji. Dalsze korzystanie z MeetMate po zmianach stanowi akceptację zaktualizowanej polityki."
       }
     }
@@ -494,12 +490,8 @@
           "bugs": "Wady zostaną naprawione"
         }
       },
-      "limitation": {
-        "title": "7. Ograniczenie odpowiedzialności",
-        "description": "W maksymalnym zakresie dozwolonym przez prawo, MeetMate i jego operatorzy nie ponoszą odpowiedzialności za jakiekolwiek pośrednie, przypadkowe, specjalne lub wynikowe szkody wynikające z korzystania z usługi lub niemożności z niej korzystania."
-      },
       "dataLoss": {
-        "title": "8. Utrata danych",
+        "title": "7. Utrata danych",
         "description": "Nie ponosimy odpowiedzialności za utratę danych wynikającą z:",
         "items": {
           "technical": "Awarii technicznych lub konserwacji systemu",
@@ -509,17 +501,9 @@
         },
         "backup": "Zalecamy zachowanie własnych zapisów ważnych szczegółów wydarzeń."
       },
-      "termination": {
-        "title": "9. Rozwiązanie",
-        "description": "Zastrzegamy sobie prawo do zawieszenia lub zakończenia dostępu do MeetMate dla użytkowników, którzy naruszają niniejszy Regulamin Usługi lub angażują się w nadużywające zachowania. Użytkownicy mogą w dowolnym momencie zaprzestać korzystania z usługi."
-      },
       "changes": {
-        "title": "10. Zmiany w warunkach",
+        "title": "8. Zmiany w warunkach",
         "description": "Możemy w dowolnym momencie modyfikować niniejszy Regulamin Usługi. Zmiany zostaną opublikowane na tej stronie z zaktualizowaną datą. Dalsze korzystanie po zmianach stanowi akceptację zmodyfikowanych warunków."
-      },
-      "governing": {
-        "title": "11. Prawo właściwe",
-        "description": "Niniejszy Regulamin Usługi podlega i jest interpretowany zgodnie z obowiązującym prawem, bez względu na zasady kolizji prawa."
       }
     }
   }

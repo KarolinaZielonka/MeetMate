@@ -2,12 +2,13 @@ import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 
-interface SubmitButtonProps {
+export function SubmitButton({
+  isLoading,
+  isDisabled,
+}: {
   isLoading: boolean
   isDisabled: boolean
-}
-
-export function SubmitButton({ isLoading, isDisabled }: SubmitButtonProps) {
+}) {
   const t = useTranslations("createEvent")
   return (
     <Button

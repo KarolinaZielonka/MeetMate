@@ -12,7 +12,6 @@ import { useEventStore } from "@/store/eventStore"
 import { DateScoreItem } from "./components/DateScoreItem"
 import { EmptyState } from "./components/EmptyState"
 import { LockConfirmationDialog } from "./components/LockConfirmationDialog"
-import { LockedEventCard } from "./components/LockedEventCard"
 
 interface OptimalDatesDisplayProps {
   shareUrl: string
@@ -24,13 +23,10 @@ const MAX_DISPLAYED_DATES = 3
 export function OptimalDatesDisplay({ shareUrl, onEventLocked }: OptimalDatesDisplayProps) {
   const t = useTranslations("optimalDates")
 
-  const { event, userRole } = useEventStore()
+  const { userRole } = useEventStore()
 
   const isAdmin = userRole === "admin"
-  const isLocked = event?.is_locked ?? false
-  const calculatedDate = event?.calculated_date ?? null
 
-  // Custom hooks for data and locking functionality
   const { dateScores, loading, fetchOptimalDates } = useOptimalDates(shareUrl, t)
   const {
     locking,
@@ -41,10 +37,8 @@ export function OptimalDatesDisplay({ shareUrl, onEventLocked }: OptimalDatesDis
     handleLockEvent,
   } = useEventLock(shareUrl, t, onEventLocked)
 
-  // Memoized top dates to prevent unnecessary recalculations
   const topDates = useMemo(() => dateScores.slice(0, MAX_DISPLAYED_DATES), [dateScores])
 
-  // Memoized lock click handler
   const handleLockClick = useCallback(
     (date: string) => {
       setSelectedDate(date)
@@ -52,11 +46,6 @@ export function OptimalDatesDisplay({ shareUrl, onEventLocked }: OptimalDatesDis
     },
     [setSelectedDate, setShowLockDialog]
   )
-
-  // Early return for locked state
-  if (isLocked && calculatedDate) {
-    return <LockedEventCard calculatedDate={calculatedDate} />
-  }
 
   return (
     <>

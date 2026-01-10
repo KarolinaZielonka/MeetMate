@@ -211,16 +211,16 @@
   /* Feature card gradient backgrounds - colorful, theme-aware */
 
   /* Purple gradient - creativity, innovation */
-  .gradient-purple {
-    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 50%, #ddd6fe 100%);
+  .gradient-red {
+    background: linear-gradient(135deg, #ffe8e8 0%, #ffd5d5 50%, #fed6d6 100%);
   }
 
-  .dark .gradient-purple {
+  .dark .gradient-red {
     background: linear-gradient(
       135deg,
-      hsl(270 8% 12%) 0%,
-      hsl(270 10% 10%) 50%,
-      hsl(260 8% 12%) 100%
+      hsl(0, 8%, 12%) 0%,
+      hsl(0, 10%, 10%) 50%,
+      hsl(0, 8%, 12%) 100%
     );
   }
 
@@ -267,12 +267,12 @@
   }
 
   /* Icon background colors matching gradients */
-  .icon-bg-purple {
-    background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%);
+  .icon-bg-red {
+    background: linear-gradient(135deg, #fdb5b5 0%, #fa8b8b 100%);
   }
 
-  .dark .icon-bg-purple {
-    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  .dark .icon-bg-red {
+    background: linear-gradient(135deg, #ed3a3a 0%, #d92828 100%);
   }
 
   .icon-bg-blue {

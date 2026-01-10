@@ -1,7 +1,6 @@
 "use client"
 
 import { Turnstile as TurnstileWidget } from "@marsidev/react-turnstile"
-import { useTranslations } from "next-intl"
 
 interface TurnstileProps {
 	onVerify: (token: string) => void
@@ -9,7 +8,6 @@ interface TurnstileProps {
 }
 
 export function Turnstile({ onVerify, onError }: TurnstileProps) {
-	const t = useTranslations("events")
 	const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 	// If no site key is configured, don't render the CAPTCHA

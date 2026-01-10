@@ -1,6 +1,5 @@
 import { Calendar, Sparkles, Users } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { AboutFeatures } from "@/components/about/AboutFeatures"
 import { AboutHero } from "@/components/about/AboutHero"
 import { StepCard } from "@/components/about/StepCard"
 
@@ -19,8 +18,8 @@ export default function AboutPage() {
       icon: Users,
       title: t("steps.step2.title"),
       description: t("steps.step2.description"),
-      gradient: "gradient-purple" as const,
-      iconBg: "icon-bg-purple" as const,
+      gradient: "gradient-red" as const,
+      iconBg: "icon-bg-red" as const,
     },
     {
       icon: Sparkles,
@@ -37,7 +36,7 @@ export default function AboutPage() {
       <section className="pb-20 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="relative space-y-6">
-            <div className="absolute left-7 top-16 bottom-16 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-green-500 opacity-20 hidden lg:block" />
+            <div className="absolute left-7 top-16 bottom-16 w-0.5 bg-gradient-to-b from-blue-500 via-red-500 to-green-500 opacity-20 hidden lg:block" />
             {steps.map((step) => (
               <div key={step.title} className="relative">
                 <StepCard {...step} />
@@ -46,8 +45,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      <AboutFeatures />
     </main>
   )
 }

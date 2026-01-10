@@ -35,7 +35,6 @@ export function MonthCalendar({
 
   return (
     <div className="w-full space-y-3">
-      {/* Day of week headers */}
       <div className="grid grid-cols-7 gap-1 mb-2">
         {getWeekdayKeys().map((weekdayKey) => (
           <div
@@ -47,10 +46,8 @@ export function MonthCalendar({
         ))}
       </div>
 
-      {/* Calendar grid */}
       <div className="grid grid-cols-7 gap-1">
         {calendarDays.map((day, index) => {
-          // Empty cells for alignment
           if (!day) {
             return <div key={`empty-${index}`} className="aspect-square" />
           }

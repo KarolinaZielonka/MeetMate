@@ -27,7 +27,6 @@ export function OptionalSettingsSection({
         <h2 className="text-xl font-bold text-foreground">{t("optionalSettings")}</h2>
       </div>
 
-      {/* Password Protection */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <Label htmlFor="password" className="text-base font-semibold">
