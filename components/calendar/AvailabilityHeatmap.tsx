@@ -1,6 +1,6 @@
 "use client"
 
-import { Users } from "lucide-react"
+import { HeartHandshake } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -68,17 +68,24 @@ export function AvailabilityHeatmap({ event, participants }: AvailabilityHeatmap
   return (
     <Card className="shadow-lg border-none slide-up">
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center shadow-md hover-scale-icon">
-                <Users className="w-5 h-5 text-white" />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <CardTitle className="text-xl sm:text-2xl flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-md hover-scale-icon flex-shrink-0">
+                <HeartHandshake className="w-5 h-5 text-white" />
               </div>
-              {t("title")}
+              <span className="truncate">{t("title")}</span>
             </CardTitle>
-            <CardDescription className="text-base mt-2">{t("description")}</CardDescription>
+            <CardDescription className="text-sm sm:text-base mt-2 line-clamp-2">
+              {t("description")}
+            </CardDescription>
           </div>
-          <Button variant="outline" size="sm" onClick={toggleViewMode}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleViewMode}
+            className="self-start sm:self-center flex-shrink-0 whitespace-nowrap"
+          >
             {viewMode === "heatmap" ? t("viewIndividual") : t("viewHeatmap")}
           </Button>
         </div>

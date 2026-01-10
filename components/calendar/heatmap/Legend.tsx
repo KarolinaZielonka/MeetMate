@@ -21,7 +21,7 @@ export function Legend() {
       </div>
       <div className="flex items-center gap-2">
         <div
-          className="w-4 h-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded"
+          className="w-4 h-4 bg-red-50 dark:bg-red-950/30 border border-red-300 dark:border-red-800 rounded"
           role="img"
           aria-label="0 percent availability indicator"
         />
@@ -29,27 +29,27 @@ export function Legend() {
       </div>
       <div className="flex items-center gap-2">
         <div
-          className="w-4 h-4 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900 rounded"
+          className="w-4 h-4 bg-orange-50 dark:bg-orange-950/30 border border-orange-300 dark:border-orange-800 rounded"
           role="img"
           aria-label="Low availability indicator"
         />
-        <span>1-33%</span>
+        <span>1-49%</span>
       </div>
       <div className="flex items-center gap-2">
         <div
-          className="w-4 h-4 bg-green-100 dark:bg-green-950/50 border border-green-300 dark:border-green-800 rounded"
-          role="img"
-          aria-label="Medium availability indicator"
-        />
-        <span>34-66%</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <div
-          className="w-4 h-4 bg-green-300 dark:bg-green-700 border border-green-500 dark:border-green-600 rounded"
+          className="w-4 h-4 bg-green-50 dark:bg-green-950/30 border border-green-300 dark:border-green-800 rounded"
           role="img"
           aria-label="High availability indicator"
         />
-        <span>67-100%</span>
+        <span>50-99%</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <div
+          className="w-4 h-4 bg-green-500 dark:bg-green-600 border border-green-600 dark:border-green-500 rounded"
+          role="img"
+          aria-label="Full availability indicator"
+        />
+        <span>100%</span>
       </div>
     </section>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar } from "lucide-react"
+import { MousePointer } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { DateRangePicker } from "@/components/calendar/DateRangePicker"
 import { Button } from "@/components/ui/button"
@@ -29,11 +29,9 @@ export function AvailabilitySection({ eventId }: AvailabilitySectionProps) {
     cancelEditingAvailability,
   } = useEventStore()
 
-  // Get participant session
   const session = getSession(eventId)
   const participantId = session?.participantId
 
-  // Don't render if no event or no participant session
   if (!event || !participantId) {
     return null
   }
@@ -45,12 +43,13 @@ export function AvailabilitySection({ eventId }: AvailabilitySectionProps) {
   const handleCancel = () => {
     cancelEditingAvailability(eventId, participantId)
   }
+
   return (
     <Card className="shadow-lg border-none slide-up">
       <CardHeader>
         <CardTitle className="text-2xl flex items-center gap-2">
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-md hover-scale-icon">
-            <Calendar className="w-5 h-5 text-white" />
+            <MousePointer className="w-5 h-5 text-white" />
           </div>
           {t("title")}
         </CardTitle>

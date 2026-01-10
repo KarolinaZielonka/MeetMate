@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, RefreshCw } from "lucide-react"
+import { BadgeCheck, RefreshCw } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useCallback, useMemo } from "react"
 import { SkeletonText } from "@/components/skeletons"
@@ -66,7 +66,7 @@ export function OptimalDatesDisplay({ shareUrl, onEventLocked }: OptimalDatesDis
             <div className="flex-1">
               <CardTitle className="text-2xl flex items-center gap-2">
                 <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-md hover-scale-icon">
-                  <Calendar className="w-5 h-5 text-white" />
+                  <BadgeCheck className="w-5 h-5 text-white" />
                 </div>
                 {t("title")}
               </CardTitle>

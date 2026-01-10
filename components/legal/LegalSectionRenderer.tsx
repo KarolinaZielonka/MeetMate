@@ -12,12 +12,9 @@ interface LegalSectionRendererProps {
 
 export function LegalSectionRenderer({ section, namespace, t }: LegalSectionRendererProps) {
   const sectionKey = `sections.${section.key}`
-  const Icon = section.icon
 
   return (
     <LegalSection
-      icon={Icon}
-      iconVariant={section.iconVariant}
       title={t(`${sectionKey}.title`)}
       description={t(`${sectionKey}.description`)}
     >

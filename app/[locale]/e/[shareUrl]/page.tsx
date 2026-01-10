@@ -131,15 +131,14 @@ export default function EventPage() {
               </Card>
             )}
 
-            <ParticipantList eventId={event.id} />
-
             {isParticipant(event.id) && !event.is_locked && (
               <AvailabilitySection eventId={event.id} />
             )}
+            <OptimalDatesDisplay shareUrl={shareUrl} onEventLocked={handleRefresh} />
 
             <AvailabilityHeatmap event={event} participants={participants} />
 
-            <OptimalDatesDisplay shareUrl={shareUrl} onEventLocked={handleRefresh} />
+            <ParticipantList eventId={event.id} />
 
             {userRole === "admin" && (
               <AdminControls shareUrl={shareUrl} onEventReopened={handleRefresh} />

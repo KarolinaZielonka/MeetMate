@@ -1,26 +1,5 @@
-/**
- * Legal page section configurations
- * Data-driven approach for Privacy Policy and Terms of Service pages
- */
-
-import type { LucideIcon } from "lucide-react"
-import {
-  AlertCircle,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Database,
-  FileText,
-  Lock,
-  Scale,
-  ShieldAlert,
-  Users,
-} from "lucide-react"
-
 export interface LegalSectionConfig {
   key: string
-  icon?: LucideIcon
-  iconVariant?: "primary" | "destructive"
   hasBulletList?: boolean
   bulletListItemKeys?: string[]
   bulletVariant?: "primary" | "destructive"
@@ -33,7 +12,6 @@ export interface LegalSectionConfig {
 export const privacySections: LegalSectionConfig[] = [
   {
     key: "dataCollection",
-    icon: Database,
     hasBulletList: true,
     bulletListItemKeys: [
       "eventData",
@@ -46,7 +24,6 @@ export const privacySections: LegalSectionConfig[] = [
   },
   {
     key: "howWeUse",
-    icon: FileText,
     hasBulletList: true,
     bulletListItemKeys: ["service", "realtime", "optimal", "security", "improvement"],
     hasHighlight: true,
@@ -55,25 +32,21 @@ export const privacySections: LegalSectionConfig[] = [
   },
   {
     key: "dataStorage",
-    icon: Lock,
     hasBulletList: true,
     bulletListItemKeys: ["encryption", "database", "location", "access", "passwords"],
   },
   {
     key: "dataRetention",
-    icon: Clock,
     hasBulletList: true,
     bulletListItemKeys: ["automatic", "manual", "immediate"],
   },
   {
     key: "localStorage",
-    icon: Database,
     hasBulletList: true,
     bulletListItemKeys: ["purpose", "format", "control", "noTracking"],
   },
   {
     key: "yourRights",
-    icon: Scale,
     hasBulletList: true,
     bulletListItemKeys: [
       "access",
@@ -87,7 +60,6 @@ export const privacySections: LegalSectionConfig[] = [
   },
   {
     key: "thirdParty",
-    icon: Users,
     hasServiceCards: true,
   },
   {
@@ -95,7 +67,6 @@ export const privacySections: LegalSectionConfig[] = [
   },
   {
     key: "children",
-    icon: AlertCircle,
   },
   {
     key: "changes",
@@ -111,20 +82,16 @@ export const termsSections: LegalSectionConfig[] = [
   },
   {
     key: "description",
-    icon: FileText,
     hasBulletList: true,
     bulletListItemKeys: ["create", "share", "coordinate", "calculate"],
   },
   {
     key: "userResponsibilities",
-    icon: CheckCircle,
     hasBulletList: true,
     bulletListItemKeys: ["accurate", "lawful", "respectful", "noSpam", "security", "noAutomation"],
   },
   {
     key: "prohibited",
-    icon: ShieldAlert,
-    iconVariant: "destructive",
     hasBulletList: true,
     bulletListItemKeys: ["violate", "infringe", "malicious", "interfere", "impersonate", "collect"],
     bulletVariant: "destructive",
@@ -134,7 +101,6 @@ export const termsSections: LegalSectionConfig[] = [
   },
   {
     key: "disclaimer",
-    icon: AlertTriangle,
     hasBulletList: true,
     bulletListItemKeys: ["uninterrupted", "secure", "accurate", "bugs"],
   },

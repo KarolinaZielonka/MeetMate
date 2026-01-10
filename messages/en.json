@@ -129,8 +129,11 @@
     },
     "share": {
       "label": "Share this event with participants",
+      "shareButton": "Share",
       "copyButton": "Copy Link",
-      "copied": "Copied!"
+      "copied": "Copied!",
+      "shared": "Shared!",
+      "shareVia": "Share via {app}"
     },
     "join": {
       "title": "Join This Event",

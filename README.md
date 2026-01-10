@@ -25,7 +25,6 @@ MeetMate solves these problems with a clean, modern interface that works seamles
 - 🔒 **Optional password protection** - Secure private events
 - 🎨 **Three-state availability** - Available (green), Maybe (orange), Unavailable (red)
 - ⚡ **Real-time updates** - See participants join and respond live
-- 🤖 **Smart date calculation** - AI-powered optimal date finding
 - 🔐 **Session management** - Edit your availability by returning to the link
 
 ### For Organizers
@@ -33,12 +32,6 @@ MeetMate solves these problems with a clean, modern interface that works seamles
 - 🎯 **Ranked date suggestions** - Algorithm finds best dates automatically
 - 👥 **Participant tracking** - Monitor who has/hasn't responded
 - 🔒 **Event locking** - Finalize dates when ready
-
-### Coming Soon
-- 📧 Email notifications
-- 📅 Calendar integration (Google, Apple, Outlook)
-- 🔄 Recurring events
-- 💬 Event comments and chat
 
 ## 🏗️ Tech Stack
 
@@ -56,14 +49,9 @@ MeetMate solves these problems with a clean, modern interface that works seamles
 - **Real-time**: Supabase Realtime subscriptions
 - **Authentication**: Session tokens (no user accounts initially)
 
-### AI Integration
-- **Phase 1**: Custom algorithm for availability calculation
-- **Phase 2**: Claude API (Anthropic) for complex scheduling scenarios
-
 ### Hosting & Deployment
 - **Platform**: [Vercel](https://vercel.com/)
 - **Database**: Supabase Cloud
-- **Domain**: TBD
 
 ## 🚀 Getting Started
 
@@ -118,10 +106,6 @@ UPSTASH_REDIS_REST_TOKEN=your-redis-token-here
 # Get these from: https://dash.cloudflare.com/?to=/:account/turnstile
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-turnstile-site-key-here
 TURNSTILE_SECRET_KEY=your-turnstile-secret-key-here
-
-# AI Integration (Phase 2 - Future Feature)
-# Get this from: https://console.anthropic.com/
-ANTHROPIC_API_KEY=your-anthropic-api-key-here
 ```
 
 **Setting up Upstash Redis for Rate Limiting:**
@@ -129,32 +113,7 @@ ANTHROPIC_API_KEY=your-anthropic-api-key-here
 2. Create a new Redis database (choose a region close to your deployment)
 3. Copy the `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` from the database details
 4. Add them to your `.env.local` file
-
-**Rate Limits (when Redis is configured):**
-- Event creation: 5 events per hour per IP
-- Participant joins: 10 joins per hour per IP
-- Availability submissions: 20 submissions per hour per IP
-- Password verification: 5 attempts per 15 minutes per IP (strict to prevent brute force)
-
-**Setting up Cloudflare Turnstile (CAPTCHA):**
-1. Create a free account at [Cloudflare](https://dash.cloudflare.com/)
-2. Navigate to **Turnstile** in the dashboard
-3. Click "Add Site"
-4. Configure your site:
-   - **Widget Mode**: Managed (recommended) or Non-Interactive
-   - **Domains**: Add `localhost` for development and your production domain
-5. Copy the **Site Key** and **Secret Key**
-6. Add them to your `.env.local` file:
-   - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` = Site Key
-   - `TURNSTILE_SECRET_KEY` = Secret Key
-
-**Why Turnstile?**
-- ✅ **Free and privacy-friendly** - Better than reCAPTCHA
-- ✅ **No tracking** - Respects user privacy
-- ✅ **Lightweight** - Minimal impact on page load
-- ✅ **Prevents bot spam** - Stops automated event creation abuse
-
-4. **Set up the database**
+5. **Set up the database**
 ```bash
 # Run Supabase migrations
 npm run db:migrate
@@ -168,31 +127,6 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the app.
-
-## 🗄️ Database Schema
-
-### Tables
-
-**events**
-- Stores event metadata (name, date range, password)
-- Generates unique shareable URLs
-- Tracks locked/unlocked status
-
-**participants**
-- Links people to events
-- Stores names and session tokens
-- Tracks submission status
-
-**availability**
-- Stores each participant's date selections
-- Three states: available, unavailable, maybe
-- Enables real-time availability aggregation
-
-See full schema in [`/supabase/migrations/001_initial_schema.sql`](./supabase/migrations/001_initial_schema.sql)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 

@@ -48,6 +48,9 @@ export function EventHeader({ event, userRole, shareUrl }: EventHeaderProps) {
               </p>
             )}
           </div>
+          <div className="hidden md:flex items-center">
+            <ShareSection shareUrl={shareUrl} eventName={event.name} />
+          </div>
         </div>
       </CardHeader>
 
@@ -56,7 +59,9 @@ export function EventHeader({ event, userRole, shareUrl }: EventHeaderProps) {
           <LockedEventStatus calculatedDate={event.calculated_date} />
         )}
 
-        <ShareSection shareUrl={shareUrl} />
+        <div className="md:hidden">
+          <ShareSection shareUrl={shareUrl} eventName={event.name} />
+        </div>
       </CardContent>
     </Card>
   )

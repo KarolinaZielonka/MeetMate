@@ -129,8 +129,11 @@
     },
     "share": {
       "label": "Udostępnij to wydarzenie uczestnikom",
+      "shareButton": "Udostępnij",
       "copyButton": "Kopiuj link",
-      "copied": "Skopiowano!"
+      "copied": "Skopiowano!",
+      "shared": "Udostępniono!",
+      "shareVia": "Udostępnij przez {app}"
     },
     "join": {
       "title": "Dołącz do tego wydarzenia",

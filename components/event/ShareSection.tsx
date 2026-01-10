@@ -1,81 +1,118 @@
 "use client"
 
-import { Check, Copy } from "lucide-react"
+import { AnimatePresence, motion } from "framer-motion"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+import { generateMessengerUrl, generateWhatsAppUrl } from "@/lib/utils/share"
+import type { ShareConfig } from "@/lib/utils/share"
+import { ShareButtonExpanded, ShareButtonInitial, ShareButtonSuccess } from "./share"
+
+type ShareState = "initial" | "expanded" | "success"
 
 interface ShareSectionProps {
   shareUrl: string
+  eventName?: string
 }
 
-export function ShareSection({ shareUrl }: ShareSectionProps) {
+export function ShareSection({ shareUrl, eventName = "Event" }: ShareSectionProps) {
   const t = useTranslations("eventPage.share")
-  const [copySuccess, setCopySuccess] = useState(false)
+  const [state, setState] = useState<ShareState>("initial")
+  const [successAction, setSuccessAction] = useState<string>("")
 
   const handleCopyLink = async () => {
     if (typeof window === "undefined") return
 
     try {
-      // Try modern Clipboard API first
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareUrl)
-        setCopySuccess(true)
-        toast.success(t("copied"))
-        setTimeout(() => setCopySuccess(false), 2000)
       } else {
-        // Fallback for older browsers or insecure contexts (HTTP)
         const textArea = document.createElement("textarea")
         textArea.value = shareUrl
         textArea.style.position = "fixed"
         textArea.style.left = "-999999px"
         document.body.appendChild(textArea)
         textArea.select()
-
         try {
           document.execCommand("copy")
-          setCopySuccess(true)
-          toast.success(t("copied"))
-          setTimeout(() => setCopySuccess(false), 2000)
-        } catch (fallbackErr) {
-          console.error("Fallback copy failed:", fallbackErr)
-          toast.error("Failed to copy link")
         } finally {
           document.body.removeChild(textArea)
         }
       }
+      setSuccessAction("copy")
+      setState("success")
+      toast.success(t("copied"))
+      setTimeout(() => setState("initial"), 1500)
     } catch (err) {
       console.error("Failed to copy:", err)
       toast.error("Failed to copy link")
     }
   }
 
+  const handleShare = (
+    callback: ({ url, eventName, message }: ShareConfig) => string,
+    action: string
+  ): void => {
+    const url = callback({ url: shareUrl, eventName })
+    window.open(url, "_blank", "noopener,noreferrer")
+    setSuccessAction(action)
+    setState("success")
+    setTimeout(() => setState("initial"), 1500)
+  }
+
+  const handleWhatsApp = () => handleShare(generateWhatsAppUrl, "whatsapp")
+
+  const handleMessenger = () => handleShare(generateMessengerUrl, "messenger")
+
+  const handleShareClick = () => {
+    setState("expanded")
+  }
+
+  const handleClickOutside = () => {
+    if (state === "expanded") {
+      setState("initial")
+    }
+  }
+
+  const containerVariants = {
+    initial: { width: "auto" },
+    expanded: { width: "auto" },
+    success: { width: "auto" },
+  }
+
   return (
-    <div>
-      <Label className="text-sm font-semibold text-foreground mb-3 block">{t("label")}</Label>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex-1 px-4 py-3 bg-muted border-2 border-border rounded-lg font-mono text-sm overflow-x-auto transition-smooth hover:border-primary/50">
-          {shareUrl}
-        </div>
-        <Button
-          onClick={handleCopyLink}
-          className={`${copySuccess ? "bg-green-600 hover:bg-green-700" : "bg-gradient-primary hover:opacity-90"} shadow-md transition-smooth hover-lift w-full sm:w-auto sm:min-w-[120px]`}
-        >
-          {copySuccess ? (
-            <>
-              <Check className="w-4 h-4 mr-2 bounce-subtle" />
-              {t("copied")}
-            </>
-          ) : (
-            <>
-              <Copy className="w-4 h-4 mr-2 transition-smooth group-hover:scale-110" />
-              {t("copyButton")}
-            </>
+    <div className="relative">
+      {state === "expanded" && (
+        <button
+          type="button"
+          className="fixed inset-0 z-10 cursor-default bg-transparent"
+          onClick={handleClickOutside}
+          onKeyDown={(e) => e.key === "Escape" && handleClickOutside()}
+          aria-label="Close share options"
+        />
+      )}
+
+      <motion.div
+        className="relative z-20 inline-flex"
+        variants={containerVariants}
+        initial="initial"
+        animate={state}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
+        <AnimatePresence mode="wait">
+          {state === "initial" && <ShareButtonInitial onClick={handleShareClick} />}
+
+          {state === "expanded" && (
+            <ShareButtonExpanded
+              onCopy={handleCopyLink}
+              onWhatsApp={handleWhatsApp}
+              onMessenger={handleMessenger}
+            />
           )}
-        </Button>
-      </div>
+
+          {state === "success" && <ShareButtonSuccess action={successAction} />}
+        </AnimatePresence>
+      </motion.div>
     </div>
   )
 }

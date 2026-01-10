@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import type { AvailabilityMap, AvailabilityStatus } from "@/types"
 
@@ -17,6 +17,13 @@ export function useDateSelection(initialAvailability?: AvailabilityMap): DateSel
   const [availability, setAvailability] = useState<AvailabilityMap>(
     initialAvailability || new Map()
   )
+
+  // Sync with initialAvailability when it changes (e.g., after fetching from server)
+  useEffect(() => {
+    if (initialAvailability && initialAvailability.size > 0) {
+      setAvailability(initialAvailability)
+    }
+  }, [initialAvailability])
 
   const selectDate = useCallback((date: string) => {
     setAvailability((prev) => {

@@ -28,15 +28,21 @@ export function HeatmapView({
     const availablePercentage = (dateData.available / participants) * 100
 
     if (availablePercentage === 0) {
-      return "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
+      return "bg-red-50 dark:bg-red-950/30 border border-red-300 dark:border-red-800"
     }
-    if (availablePercentage <= 33) {
-      return "bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900"
+    if (availablePercentage < 50) {
+      return "bg-orange-50 dark:bg-orange-950/30 border border-orange-300 dark:border-orange-800"
     }
-    if (availablePercentage <= 66) {
-      return "bg-green-100 dark:bg-green-950/50 border border-green-300 dark:border-green-800"
+    if (availablePercentage < 100) {
+      return "bg-green-50 dark:bg-green-950/30 border border-green-300 dark:border-green-800"
     }
-    return "bg-green-300 dark:bg-green-700 border border-green-500 dark:border-green-600"
+    // 100% availability - fully colored
+    return "bg-green-500 dark:bg-green-600 border border-green-600 dark:border-green-500"
+  }
+
+  const isFullAvailability = (dateData: DateAggregation): boolean => {
+    if (dateData.total === 0) return false
+    return (dateData.available / participants) * 100 === 100
   }
 
   const getAvailabilityLabel = (dateData: DateAggregation): string => {
@@ -47,7 +53,7 @@ export function HeatmapView({
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-7 gap-1 sm:gap-2">
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
         {dates.map((date) => {
           const dateData = aggregatedData.get(date)
           if (!dateData) return null
@@ -66,7 +72,7 @@ export function HeatmapView({
               className={`
                 ${getHeatmapColor(dateData)}
                 rounded-lg p-2 sm:p-3 transition-smooth hover-lift
-                aspect-square min-h-[44px] w-full cursor-pointer
+                aspect-square min-h-[60px] w-full cursor-pointer
                 flex flex-col items-center justify-center
                 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
                 ${isSelected ? "ring-2 ring-primary ring-offset-2" : ""}
@@ -74,14 +80,20 @@ export function HeatmapView({
               aria-label={`${dayOfWeek}, ${monthName} ${dayOfMonth}. ${getAvailabilityLabel(dateData)}${isSelected ? ". Currently selected" : ""}`}
               aria-current={isSelected ? "date" : undefined}
             >
-              <div className="text-xs text-muted-foreground font-medium" aria-hidden="true">
+              <div
+                className={`text-xs font-medium ${isFullAvailability(dateData) ? "text-white/80" : "text-muted-foreground"}`}
+                aria-hidden="true"
+              >
                 {dayOfWeek.slice(0, 3)}
               </div>
-              <div className="text-lg sm:text-xl font-bold text-foreground" aria-hidden="true">
+              <div
+                className={`text-lg sm:text-xl font-bold ${isFullAvailability(dateData) ? "text-white" : "text-foreground"}`}
+                aria-hidden="true"
+              >
                 {dayOfMonth}
               </div>
               <div
-                className="text-xs text-foreground font-medium mt-0.5 sm:mt-1"
+                className={`text-xs font-medium ${isFullAvailability(dateData) ? "text-white/90" : "text-foreground"}`}
                 aria-hidden="true"
               >
                 {dateData.available}/{participants}
