@@ -111,7 +111,8 @@
     "createdBy": "Utworzone przez",
     "locked": {
       "title": "Wydarzenie zablokowane",
-      "chosenDate": "Wybrana data: {date}"
+      "chosenDate": "Wybrana data: {date}",
+      "addToCalendar": "Dodaj do Kalendarza Google"
     },
     "heatmap": {
       "title": "Przegląd dostępności",

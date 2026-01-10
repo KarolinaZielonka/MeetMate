@@ -206,3 +206,7 @@ export function formatDateRange(start: Date, end: Date): string {
     return `${format(start, "MMM d, yyyy")} - ${format(end, "MMM d, yyyy")}`
   }
 }
+
+export function formatSingleDate(date: Date): string {
+  return format(date, "MMM d, yyyy")
+}

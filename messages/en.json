@@ -111,7 +111,8 @@
     "createdBy": "Created by",
     "locked": {
       "title": "Event Locked",
-      "chosenDate": "Chosen date: {date}"
+      "chosenDate": "Chosen date: {date}",
+      "addToCalendar": "Add to Google Calendar"
     },
     "heatmap": {
       "title": "Availability Overview",

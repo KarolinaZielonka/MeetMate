@@ -56,7 +56,11 @@ export function EventHeader({ event, userRole, shareUrl }: EventHeaderProps) {
 
       <CardContent className="space-y-4">
         {event.is_locked && event.calculated_date && (
-          <LockedEventStatus calculatedDate={event.calculated_date} />
+          <LockedEventStatus
+            calculatedDate={event.calculated_date}
+            eventName={event.name}
+            eventUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/e/${shareUrl}`}
+          />
         )}
 
         <div className="md:hidden">
