@@ -10,7 +10,7 @@ export function generateWhatsAppUrl({ url, eventName, message }: ShareConfig): s
 }
 
 export function generateMessengerUrl({ url }: ShareConfig): string {
-  return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+  return `fb-messenger://share/?link=${encodeURIComponent(url)}`
 }
 
 export function canUseNativeShare(): boolean {
