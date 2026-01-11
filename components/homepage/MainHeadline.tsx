@@ -79,10 +79,10 @@ export function MainHeadline() {
           </span>
         </div>
 
-        <h1 className="text-[2.5rem] sm:text-5xl md:text-7xl font-bold text-foreground leading-tight min-h-[120px] sm:min-h-[80px] md:min-h-[120px]">
-          <span className="block sm:inline">{currentTitle.main}</span>
-          <span className="block sm:inline text-primary">{currentTitle.accent}</span>
-        </h1>
+      <h1 className="text-[2.5rem] sm:text-5xl md:text-7xl headline-tight text-foreground leading-tight min-h-[120px] sm:min-h-[80px] md:min-h-[120px]">
+        <span className="block sm:inline">{currentTitle.main}</span>
+        <span className="block sm:inline text-primary">{currentTitle.accent}</span>
+      </h1>
       </div>
     )
   }
@@ -95,7 +95,7 @@ export function MainHeadline() {
         </span>
       </div>
 
-      <h1 className="text-[2.5rem] sm:text-5xl md:text-7xl font-bold text-foreground leading-tight min-h-[120px] sm:min-h-[80px] md:min-h-[120px]">
+      <h1 className="text-[2.5rem] sm:text-5xl md:text-7xl headline-tight text-foreground leading-tight min-h-[120px] sm:min-h-[80px] md:min-h-[120px]">
         <AnimatePresence mode="wait">
           <motion.span key={currentTitleIndex} className="block">
             <span className="block sm:inline">{renderAnimatedText(currentTitle.main, 0)}</span>

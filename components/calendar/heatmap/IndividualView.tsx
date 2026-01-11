@@ -32,14 +32,14 @@ export function IndividualView({ dates, participants, aggregatedData }: Individu
                   <div
                     key={date}
                     className={`
-                      rounded-lg p-2 text-center min-h-[44px] flex items-center justify-center
+                      availability-slot text-center min-h-[44px] flex items-center justify-center
                       ${
                         participantStatus === "available"
-                          ? "state-available"
+                          ? "availability-available"
                           : participantStatus === "maybe"
-                            ? "state-maybe"
+                            ? "availability-maybe"
                             : participantStatus === "unavailable"
-                              ? "state-unavailable"
+                              ? "availability-unavailable"
                               : "bg-muted border border-border"
                       }
                     `}

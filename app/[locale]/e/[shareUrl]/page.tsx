@@ -61,6 +61,7 @@ export default function EventPage() {
   const handleRefresh = () => {
     if (event && shareUrl) {
       fetchEvent(shareUrl, t)
+      fetchParticipants(shareUrl, tParticipants)
       const session = getSession(event.id)
       if (session?.participantId) {
         fetchAvailability(event.id, session.participantId)
@@ -80,6 +81,10 @@ export default function EventPage() {
 
   const handleJoinSuccess = () => {
     handleRefresh()
+    // Also refresh participants list when someone joins
+    if (shareUrl) {
+      fetchParticipants(shareUrl, tParticipants)
+    }
     const session = getSession(event?.id || "")
     if (session) {
       setUserRole(session.role)

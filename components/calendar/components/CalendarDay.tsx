@@ -43,6 +43,7 @@ export function CalendarDay({ day, status, monthName, readonly, onClick }: Calen
       className={cn(
         "aspect-square flex items-center justify-center rounded-md text-sm font-medium",
         "min-h-11 min-w-11", // 44px minimum touch target
+        "select-bounce focus-glow",
         styles
       )}
       aria-label={`${day.dayOfMonth} ${monthName} - ${status || "unselected"}`}

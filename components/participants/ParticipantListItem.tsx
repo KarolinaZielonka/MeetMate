@@ -48,23 +48,20 @@ export function ParticipantListItem({
 
       <div className="flex items-center gap-2 flex-shrink-0">
         {isCurrentUser && (
-          <Badge
-            variant="outline"
-            className="bg-primary/10 border-primary/30 text-primary hover-scale"
-          >
+          <span className="pill pill-primary hover-scale">
             {youBadgeText}
-          </Badge>
+          </span>
         )}
         {participant.has_submitted ? (
-          <Badge variant="default" className="hover:bg-green-600 bg-green-800 hover-scale">
-            <Check className="w-3 h-3 mr-1" />
+          <span className="pill pill-success hover-scale">
+            <Check className="w-3 h-3" />
             {submittedBadgeText}
-          </Badge>
+          </span>
         ) : (
-          <Badge variant="secondary" className="hover-scale">
-            <Clock className="w-3 h-3 mr-1" />
+          <span className="pill hover-scale">
+            <Clock className="w-3 h-3" />
             {pendingBadgeText}
-          </Badge>
+          </span>
         )}
       </div>
     </li>

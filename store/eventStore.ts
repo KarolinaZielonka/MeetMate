@@ -226,6 +226,7 @@ export const useEventStore = create<EventState>((set, get) => ({
         // Refresh event data to get updated availability
         if (state.event) {
           await get().refreshEvent(state.event.share_url, t)
+          await get().fetchParticipants(state.event.share_url, t)
         }
       } else {
         toast.error(result.error || t("errorSubmit"))

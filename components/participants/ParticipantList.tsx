@@ -25,7 +25,7 @@ export function ParticipantList({ eventId }: { eventId: string }) {
           </div>
           {t("title")}
 
-          <div className="bg-muted rounded-full p-2 text-sm">{participants.length}</div>
+          <span className="pill pill-primary">{participants.length}</span>
         </CardTitle>
         <CardDescription className="text-base">{t("description")}</CardDescription>
       </CardHeader>

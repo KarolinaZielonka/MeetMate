@@ -5,18 +5,25 @@ export interface FeatureCardProps {
   icon: ReactNode
   title: string
   description: string
-  gradientClass: "gradient-purple" | "gradient-blue" | "gradient-green" | "gradient-orange"
   iconBgClass: "icon-bg-purple" | "icon-bg-blue" | "icon-bg-green" | "icon-bg-orange"
 }
 
 export function FeatureCard({ feature }: { feature: FeatureCardProps }) {
-  const { gradientClass, iconBgClass, icon, title, description } = feature
+  const { iconBgClass, icon, title, description } = feature
+  
+  // Map icon background classes to feature-card-icon variants
+  const iconVariant = iconBgClass.includes("green") 
+    ? "icon-green" 
+    : iconBgClass.includes("blue") 
+    ? "icon-primary"
+    : iconBgClass.includes("purple")
+    ? "icon-primary"
+    : "icon-primary"
+  
   return (
-    <Card className={`border-none ${gradientClass}`}>
+    <Card className="feature-card">
       <CardContent className="pt-6 pb-6 text-center space-y-4">
-        <div
-          className={`w-14 h-14 rounded-2xl mx-auto flex items-center justify-center shadow-lg hover-scale-icon text-white ${iconBgClass}`}
-        >
+        <div className={`feature-card-icon ${iconVariant} mx-auto hover-scale-icon`}>
           {icon}
         </div>
         <h3 className="text-xl font-bold text-foreground">{title}</h3>

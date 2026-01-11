@@ -22,6 +22,7 @@ interface UseRealtimeEventOptions {
  * Subscribes to:
  * - participants table: New joins and availability submissions
  * - events table: Lock state changes
+ * - availability table: Availability updates
  *
  * @param options - Configuration options
  */
@@ -35,78 +36,90 @@ export function useRealtimeEvent({
   showToasts = true,
 }: UseRealtimeEventOptions) {
   const channelRef = useRef<RealtimeChannel | null>(null)
-  const setParticipants = useEventStore((state) => state.setParticipants)
-  const setEvent = useEventStore((state) => state.setEvent)
+  
+  const callbacksRef = useRef({
+    onParticipantJoin,
+    onParticipantUpdate,
+    onAvailabilityUpdate,
+    onEventLocked,
+    onEventReopened,
+    showToasts,
+  })
+
+  useEffect(() => {
+    callbacksRef.current = {
+      onParticipantJoin,
+      onParticipantUpdate,
+      onAvailabilityUpdate,
+      onEventLocked,
+      onEventReopened,
+      showToasts,
+    }
+  }, [onParticipantJoin, onParticipantUpdate, onAvailabilityUpdate, onEventLocked, onEventReopened, showToasts])
 
   // Helper function to refresh participants list
-  const refreshParticipants = useCallback(
-    async (eventId: string) => {
-      try {
-        // Fetch event's share_url first
-        const { data: event } = await supabase
+  // Get event from store dynamically to avoid dependency issues
+  const refreshParticipants = useCallback(async (eventId: string) => {
+    try {
+      const currentEvent = useEventStore.getState().event
+      let shareUrl = currentEvent?.share_url
+      
+      if (!shareUrl) {
+        const { data: eventData, error: fetchError } = await supabase
           .from("events")
           .select("share_url")
           .eq("id", eventId)
           .single()
-
-        if (!event) return
-
-        // Fetch updated participants list
-        const { data: participants, error } = await supabase
-          .from("participants")
-          .select("id, event_id, name, has_submitted, created_at, session_token, joined_at")
-          .eq("event_id", eventId)
-          .order("created_at", { ascending: true })
-
-        if (error) {
-          console.error("Error fetching participants:", error)
+        
+        if (fetchError) {
+          console.error("Error fetching share_url:", fetchError)
           return
         }
-
-        // Update Zustand store
-        if (participants) {
-          setParticipants(participants)
-        }
-      } catch (error) {
-        console.error("Error refreshing participants:", error)
-      }
-    },
-    [setParticipants]
-  )
-
-  // Helper function to refresh event data
-  const refreshEvent = useCallback(
-    async (eventId: string) => {
-      try {
-        const { data: event, error } = await supabase
-          .from("events")
-          .select("*")
-          .eq("id", eventId)
-          .single()
-
-        if (error) {
-          console.error("Error fetching event:", error)
+        
+        if (!eventData?.share_url) {
+          console.warn("No share_url found for event:", eventId)
           return
         }
-
-        // Update Zustand store
-        if (event) {
-          setEvent(event)
-        }
-      } catch (error) {
-        console.error("Error refreshing event:", error)
+        
+        shareUrl = eventData.share_url
       }
-    },
-    [setEvent]
-  )
+
+      if (shareUrl) {
+        const fetchParticipants = useEventStore.getState().fetchParticipants
+        await fetchParticipants(shareUrl, (key: string) => key)
+      }
+    } catch (error) {
+      console.error("Error refreshing participants:", error)
+    }
+  }, []) // No dependencies - gets everything from store dynamically
+
+  const refreshEvent = useCallback(async (eventId: string) => {
+    try {
+      const { data: event, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("id", eventId)
+        .single()
+
+      if (error) {
+        console.error("Error fetching event:", error)
+        return
+      }
+
+      if (event) {
+        const setEvent = useEventStore.getState().setEvent
+        setEvent(event)
+      }
+    } catch (error) {
+      console.error("Error refreshing event:", error)
+    }
+  }, []) // No dependencies - gets setEvent from store dynamically
 
   useEffect(() => {
     if (!eventId) return
 
-    // Create a unique channel name for this event
     const channelName = `participants:event_id=eq.${eventId}`
 
-    // Subscribe to participants table changes
     channelRef.current = supabase
       .channel(channelName)
       .on(
@@ -118,29 +131,39 @@ export function useRealtimeEvent({
           filter: `event_id=eq.${eventId}`,
         },
         (payload) => {
-          console.log("New participant joined:", payload)
+          console.log("New participant joined - real-time event received:", payload)
 
           const newParticipant = payload.new as {
             id: string
             name: string
             has_submitted: boolean
             created_at: string
+            event_id: string
           }
 
-          // Call custom callback
+          const { onParticipantJoin, showToasts } = callbacksRef.current
+
           onParticipantJoin?.(newParticipant.name)
 
-          // Show toast notification
           if (showToasts) {
             toast.success(`${newParticipant.name} joined the event!`, {
               duration: 3000,
             })
           }
 
-          // Refresh participants list
-          // Note: In production, you might want to add the participant directly
-          // instead of refetching, but refetching ensures consistency
+          console.log("Refreshing participants list for event:", eventId)
           refreshParticipants(eventId)
+            .then(() => {
+              console.log("Successfully refreshed participants list")
+            })
+            .catch((error) => {
+              console.error("Failed to refresh participants after join:", error)
+              if (showToasts) {
+                toast.error("Failed to refresh participant list. Please refresh the page.", {
+                  duration: 5000,
+                })
+              }
+            })
         }
       )
       .on(
@@ -152,7 +175,7 @@ export function useRealtimeEvent({
           filter: `event_id=eq.${eventId}`,
         },
         (payload) => {
-          console.log("Participant updated:", payload)
+          console.log("Participant updated - real-time event received:", payload)
 
           const updatedParticipant = payload.new as {
             id: string
@@ -160,13 +183,12 @@ export function useRealtimeEvent({
             has_submitted: boolean
           }
 
-          // Only show notification if has_submitted changed to true
           const oldParticipant = payload.old as { has_submitted: boolean }
+          const { onParticipantUpdate, showToasts } = callbacksRef.current
+
           if (updatedParticipant.has_submitted && !oldParticipant.has_submitted) {
-            // Call custom callback
             onParticipantUpdate?.(updatedParticipant.name)
 
-            // Show toast notification
             if (showToasts) {
               toast.info(`${updatedParticipant.name} submitted their availability!`, {
                 duration: 3000,
@@ -174,8 +196,14 @@ export function useRealtimeEvent({
             }
           }
 
-          // Refresh participants list
+          console.log("Refreshing participants list after update for event:", eventId)
           refreshParticipants(eventId)
+            .then(() => {
+              console.log("Successfully refreshed participants list after update")
+            })
+            .catch((error) => {
+              console.error("Failed to refresh participants after update:", error)
+            })
         }
       )
       .on(
@@ -198,10 +226,10 @@ export function useRealtimeEvent({
             calculated_date: string | null
           }
 
-          // Check if lock state changed
+          const { onEventLocked, onEventReopened, showToasts } = callbacksRef.current
+
           if (updatedEvent.is_locked !== oldEvent.is_locked) {
             if (updatedEvent.is_locked) {
-              // Event was locked
               onEventLocked?.()
 
               if (showToasts) {
@@ -213,7 +241,6 @@ export function useRealtimeEvent({
                 })
               }
             } else {
-              // Event was reopened
               onEventReopened?.()
 
               if (showToasts) {
@@ -225,7 +252,6 @@ export function useRealtimeEvent({
             }
           }
 
-          // Refresh event data
           refreshEvent(eventId)
         }
       )
@@ -240,28 +266,36 @@ export function useRealtimeEvent({
         (payload) => {
           console.log("Availability updated:", payload)
 
-          // Call custom callback to refresh availability data
-          onAvailabilityUpdate?.()
+          callbacksRef.current.onAvailabilityUpdate?.()
         }
       )
       .subscribe((status) => {
+        console.log(`Real-time subscription status for event ${eventId}:`, status)
+        const { showToasts } = callbacksRef.current
+        
         if (status === "SUBSCRIBED") {
-          console.log(`Subscribed to real-time updates for event ${eventId}`)
+          console.log(`✅ Successfully subscribed to real-time updates for event ${eventId}`)
         } else if (status === "CHANNEL_ERROR") {
-          console.error("Real-time subscription error")
+          console.error("❌ Real-time subscription error for event:", eventId)
           if (showToasts) {
             toast.error("Real-time updates disconnected. Please refresh the page.", {
               duration: 5000,
             })
           }
         } else if (status === "TIMED_OUT") {
-          console.error("Real-time subscription timed out")
+          console.error("⏱️ Real-time subscription timed out for event:", eventId)
+          if (showToasts) {
+            toast.warning("Real-time connection timed out. Updates may be delayed.", {
+              duration: 5000,
+            })
+          }
         } else if (status === "CLOSED") {
-          console.log("Real-time subscription closed")
+          console.log("🔒 Real-time subscription closed for event:", eventId)
+        } else {
+          console.log("ℹ️ Real-time subscription status:", status, "for event:", eventId)
         }
       })
 
-    // Cleanup function
     return () => {
       if (channelRef.current) {
         console.log(`Unsubscribing from real-time updates for event ${eventId}`)
@@ -269,17 +303,7 @@ export function useRealtimeEvent({
         channelRef.current = null
       }
     }
-  }, [
-    eventId,
-    onParticipantJoin,
-    onParticipantUpdate,
-    onAvailabilityUpdate,
-    onEventLocked,
-    onEventReopened,
-    showToasts,
-    refreshParticipants,
-    refreshEvent,
-  ])
+  }, [eventId, refreshParticipants, refreshEvent]) // Only depend on eventId and stable callbacks
 
   return {
     isConnected: channelRef.current !== null,

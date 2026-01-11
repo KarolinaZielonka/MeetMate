@@ -74,7 +74,7 @@ export function HeatmapView({
                 rounded-lg p-2 sm:p-3 transition-smooth hover-lift
                 aspect-square min-h-[60px] w-full cursor-pointer
                 flex flex-col items-center justify-center
-                focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                focus-glow select-bounce
                 ${isSelected ? "ring-2 ring-primary ring-offset-2" : ""}
               `}
               aria-label={`${dayOfWeek}, ${monthName} ${dayOfMonth}. ${getAvailabilityLabel(dateData)}${isSelected ? ". Currently selected" : ""}`}

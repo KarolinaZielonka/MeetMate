@@ -38,12 +38,13 @@ export const DateScoreItem = memo(function DateScoreItem({
         </div>
 
         {/* Score and Progress */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">{t("score", { percentage })}</span>
-            <span className="text-xs text-muted-foreground">
-              {t("outOf", { total: dateScore.totalParticipants })}
-            </span>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="label-spaced">{t("score", { percentage })}</span>
+            <div className="text-right">
+              <div className="stat-number">{percentage}%</div>
+              <div className="stat-label">{t("outOf", { total: dateScore.totalParticipants })}</div>
+            </div>
           </div>
           <Progress value={percentage} className="h-2" />
           <p className="text-xs text-muted-foreground break-words">

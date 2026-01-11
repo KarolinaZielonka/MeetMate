@@ -71,7 +71,7 @@ export default function CreateEventPage() {
     <div className="min-h-screen bg-background pt-24 pb-12 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8 fade-in">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">{t("title")}</h1>
+          <h1 className="text-4xl md:text-5xl headline-tight text-foreground mb-3">{t("title")}</h1>
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         <Card className="shadow-xl border-none slide-up">
@@ -85,7 +85,9 @@ export default function CreateEventPage() {
                 onDateChange={handleDateChange}
               />
 
-              <Separator />
+              <div className="divider-dot">
+                <span />
+              </div>
 
               <OptionalSettingsSection
                 formData={formData}

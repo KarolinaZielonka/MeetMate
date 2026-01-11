@@ -115,6 +115,99 @@
 }
 
 @layer utilities {
+  /* ============================================
+   * SIGNATURE GEOMETRIC PATTERNS
+   * Unique brand elements for visual identity
+   * ============================================ */
+
+  /* Signature dot pattern - unique brand element */
+  .pattern-dots {
+    background-image: radial-gradient(
+      circle,
+      hsl(var(--primary) / 0.15) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+  }
+
+  .dark .pattern-dots {
+    background-image: radial-gradient(
+      circle,
+      hsl(var(--primary) / 0.08) 1px,
+      transparent 1px
+    );
+  }
+
+  .pattern-dots-lg {
+    background-image: radial-gradient(
+      circle,
+      hsl(var(--primary) / 0.1) 1.5px,
+      transparent 1.5px
+    );
+    background-size: 32px 32px;
+  }
+
+  .dark .pattern-dots-lg {
+    background-image: radial-gradient(
+      circle,
+      hsl(var(--primary) / 0.05) 1.5px,
+      transparent 1.5px
+    );
+  }
+
+  /* Grid pattern for hero sections */
+  .pattern-grid {
+    background-image: linear-gradient(
+        hsl(var(--border) / 0.3) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .dark .pattern-grid {
+    background-image: linear-gradient(
+        hsl(var(--border) / 0.2) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, hsl(var(--border) / 0.2) 1px, transparent 1px);
+  }
+
+  .pattern-grid-fine {
+    background-image: linear-gradient(
+        hsl(var(--border) / 0.3) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .dark .pattern-grid-fine {
+    background-image: linear-gradient(
+        hsl(var(--border) / 0.15) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, hsl(var(--border) / 0.15) 1px, transparent 1px);
+  }
+
+  .pattern-cross {
+    background-image: radial-gradient(
+      circle,
+      hsl(var(--muted-foreground) / 0.15) 1px,
+      transparent 1px
+    );
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+  }
+
+  .dark .pattern-cross {
+    background-image: radial-gradient(
+      circle,
+      hsl(var(--muted-foreground) / 0.08) 1px,
+      transparent 1px
+    );
+  }
+
   /* Dark-mode-aware shadows using light glow instead of dark drop shadows */
   .shadow-soft {
     box-shadow:
@@ -360,6 +453,63 @@
   .spin-smooth {
     animation: spin 1s linear infinite;
   }
+
+  /* ============================================
+   * PILL UI COMPONENTS
+   * Modern pill-shaped badges and tags
+   * ============================================ */
+  
+  /* Pill-shaped badges and tags */
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
+    @apply bg-muted text-muted-foreground;
+    @apply border border-border/50;
+  }
+
+  .pill-primary {
+    @apply bg-primary/10 text-primary border-primary/20;
+  }
+
+  .pill-success {
+    @apply bg-green-500/10 text-green-700 border-green-500/20;
+  }
+
+  .dark .pill-success {
+    @apply text-green-400;
+  }
+
+  /* ============================================
+   * TYPOGRAPHY IMPROVEMENTS
+   * Modern, impactful typography styles
+   * ============================================ */
+
+  /* Tight headlines - modern, impactful */
+  .headline-tight {
+    @apply tracking-tight font-bold;
+    letter-spacing: -0.025em;
+  }
+
+  /* Loose labels - readable, elegant */
+  .label-spaced {
+    @apply text-xs font-medium uppercase tracking-wider text-muted-foreground;
+  }
+
+  /* ============================================
+   * DISTINCTIVE NUMBER/COUNT DISPLAY
+   * Monospaced numbers in styled containers
+   * ============================================ */
+
+  /* Monospaced numbers in a styled container */
+  .stat-number {
+    @apply font-mono text-2xl font-bold text-foreground;
+    @apply bg-muted/50 px-3 py-1 rounded-lg;
+    @apply border border-border/50;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    @apply text-xs text-muted-foreground uppercase tracking-wider mt-1;
+  }
 }
 
 @layer components {
@@ -385,6 +535,22 @@
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
 
+  /* Modern glow focus effect */
+  .focus-glow:focus-visible {
+    @apply outline-none;
+    box-shadow: 
+      0 0 0 2px hsl(var(--background)),
+      0 0 0 4px hsl(var(--primary)),
+      0 0 20px -5px hsl(var(--primary) / 0.4);
+  }
+
+  .dark .focus-glow:focus-visible {
+    box-shadow: 
+      0 0 0 2px hsl(var(--background)),
+      0 0 0 4px hsl(var(--primary)),
+      0 0 30px -5px hsl(var(--primary) / 0.6);
+  }
+
   /* Link focus states */
   a:focus-visible {
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background rounded-sm;
@@ -397,6 +563,115 @@
 
   button:active {
     @apply scale-[0.98];
+  }
+
+  /* ============================================
+   * AVAILABILITY STATES REDESIGN
+   * Modern availability indicators with left border accent
+   * ============================================ */
+
+  /* Modern availability indicators with left border accent */
+  .availability-slot {
+    @apply relative pl-3 py-2 rounded-md;
+    @apply bg-card border border-border;
+    @apply transition-all duration-200;
+  }
+
+  .availability-slot::before {
+    content: '';
+    @apply absolute left-0 top-0 bottom-0 w-1 rounded-l-md;
+  }
+
+  .availability-available::before { 
+    @apply bg-green-500; 
+  }
+
+  .availability-maybe::before { 
+    @apply bg-amber-500; 
+  }
+
+  .availability-unavailable::before { 
+    @apply bg-red-500; 
+  }
+
+  /* Hover states */
+  .availability-slot:hover {
+    @apply border-primary/50 shadow-sm;
+  }
+
+  /* ============================================
+   * MICRO-INTERACTIONS FOR SELECTION STATES
+   * Satisfying click feedback
+   * ============================================ */
+
+  /* Selection checkbox animation */
+  .select-bounce {
+    @apply transition-transform;
+  }
+
+  .select-bounce:active {
+    transform: scale(0.92);
+  }
+
+  /* Success checkmark animation */
+  .check-animated {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    animation: checkDraw 0.3s ease-out forwards;
+  }
+
+  /* ============================================
+   * FEATURE CARD REDESIGN (NO GRADIENTS)
+   * Clean feature cards with color accent
+   * ============================================ */
+
+  /* Clean feature cards with color accent */
+  .feature-card {
+    @apply bg-card rounded-2xl p-6;
+    @apply border border-border;
+    @apply transition-all duration-300;
+  }
+
+  .feature-card:hover {
+    @apply border-primary/30 shadow-lg;
+  }
+
+  .feature-card-icon {
+    @apply w-12 h-12 rounded-xl;
+    @apply flex items-center justify-center;
+    @apply border-2;
+  }
+
+  .feature-card-icon.icon-primary {
+    @apply border-primary bg-primary/5 text-primary;
+  }
+
+  .feature-card-icon.icon-green {
+    @apply border-green-500 bg-green-500/5 text-green-600;
+  }
+
+  .dark .feature-card-icon.icon-green {
+    @apply text-green-400;
+  }
+
+  /* ============================================
+   * VISUAL RHYTHM WITH DIVIDERS
+   * Decorative divider with dot
+   * ============================================ */
+
+  /* Decorative divider with dot */
+  .divider-dot {
+    @apply flex items-center gap-4 my-8;
+  }
+
+  .divider-dot::before,
+  .divider-dot::after {
+    content: '';
+    @apply flex-1 h-px bg-border;
+  }
+
+  .divider-dot span {
+    @apply w-1.5 h-1.5 rounded-full bg-primary;
   }
 
   /* Skip to main content link for screen readers */
@@ -453,6 +728,15 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes checkDraw {
+  0% { 
+    stroke-dashoffset: 24; 
+  }
+  100% { 
+    stroke-dashoffset: 0; 
   }
 }
 

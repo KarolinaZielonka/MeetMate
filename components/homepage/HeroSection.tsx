@@ -9,7 +9,7 @@ export function HeroSection() {
   const t = useTranslations("homepage")
 
   return (
-    <section className="pt-32 pb-20 px-4">
+    <section className="pt-32 pb-20 px-4 pattern-dots">
       <div className="max-w-5xl mx-auto text-center space-y-8">
         <MainHeadline />
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center slide-up">

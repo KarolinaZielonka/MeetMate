@@ -35,7 +35,7 @@ export function EventHeader({ event, userRole, shareUrl }: EventHeaderProps) {
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="flex-1">
             <div className="flex items-center gap-3 flex-wrap mb-3">
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground">{event.name}</h1>
+              <h1 className="text-3xl md:text-4xl headline-tight text-foreground">{event.name}</h1>
               <RoleBadge role={userRole} />
             </div>
 
@@ -61,17 +61,22 @@ export function EventHeader({ event, userRole, shareUrl }: EventHeaderProps) {
           <LockedEventCard calculatedDate={event.calculated_date} />
         )}
 
-        <Separator />
-
         {event.is_locked && event.calculated_date && (
-          <AddToCalendars
-            calculatedDate={event.calculated_date}
-            eventName={event.name}
-            eventUrl={`${window.location.origin}/e/${shareUrl}`}
-          />
+          <>
+            <div className="divider-dot">
+              <span />
+            </div>
+            <AddToCalendars
+              calculatedDate={event.calculated_date}
+              eventName={event.name}
+              eventUrl={`${window.location.origin}/e/${shareUrl}`}
+            />
+          </>
         )}
 
-        <Separator />
+        <div className="divider-dot">
+          <span />
+        </div>
 
         <div className="md:hidden">
           <ShareSection shareUrl={shareUrl} eventName={event.name} />
