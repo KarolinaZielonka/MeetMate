@@ -646,12 +646,69 @@
     @apply border-primary bg-primary/5 text-primary;
   }
 
+  .feature-card-icon.icon-blue {
+    @apply border-blue-500 bg-blue-500/5 text-blue-600;
+  }
+
+  .dark .feature-card-icon.icon-blue {
+    @apply text-blue-400;
+  }
+
   .feature-card-icon.icon-green {
     @apply border-green-500 bg-green-500/5 text-green-600;
   }
 
   .dark .feature-card-icon.icon-green {
     @apply text-green-400;
+  }
+
+  .feature-card-icon.icon-red {
+    @apply border-red-500 bg-red-500/5 text-red-600;
+  }
+
+  .dark .feature-card-icon.icon-red {
+    @apply text-red-400;
+  }
+
+  .feature-card-icon.icon-orange {
+    @apply border-orange-500 bg-orange-500/5 text-orange-600;
+  }
+
+  .dark .feature-card-icon.icon-orange {
+    @apply text-orange-400;
+  }
+
+  /* ============================================
+   * STEP CARD (About page)
+   * Clean step cards with left accent border
+   * ============================================ */
+
+  .step-card {
+    @apply bg-card rounded-2xl;
+    @apply border border-border;
+    @apply transition-all duration-300;
+    @apply relative overflow-hidden;
+  }
+
+  .step-card::before {
+    content: '';
+    @apply absolute left-0 top-0 bottom-0 w-1;
+  }
+
+  .step-card:hover {
+    @apply border-primary/30 shadow-lg;
+  }
+
+  .step-card.step-blue::before {
+    @apply bg-blue-500;
+  }
+
+  .step-card.step-red::before {
+    @apply bg-red-500;
+  }
+
+  .step-card.step-green::before {
+    @apply bg-green-500;
   }
 
   /* ============================================

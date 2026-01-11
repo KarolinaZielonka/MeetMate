@@ -5,7 +5,7 @@ export interface FeatureCardProps {
   icon: ReactNode
   title: string
   description: string
-  iconBgClass: "icon-bg-purple" | "icon-bg-blue" | "icon-bg-green" | "icon-bg-orange"
+  iconBgClass: "icon-bg-orange" | "icon-bg-blue" | "icon-bg-green" | "icon-bg-orange"
 }
 
 export function FeatureCard({ feature }: { feature: FeatureCardProps }) {
@@ -16,8 +16,8 @@ export function FeatureCard({ feature }: { feature: FeatureCardProps }) {
     ? "icon-green" 
     : iconBgClass.includes("blue") 
     ? "icon-primary"
-    : iconBgClass.includes("purple")
-    ? "icon-primary"
+    : iconBgClass.includes("orange")
+    ? "icon-orange"
     : "icon-primary"
   
   return (

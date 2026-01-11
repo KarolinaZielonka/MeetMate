@@ -5,25 +5,24 @@ interface StepCardProps {
   icon: LucideIcon
   title: string
   description: string
-  gradient: "gradient-blue" | "gradient-red" | "gradient-green"
-  iconBg: "icon-bg-blue" | "icon-bg-red" | "icon-bg-green"
+  color: "blue" | "red" | "green"
 }
 
-export function StepCard({ icon: Icon, title, description, gradient, iconBg }: StepCardProps) {
+export function StepCard({ icon: Icon, title, description, color }: StepCardProps) {
   return (
-    <Card className={`border-none shadow-lg card-hover ${gradient}`}>
+    <Card className={`step-card step-${color}`}>
       <CardContent className="p-6 md:p-8">
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="flex-shrink-0 relative z-10">
-            <div
-              className={`w-14 h-14 ${iconBg} rounded-2xl flex items-center justify-center shadow-lg hover-scale-icon text-white`}
-            >
+            <div className={`feature-card-icon icon-${color} w-14 h-14 rounded-2xl hover-scale-icon`}>
               <Icon className="w-7 h-7" />
             </div>
           </div>
 
           <div className="flex-1 space-y-2">
-            <h3 className="text-xl md:text-2xl font-bold text-foreground">{title}</h3>
+            <h3 className="text-xl md:text-2xl font-bold text-foreground headline-tight">
+              {title}
+            </h3>
             <p className="text-muted-foreground leading-relaxed">{description}</p>
           </div>
         </div>

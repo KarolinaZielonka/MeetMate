@@ -11,7 +11,7 @@ export function FeaturesSection() {
       icon: <Zap className="w-7 h-7" />,
       title: t("features.fast.title"),
       description: t("features.fast.description"),
-      iconBgClass: "icon-bg-purple",
+      iconBgClass: "icon-bg-orange",
     },
     {
       icon: <Users className="w-7 h-7" />,
