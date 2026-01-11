@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "MeetMate - Group Scheduling Made Simple",
+    "description": "Free group scheduling tool. Create events, share a link, and find the perfect time for everyone. No account required."
+  },
   "common": {
     "appName": "MeetMate",
     "loading": "Loading...",

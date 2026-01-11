@@ -1,6 +1,6 @@
 "use client"
 
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion } from "motion/react"
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 
@@ -39,7 +39,7 @@ export function MainHeadline() {
       transition: {
         delay: i * 0.05,
         duration: 0.5,
-        ease: "easeOut",
+        ease: "easeOut" as const,
       },
     }),
     exit: (i: number) => ({
@@ -48,7 +48,7 @@ export function MainHeadline() {
       transition: {
         delay: i * 0.02,
         duration: 0.3,
-        ease: "easeIn",
+        ease: "easeIn" as const,
       },
     }),
   }
@@ -74,7 +74,7 @@ export function MainHeadline() {
     return (
       <div className="space-y-4 fade-in">
         <div className="inline-block">
-          <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
+          <span className="inline-block px-4 py-1.5 bg-primary/20 text-primary dark:bg-primary/25 rounded-full text-sm font-medium mb-4">
             {t("badge")}
           </span>
         </div>
@@ -90,7 +90,7 @@ export function MainHeadline() {
   return (
     <div className="space-y-4 fade-in">
       <div className="inline-block">
-        <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4 hover-scale">
+        <span className="inline-block px-4 py-1.5 bg-primary/20 text-primary dark:bg-primary/25 rounded-full text-sm font-medium mb-4 hover-scale">
           {t("badge")}
         </span>
       </div>

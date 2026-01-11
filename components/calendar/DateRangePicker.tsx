@@ -1,7 +1,7 @@
 "use client"
 
-import { AnimatePresence, motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { AnimatePresence, motion } from "motion/react"
 import { useTranslations } from "next-intl"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"

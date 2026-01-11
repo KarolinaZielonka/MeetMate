@@ -1,7 +1,7 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { Check } from "lucide-react"
+import { motion } from "motion/react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 
@@ -21,7 +21,7 @@ export function ShareButtonSuccess({ action }: ShareButtonSuccessProps) {
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
     >
       <Button
-        className="bg-green-600 hover:bg-green-700 shadow-md min-w-[120px] gap-2 pointer-events-none"
+        className="bg-green-600 hover:bg-green-700 shadow-md w-full md:w-auto md:min-w-[120px] gap-2"
         asChild
       >
         <motion.div>

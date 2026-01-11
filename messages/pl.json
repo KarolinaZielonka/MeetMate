@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "MeetMate - Proste planowanie spotkań grupowych",
+    "description": "Darmowe narzędzie do planowania spotkań grupowych. Utwórz wydarzenie, udostępnij link i znajdź idealny termin dla wszystkich. Bez rejestracji."
+  },
   "common": {
     "appName": "MeetMate",
     "loading": "Ładowanie...",
