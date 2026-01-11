@@ -62,6 +62,7 @@ export function AvailabilitySection({ eventId }: AvailabilitySectionProps) {
           onAvailabilityChange={setAvailabilitySelections}
           initialAvailability={availabilitySelections}
           readonly={hasSubmittedAvailability && !isEditingAvailability}
+          excludedDates={event.excluded_dates || []}
         />
 
         <div className="flex gap-3">

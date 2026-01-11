@@ -19,6 +19,7 @@ export function DateRangePicker({
   onAvailabilityChange,
   readonly = false,
   className,
+  excludedDates = [],
 }: DateRangePickerProps) {
   const t = useTranslations("calendar")
   const { availability, selectDate } = useDateSelection(initialAvailability)
@@ -183,6 +184,7 @@ export function DateRangePicker({
                   availability={availability}
                   onDateSelect={selectDate}
                   readonly={readonly}
+                  excludedDates={excludedDates}
                 />
               </div>
             ))}

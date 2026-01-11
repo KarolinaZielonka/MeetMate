@@ -22,6 +22,7 @@ interface CreateEventBody {
   creator_name: string
   password?: string
   captcha_token?: string
+  excluded_dates?: string[]
 }
 
 /**
@@ -35,6 +36,7 @@ interface CreateEventResponse {
   end_date: string
   creator_name: string | null
   is_locked: boolean
+  excluded_dates: string[]
   participant: {
     participant_id: string
     session_token: string
@@ -56,6 +58,7 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       creator_name: body.creator_name,
       password: body.password,
       captcha_token: body.captcha_token,
+      excluded_dates: body.excluded_dates,
     }
   },
 
@@ -147,6 +150,49 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       }
     }
 
+    // Validate excluded_dates if provided
+    if (body.excluded_dates && body.excluded_dates.length > 0) {
+      // Check that it's an array
+      if (!Array.isArray(body.excluded_dates)) {
+        return {
+          valid: false,
+          error: "excluded_dates must be an array",
+          status: 400,
+        }
+      }
+
+      // Validate each excluded date
+      for (const dateStr of body.excluded_dates) {
+        if (typeof dateStr !== "string") {
+          return {
+            valid: false,
+            error: "Each excluded date must be a string in YYYY-MM-DD format",
+            status: 400,
+          }
+        }
+
+        let excludedDate: Date
+        try {
+          excludedDate = parseDate(dateStr)
+        } catch (_error) {
+          return {
+            valid: false,
+            error: `Invalid excluded date format: ${dateStr}. Use YYYY-MM-DD format.`,
+            status: 400,
+          }
+        }
+
+        // Check that excluded date is within the event date range
+        if (excludedDate < parsedStartDate || excludedDate > parsedEndDate) {
+          return {
+            valid: false,
+            error: `Excluded date ${dateStr} is outside the event date range`,
+            status: 400,
+          }
+        }
+      }
+    }
+
     return { valid: true }
   },
 
@@ -181,6 +227,7 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       end_date: string
       creator_name: string | null
       is_locked: boolean
+      excluded_dates: string[] | null
     } | null = null
     let eventError: { code?: string; message?: string } | null = null
     const maxRetries = 5
@@ -199,8 +246,9 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
           creator_name: body.creator_name?.trim() || null,
           is_locked: false,
           calculated_date: null,
+          excluded_dates: body.excluded_dates || [],
         })
-        .select("id, share_url, name, start_date, end_date, creator_name, is_locked")
+        .select("id, share_url, name, start_date, end_date, creator_name, is_locked, excluded_dates")
         .single()
 
       event = result.data
@@ -255,6 +303,7 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       end_date: event.end_date,
       creator_name: event.creator_name,
       is_locked: event.is_locked,
+      excluded_dates: event.excluded_dates || [],
       participant: participantData,
     }
   },

@@ -15,6 +15,7 @@ export interface Event {
   calculated_date: string | null
   share_url: string
   has_password: boolean
+  excluded_dates: string[]
 }
 
 export interface Participant {

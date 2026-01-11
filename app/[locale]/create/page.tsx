@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 import { AlertMessage } from "@/components/create-event/AlertMessage"
 import { EventDetailsSection } from "@/components/create-event/EventDetailsSection"
+import { ExcludedDatesSection } from "@/components/create-event/ExcludedDatesSection"
 import { OptionalSettingsSection } from "@/components/create-event/OptionalSettingsSection"
 import { SubmitButton } from "@/components/create-event/SubmitButton"
 import { SkeletonForm } from "@/components/skeletons"
@@ -18,7 +19,7 @@ export default function CreateEventPage() {
   const t = useTranslations("createEvent")
   const tApi = useTranslations("api")
 
-  const { formData, isLoading, validation, setFormField, setDateRange, createEvent } =
+  const { formData, isLoading, validation, setFormField, setDateRange, toggleExcludedDate, createEvent } =
     useCreateEventStore()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +85,22 @@ export default function CreateEventPage() {
                 onChange={handleChange}
                 onDateChange={handleDateChange}
               />
+
+              {formData.startDate && formData.endDate && !validation.error && (
+                <>
+                  <div className="divider-dot">
+                    <span />
+                  </div>
+
+                  <ExcludedDatesSection
+                    startDate={formData.startDate}
+                    endDate={formData.endDate}
+                    excludedDates={formData.excludedDates}
+                    onToggleDate={toggleExcludedDate}
+                    disabled={isLoading}
+                  />
+                </>
+              )}
 
               <div className="divider-dot">
                 <span />

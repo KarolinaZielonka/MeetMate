@@ -8,6 +8,7 @@ export interface MonthCalendarProps {
   availability: Map<string, AvailabilityStatus>
   onDateSelect: (date: string) => void
   readonly?: boolean
+  excludedDates?: string[]
 }
 
 export interface CalendarDay {
@@ -15,6 +16,7 @@ export interface CalendarDay {
   dayOfMonth: number
   isInRange: boolean
   isToday: boolean
+  isExcluded: boolean
 }
 
 export interface DateRangePickerProps {
@@ -24,4 +26,5 @@ export interface DateRangePickerProps {
   onAvailabilityChange?: (availability: AvailabilityMap) => void
   readonly?: boolean
   className?: string
+  excludedDates?: string[]
 }

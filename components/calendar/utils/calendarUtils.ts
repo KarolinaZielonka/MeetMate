@@ -18,10 +18,11 @@ export function formatDateToYYYYMMDD(date: Date): string {
 export function getDateStyles(
   status: AvailabilityStatus | undefined,
   isInRange: boolean,
-  isToday: boolean
+  isToday: boolean,
+  isExcluded: boolean = false
 ): string {
-  // Out of range dates are disabled
-  if (!isInRange) {
+  // Out of range or excluded dates are disabled
+  if (!isInRange || isExcluded) {
     return "bg-muted/50 text-muted-foreground cursor-not-allowed border-border"
   }
 

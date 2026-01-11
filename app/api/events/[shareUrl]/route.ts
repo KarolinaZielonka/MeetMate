@@ -14,6 +14,7 @@ interface EventResponse {
   calculated_date: string | null
   created_at: string
   has_password: boolean
+  excluded_dates: string[]
 }
 
 /**
@@ -40,12 +41,13 @@ export const GET = createApiHandler<never, EventResponse>({
       calculated_date: string | null
       created_at: string
       password_hash: string | null
+      excluded_dates: string[] | null
     }>(
       client,
       "events",
       "share_url",
       params.shareUrl,
-      "id, name, start_date, end_date, share_url, creator_name, is_locked, calculated_date, created_at, password_hash"
+      "id, name, start_date, end_date, share_url, creator_name, is_locked, calculated_date, created_at, password_hash, excluded_dates"
     )
 
     // Check if event has password protection (don't expose the hash)
@@ -63,6 +65,7 @@ export const GET = createApiHandler<never, EventResponse>({
       calculated_date: event.calculated_date,
       created_at: event.created_at,
       has_password: hasPassword,
+      excluded_dates: event.excluded_dates || [],
     }
   },
 

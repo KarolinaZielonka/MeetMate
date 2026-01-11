@@ -28,7 +28,6 @@ export const DateScoreItem = memo(function DateScoreItem({
   return (
     <div className="rounded-lg border p-3 sm:p-4 transition-smooth hover:bg-muted/50">
       <div className="space-y-3">
-        {/* Date and Badge */}
         <div className="flex items-center gap-2 flex-wrap">
           <Badge variant={index === 0 ? "default" : "secondary"}>#{index + 1}</Badge>
           <span className="font-semibold text-sm sm:text-base break-words">
@@ -37,14 +36,9 @@ export const DateScoreItem = memo(function DateScoreItem({
           </span>
         </div>
 
-        {/* Score and Progress */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="label-spaced">{t("score", { percentage })}</span>
-            <div className="text-right">
-              <div className="stat-number">{percentage}%</div>
-              <div className="stat-label">{t("outOf", { total: dateScore.totalParticipants })}</div>
-            </div>
           </div>
           <Progress value={percentage} className="h-2" />
           <p className="text-xs text-muted-foreground break-words">
@@ -56,7 +50,6 @@ export const DateScoreItem = memo(function DateScoreItem({
           </p>
         </div>
 
-        {/* Lock Button */}
         {isAdmin && (
           <Button
             variant="outline"

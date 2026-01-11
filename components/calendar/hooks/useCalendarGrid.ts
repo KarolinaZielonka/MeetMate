@@ -7,13 +7,22 @@ interface UseCalendarGridProps {
   month: number
   startDate: Date
   endDate: Date
+  excludedDates?: string[]
 }
 
 /**
  * Generates calendar grid data for a given month
  * Handles empty cells for week alignment and marks dates within range
  */
-export function useCalendarGrid({ year, month, startDate, endDate }: UseCalendarGridProps) {
+export function useCalendarGrid({
+  year,
+  month,
+  startDate,
+  endDate,
+  excludedDates = [],
+}: UseCalendarGridProps) {
+  const excludedSet = useMemo(() => new Set(excludedDates), [excludedDates])
+
   const calendarDays = useMemo(() => {
     const days: (CalendarDay | null)[] = []
     const firstDayOfMonth = new Date(year, month, 1)
@@ -40,17 +49,19 @@ export function useCalendarGrid({ year, month, startDate, endDate }: UseCalendar
       const dateStr = formatDateToYYYYMMDD(currentDate)
       const isInRange = currentDate >= startDate && currentDate <= endDate
       const isToday = currentDate.getTime() === today.getTime()
+      const isExcluded = excludedSet.has(dateStr)
 
       days.push({
         date: dateStr,
         dayOfMonth: day,
         isInRange,
         isToday,
+        isExcluded,
       })
     }
 
     return days
-  }, [year, month, startDate, endDate])
+  }, [year, month, startDate, endDate, excludedSet])
 
   const monthName = useMemo(() => {
     const date = new Date(year, month, 1)

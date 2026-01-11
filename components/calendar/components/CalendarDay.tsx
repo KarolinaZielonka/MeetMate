@@ -18,8 +18,8 @@ interface CalendarDayProps {
  * Handles interaction, styling, and accessibility for a single date
  */
 export function CalendarDay({ day, status, monthName, readonly, onClick }: CalendarDayProps) {
-  const styles = getDateStyles(status, day.isInRange, day.isToday)
-  const isDisabled = !day.isInRange || readonly
+  const styles = getDateStyles(status, day.isInRange, day.isToday, day.isExcluded)
+  const isDisabled = !day.isInRange || day.isExcluded || readonly
 
   const handleClick = () => {
     if (!isDisabled) {
@@ -46,7 +46,7 @@ export function CalendarDay({ day, status, monthName, readonly, onClick }: Calen
         "select-bounce focus-glow",
         styles
       )}
-      aria-label={`${day.dayOfMonth} ${monthName} - ${status || "unselected"}`}
+      aria-label={`${day.dayOfMonth} ${monthName} - ${day.isExcluded ? "excluded" : status || "unselected"}`}
       aria-pressed={status ? "true" : "false"}
     >
       {day.dayOfMonth}

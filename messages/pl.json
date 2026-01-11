@@ -104,7 +104,14 @@
       "invalidDate": "Nieprawidłowy format daty",
       "captchaRequired": "Proszę ukończyć weryfikację CAPTCHA",
       "captchaFailed": "Weryfikacja CAPTCHA nie powiodła się. Spróbuj ponownie."
-    }
+    },
+    "excludedDates": {
+  "label": "Wyklucz konkretne daty",
+  "optional": "(Opcjonalne)",
+  "description": "Kliknij na daty, aby je wykluczyc. Uczestnicy nie beda mogli wybrac wykluczonych dat.",
+  "excludedCount": "Wykluczono {count} dat(e)"
+}
+
   },
   "eventPage": {
     "badges": {

@@ -104,7 +104,13 @@
       "invalidDate": "Invalid date format",
       "captchaRequired": "Please complete the CAPTCHA verification",
       "captchaFailed": "CAPTCHA verification failed. Please try again."
-    }
+    },
+    "excludedDates": {
+  "label": "Exclude Specific Dates",
+  "optional": "(Optional)",
+  "description": "Click on dates to exclude them. Participants won't be able to select excluded dates.",
+  "excludedCount": "{count} date(s) excluded"
+}
   },
   "eventPage": {
     "badges": {

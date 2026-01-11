@@ -26,12 +26,16 @@ export function AvailabilityHeatmap({ event, participants }: AvailabilityHeatmap
   const { isLoading, aggregatedData } = useHeatmapData(event, participants)
 
   // Convert date strings to Date objects, get range, then convert back to strings
+  // Filter out excluded dates
   const allDates = useMemo(() => {
     const startDate = parseDate(event.start_date)
     const endDate = parseDate(event.end_date)
     const dateObjects = getDatesInRange(startDate, endDate)
-    return dateObjects.map((date) => formatDateForAPI(date))
-  }, [event.start_date, event.end_date])
+    const excludedSet = new Set(event.excluded_dates || [])
+    return dateObjects
+      .map((date) => formatDateForAPI(date))
+      .filter((date) => !excludedSet.has(date))
+  }, [event.start_date, event.end_date, event.excluded_dates])
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(selectedDate === date ? null : date)

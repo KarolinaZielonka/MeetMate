@@ -24,6 +24,7 @@ export function MonthCalendar({
   availability,
   onDateSelect,
   readonly = false,
+  excludedDates = [],
 }: MonthCalendarProps) {
   const t = useTranslations("calendar.weekdays")
   const { calendarDays, monthName } = useCalendarGrid({
@@ -31,6 +32,7 @@ export function MonthCalendar({
     month,
     startDate,
     endDate,
+    excludedDates,
   })
 
   return (

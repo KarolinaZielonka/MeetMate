@@ -9,6 +9,7 @@ interface FormData {
   creatorName: string
   password: string
   captchaToken: string
+  excludedDates: string[]
 }
 
 interface ValidationState {
@@ -25,6 +26,8 @@ interface CreateEventState {
   // Actions
   setFormField: (field: keyof FormData, value: string) => void
   setDateRange: (startDate: string, endDate: string) => void
+  toggleExcludedDate: (date: string) => void
+  clearExcludedDates: () => void
   validateForm: (t: (key: string) => string) => boolean
   createEvent: (
     t: (key: string) => string,
@@ -40,6 +43,7 @@ const initialFormData: FormData = {
   creatorName: "",
   password: "",
   captchaToken: "",
+  excludedDates: [],
 }
 
 const initialValidation: ValidationState = {
@@ -62,7 +66,7 @@ export const useCreateEventStore = create<CreateEventState>((set, get) => ({
 
   setDateRange: (startDate, endDate) => {
     set((state) => ({
-      formData: { ...state.formData, startDate, endDate },
+      formData: { ...state.formData, startDate, endDate, excludedDates: [] },
       validation: state.validation.error ? { ...state.validation, error: null } : state.validation,
     }))
 
@@ -92,6 +96,21 @@ export const useCreateEventStore = create<CreateEventState>((set, get) => ({
       }
     }
   },
+
+  toggleExcludedDate: (date) =>
+    set((state) => {
+      const newExcludedDates = state.formData.excludedDates.includes(date)
+        ? state.formData.excludedDates.filter((d) => d !== date)
+        : [...state.formData.excludedDates, date]
+      return {
+        formData: { ...state.formData, excludedDates: newExcludedDates },
+      }
+    }),
+
+  clearExcludedDates: () =>
+    set((state) => ({
+      formData: { ...state.formData, excludedDates: [] },
+    })),
 
   validateForm: (t) => {
     const { formData } = get()
@@ -145,6 +164,8 @@ export const useCreateEventStore = create<CreateEventState>((set, get) => ({
           creator_name: formData.creatorName.trim(),
           password: formData.password || undefined,
           captcha_token: formData.captchaToken || undefined,
+          excluded_dates:
+            formData.excludedDates.length > 0 ? formData.excludedDates : undefined,
         }),
       })
 
