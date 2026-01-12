@@ -1,8 +1,10 @@
-import { Lock } from "lucide-react"
+"use client"
+
+import { ChevronDown, Lock } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils"
 
 interface OptionalSettingsSectionProps {
   formData: {
@@ -18,39 +20,51 @@ export function OptionalSettingsSection({
   onChange,
 }: OptionalSettingsSectionProps) {
   const t = useTranslations("createEvent")
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center text-muted-foreground font-bold transition-smooth hover:scale-110">
-          2
-        </div>
-        <h2 className="text-xl font-bold text-foreground">{t("optionalSettings")}</h2>
-      </div>
+  const [isExpanded, setIsExpanded] = useState(false)
+  const hasPassword = formData.password.length > 0
 
-      <div className="space-y-2">
+  return (
+    <div className="space-y-3">
+      <button
+        type="button"
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between py-2 text-left hover:bg-muted/50 rounded-md transition-smooth -mx-2 px-2"
+      >
         <div className="flex items-center gap-2">
-          <Label htmlFor="password" className="text-base font-semibold">
-            {t("password.label")}
-          </Label>
-          <Badge variant="secondary" className="text-xs hover-scale">
-            {t("password.optional")}
-          </Badge>
+          <Lock className="w-4 h-4 text-muted-foreground" />
+          <span className="text-base font-semibold">{t("password.label")}</span>
+          <span className="text-muted-foreground font-normal text-sm">
+            ({t("password.optional")})
+          </span>
+          {hasPassword && (
+            <span className="text-sm text-primary ml-1">
+              ({t("password.set")})
+            </span>
+          )}
         </div>
-        <Input
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={onChange}
-          placeholder={t("password.placeholder")}
-          disabled={isLoading}
-          className="h-12 text-base transition-smooth focus:shadow-md"
+        <ChevronDown
+          className={cn(
+            "w-5 h-5 text-muted-foreground transition-transform duration-200",
+            isExpanded && "rotate-180"
+          )}
         />
-        <div className="flex items-start gap-2 p-3 bg-muted rounded-lg">
-          <Lock className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+      </button>
+
+      {isExpanded && (
+        <div className="space-y-3 pt-1">
           <p className="text-sm text-muted-foreground">{t("password.helper")}</p>
+          <Input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={onChange}
+            placeholder={t("password.placeholder")}
+            disabled={isLoading}
+            className="h-12 text-base transition-smooth focus:shadow-md"
+          />
         </div>
-      </div>
+      )}
     </div>
   )
 }

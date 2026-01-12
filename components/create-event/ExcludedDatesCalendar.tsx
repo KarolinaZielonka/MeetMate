@@ -20,13 +20,16 @@ export function ExcludedDatesCalendar({
 }: ExcludedDatesCalendarProps) {
   const t = useTranslations("calendar.weekdays")
 
+  const availableDatesSet = useMemo(() => new Set(dates), [dates])
+
   const monthGroups = useMemo(() => {
-    const groups = new Map<string, string[]>()
+    const groups = new Map<string, { year: number; month: number }>()
     for (const date of dates) {
       const d = parseDateAsLocal(date)
       const key = `${d.getFullYear()}-${d.getMonth()}`
-      const existing = groups.get(key) || []
-      groups.set(key, [...existing, date])
+      if (!groups.has(key)) {
+        groups.set(key, { year: d.getFullYear(), month: d.getMonth() })
+      }
     }
     return groups
   }, [dates])
@@ -34,35 +37,37 @@ export function ExcludedDatesCalendar({
   const excludedSet = useMemo(() => new Set(excludedDates), [excludedDates])
 
   const weekdays = [
-    t("mon"),
-    t("tue"),
-    t("wed"),
-    t("thu"),
-    t("fri"),
-    t("sat"),
-    t("sun"),
+    t("monday"),
+    t("tuesday"),
+    t("wednesday"),
+    t("thursday"),
+    t("friday"),
+    t("saturday"),
+    t("sunday"),
   ]
 
   return (
     <div className="space-y-6">
-      {Array.from(monthGroups.entries()).map(([monthKey, monthDates]) => {
-        const firstDate = parseDateAsLocal(monthDates[0])
-        const monthName = firstDate.toLocaleDateString("en-US", {
+      {Array.from(monthGroups.entries()).map(([monthKey, { year, month }]) => {
+        const monthName = new Date(year, month, 1).toLocaleDateString("en-US", {
           month: "long",
           year: "numeric",
         })
 
-        const firstDayOfMonth = new Date(
-          firstDate.getFullYear(),
-          firstDate.getMonth(),
-          1
-        )
+        const firstDayOfMonth = new Date(year, month, 1)
         let startOffset = firstDayOfMonth.getDay() - 1
         if (startOffset < 0) startOffset = 6
 
-        const calendarDays: (string | null)[] = Array(startOffset).fill(null)
-        for (const date of monthDates) {
-          calendarDays.push(date)
+        const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+        const calendarDays: { date: string; dayOfMonth: number; isAvailable: boolean }[] = []
+        for (let day = 1; day <= daysInMonth; day++) {
+          const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+          calendarDays.push({
+            date: dateStr,
+            dayOfMonth: day,
+            isAvailable: availableDatesSet.has(dateStr),
+          })
         }
 
         return (
@@ -81,14 +86,24 @@ export function ExcludedDatesCalendar({
               ))}
             </div>
             <div className="grid grid-cols-7 gap-1">
-              {calendarDays.map((date, index) => {
-                if (!date) {
-                  return <div key={`empty-${index}`} className="aspect-square" />
-                }
-
-                const d = parseDateAsLocal(date)
+              {Array(startOffset)
+                .fill(null)
+                .map((_, index) => (
+                  <div key={`empty-start-${index}`} className="aspect-square" />
+                ))}
+              {calendarDays.map(({ date, dayOfMonth, isAvailable }) => {
                 const isExcluded = excludedSet.has(date)
-                const dayOfMonth = d.getDate()
+
+                if (!isAvailable) {
+                  return (
+                    <div
+                      key={date}
+                      className="aspect-square flex items-center justify-center rounded-md text-sm min-h-10 min-w-10 text-muted-foreground/40"
+                    >
+                      {dayOfMonth}
+                    </div>
+                  )
+                }
 
                 return (
                   <button

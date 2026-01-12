@@ -31,9 +31,6 @@ export function EventDetailsSection({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center text-white font-bold shadow-md transition-smooth hover:scale-110">
-          1
-        </div>
         <h2 className="text-xl font-bold text-foreground">{t("eventDetails")}</h2>
       </div>
 

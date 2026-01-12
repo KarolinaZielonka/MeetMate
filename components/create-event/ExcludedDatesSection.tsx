@@ -1,9 +1,9 @@
 "use client"
 
-import { CalendarOff } from "lucide-react"
+import { CalendarOff, ChevronDown } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useMemo } from "react"
-import { Label } from "@/components/ui/label"
+import { useMemo, useState } from "react"
+import { cn } from "@/lib/utils"
 import { getDatesInRange, formatDateForAPI, parseDate } from "@/lib/utils/dates"
 import { ExcludedDatesCalendar } from "./ExcludedDatesCalendar"
 
@@ -23,6 +23,7 @@ export function ExcludedDatesSection({
   disabled,
 }: ExcludedDatesSectionProps) {
   const t = useTranslations("createEvent.excludedDates")
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const datesInRange = useMemo(() => {
     if (!startDate || !endDate) return []
@@ -38,30 +39,44 @@ export function ExcludedDatesSection({
   const excludedCount = excludedDates.length
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Label className="text-base font-semibold flex items-center gap-2">
-          <CalendarOff className="w-4 h-4" />
-          {t("label")}
+    <div className="space-y-3">
+      <button
+        type="button"
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between py-2 text-left hover:bg-muted/50 rounded-md transition-smooth -mx-2 px-2"
+      >
+        <div className="flex items-center gap-2">
+          <CalendarOff className="w-4 h-4 text-muted-foreground" />
+          <span className="text-base font-semibold">{t("label")}</span>
           <span className="text-muted-foreground font-normal text-sm">
             {t("optional")}
           </span>
-        </Label>
-        {excludedCount > 0 && (
-          <span className="text-sm text-muted-foreground">
-            {t("excludedCount", { count: excludedCount })}
-          </span>
-        )}
-      </div>
+          {excludedCount > 0 && (
+            <span className="text-sm text-muted-foreground ml-1">
+              ({t("excludedCount", { count: excludedCount })})
+            </span>
+          )}
+        </div>
+        <ChevronDown
+          className={cn(
+            "w-5 h-5 text-muted-foreground transition-transform duration-200",
+            isExpanded && "rotate-180"
+          )}
+        />
+      </button>
 
-      <p className="text-sm text-muted-foreground">{t("description")}</p>
+      {isExpanded && (
+        <div className="space-y-4 pt-1">
+          <p className="text-sm text-muted-foreground">{t("description")}</p>
 
-      <ExcludedDatesCalendar
-        dates={datesInRange}
-        excludedDates={excludedDates}
-        onToggleDate={onToggleDate}
-        disabled={disabled}
-      />
+          <ExcludedDatesCalendar
+            dates={datesInRange}
+            excludedDates={excludedDates}
+            onToggleDate={onToggleDate}
+            disabled={disabled}
+          />
+        </div>
+      )}
     </div>
   )
 }

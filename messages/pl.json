@@ -92,7 +92,8 @@
       "label": "Ochrona hasłem",
       "optional": "Opcjonalne",
       "placeholder": "Pozostaw puste dla publicznego wydarzenia",
-      "helper": "Dodaj hasło, aby ograniczyć dostęp do wydarzenia"
+      "helper": "Dodaj hasło, aby ograniczyć dostęp do wydarzenia",
+      "set": "Ustawione"
     },
     "submitButton": "Utwórz wydarzenie",
     "submittingButton": "Tworzenie wydarzenia...",

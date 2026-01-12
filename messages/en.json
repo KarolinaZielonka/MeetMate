@@ -92,7 +92,8 @@
       "label": "Password Protection",
       "optional": "Optional",
       "placeholder": "Leave blank for public event",
-      "helper": "Add a password to restrict access to your event"
+      "helper": "Add a password to restrict access to your event",
+      "set": "Set"
     },
     "submitButton": "Create Event",
     "submittingButton": "Creating Event...",
