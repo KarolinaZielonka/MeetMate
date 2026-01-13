@@ -50,6 +50,13 @@ export function DateRangePicker({
     [startDate]
   )
 
+  const endDateDefaultMonth = React.useMemo(() => {
+    if (startDate) {
+      return new Date(startDate)
+    }
+    return undefined
+  }, [startDate])
+
   return (
     <div className="space-y-4">
       <Label className="text-base font-semibold">
@@ -76,6 +83,7 @@ export function DateRangePicker({
             placeholder={t("dateRange.endDate")}
             disabled={disabled}
             disabledDates={disableBeforeStartDate}
+            defaultMonth={endDateDefaultMonth}
           />
         </div>
       </div>

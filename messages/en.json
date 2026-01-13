@@ -270,6 +270,7 @@
   },
   "optimalDates": {
     "title": "Best Meeting Dates",
+    "singular": "Best Meeting Date",
     "description": "Ranked by participant availability",
     "noData": "No availability data yet. Waiting for participants to submit.",
     "minParticipants": "Need at least 2 participants with availability to calculate.",

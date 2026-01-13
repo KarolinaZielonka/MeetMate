@@ -276,6 +276,7 @@
   },
   "optimalDates": {
     "title": "Najlepsze daty spotkań",
+    "singular": "Najlepsza data spotkania",
     "description": "Uszeregowane według dostępności uczestników",
     "noData": "Brak danych o dostępności. Oczekiwanie na przesłanie przez uczestników.",
     "minParticipants": "Potrzeba co najmniej 2 uczestników z dostępnością do obliczenia.",

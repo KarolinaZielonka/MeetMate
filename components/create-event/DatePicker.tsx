@@ -14,6 +14,7 @@ interface DatePickerProps {
   placeholder?: string
   disabled?: boolean
   disabledDates?: (date: Date) => boolean
+  defaultMonth?: Date
 }
 
 export function DatePicker({
@@ -22,6 +23,7 @@ export function DatePicker({
   placeholder = "Pick a date",
   disabled,
   disabledDates,
+  defaultMonth,
 }: DatePickerProps) {
   const locale = useLocale()
   const [open, setOpen] = React.useState(false)
@@ -83,6 +85,8 @@ export function DatePicker({
           selected={selectedDate}
           onSelect={handleSelect}
           disabled={disabledDates}
+          defaultMonth={defaultMonth ?? selectedDate}
+          fixedWeeks
         />
       </PopoverContent>
     </Popover>

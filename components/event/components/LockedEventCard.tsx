@@ -13,14 +13,11 @@ export function LockedEventCard({ calculatedDate }: { calculatedDate: string }) 
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-foreground">
           <Lock className="h-5 w-5" />
-          {t("title")}
+          {t("singular")}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">
-            {t("lockedMessage", { date: formatDate(calculatedDate) })}
-          </p>
           <div className="flex items-center gap-2 rounded-lg bg-card border border-border p-4">
             <span className="font-semibold text-lg text-foreground">
               {formatDate(calculatedDate)}
