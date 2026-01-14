@@ -62,7 +62,7 @@ export function ConfirmDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="sm:max-w-md w-[calc(100vw-2rem)] max-h-[90vh] p-6">
         <AlertDialogHeader>
           <AlertDialogTitle
             className={`flex items-center gap-2 ${

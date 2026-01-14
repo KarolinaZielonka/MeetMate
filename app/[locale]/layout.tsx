@@ -23,6 +23,8 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
 })
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
 }
@@ -35,9 +37,67 @@ export async function generateMetadata({
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: "metadata" })
 
+  const title = t("title")
+  const description = t("description")
+
   return {
-    title: t("title"),
-    description: t("description"),
+    metadataBase: new URL(baseUrl),
+    title: {
+      default: title,
+      template: `%s | MeetMate`,
+    },
+    description,
+    keywords: [
+      "group scheduling",
+      "meeting planner",
+      "team availability",
+      "when2meet alternative",
+      "doodle alternative",
+      "free scheduling tool",
+      "no signup scheduling",
+    ],
+    authors: [{ name: "MeetMate" }],
+    creator: "MeetMate",
+    openGraph: {
+      type: "website",
+      locale: locale === "pl" ? "pl_PL" : "en_US",
+      url: `${baseUrl}/${locale}`,
+      siteName: "MeetMate",
+      title,
+      description,
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "MeetMate - Group Scheduling Made Simple",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og-image.png"],
+    },
+    alternates: {
+      canonical: `${baseUrl}/${locale}`,
+      languages: {
+        en: `${baseUrl}/en`,
+        pl: `${baseUrl}/pl`,
+      },
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
   }
 }
 
