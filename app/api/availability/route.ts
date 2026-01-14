@@ -22,6 +22,7 @@ interface DateEntry {
  */
 interface AvailabilityBody {
   participant_id: string
+  session_token: string
   dates: DateEntry[]
 }
 
@@ -35,6 +36,7 @@ interface AvailabilityResponse {
 /**
  * POST /api/availability
  * Submit or update participant availability
+ * Requires session_token for authorization
  */
 export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
   // Parse request body
@@ -42,13 +44,12 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
     const body = await request.json()
     return {
       participant_id: body.participant_id,
+      session_token: body.session_token,
       dates: body.dates || [],
     }
   },
 
-  // Validate inputs
   validate: async (body, _params, request) => {
-    // Apply rate limiting (20 submissions per hour per IP)
     const clientIp = getClientIp(request)
     const rateLimitResult = await applyRateLimit(availabilitySubmissionLimiter, clientIp)
 
@@ -60,7 +61,6 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
       }
     }
 
-    // Validate required fields
     const requiredValidation = validateRequired({ participant_id: body.participant_id }, [
       "participant_id",
     ])
@@ -69,7 +69,6 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
       return requiredValidation
     }
 
-    // Validate participant_id is a string
     if (typeof body.participant_id !== "string") {
       return {
         valid: false,
@@ -78,7 +77,14 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
       }
     }
 
-    // Validate dates array
+    if (!body.session_token || typeof body.session_token !== "string") {
+      return {
+        valid: false,
+        error: "session_token is required for this operation",
+        status: 401,
+      }
+    }
+
     if (!Array.isArray(body.dates) || body.dates.length === 0) {
       return {
         valid: false,
@@ -87,11 +93,9 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
       }
     }
 
-    // Validate each date entry
     const validStatuses: AvailabilityStatus[] = ["available", "maybe", "unavailable"]
 
     for (const dateEntry of body.dates) {
-      // Validate date format
       const dateValidation = validateDateFormat(dateEntry.date, "date")
       if (!dateValidation.valid) {
         return {
@@ -101,7 +105,6 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
         }
       }
 
-      // Validate status
       if (!validStatuses.includes(dateEntry.status)) {
         return {
           valid: false,
@@ -114,18 +117,17 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
     return { valid: true }
   },
 
-  // Main handler logic
   handler: async (body, _params, client) => {
-    // Verify participant exists
-    await fetchSingleRecord<{ id: string; event_id: string }>(
-      client,
-      "participants",
-      "id",
-      body.participant_id,
-      "id, event_id"
-    )
+    const participant = await fetchSingleRecord<{
+      id: string
+      event_id: string
+      session_token: string
+    }>(client, "participants", "id", body.participant_id, "id, event_id, session_token")
 
-    // Upsert availability records (insert or update on conflict)
+    if (participant.session_token !== body.session_token) {
+      throw new ApiError("Unauthorized: Invalid session token", 403)
+    }
+
     const availabilityRecords = body.dates.map((dateEntry) => ({
       participant_id: body.participant_id,
       date: dateEntry.date,
@@ -141,7 +143,6 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
       throw new ApiError("Failed to save availability", 500)
     }
 
-    // Update participant has_submitted status
     const { error: updateError } = await client
       .from("participants")
       .update({ has_submitted: true })
@@ -149,16 +150,13 @@ export const POST = createApiHandler<AvailabilityBody, AvailabilityResponse>({
 
     if (updateError) {
       console.error("Participant update error:", updateError)
-      // Non-critical error, availability is already saved
     }
 
     return { success: true }
   },
 
-  // Success status
   successStatus: 200,
 
-  // Custom error messages
   errorMessages: {
     validation: "Invalid availability data",
     notFound: "Participant not found",

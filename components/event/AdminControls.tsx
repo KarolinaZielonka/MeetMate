@@ -7,6 +7,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { getAdminToken } from "@/lib/utils/session"
 import { useEventStore } from "@/store/eventStore"
 import { DeleteEventDialog, ReopenEventDialog } from "./dialogs"
 
@@ -27,10 +28,20 @@ export function AdminControls({ shareUrl, onEventReopened }: AdminControlsProps)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const handleReopen = async () => {
+    if (!event?.id) return
+
+    const adminToken = getAdminToken(event.id)
+    if (!adminToken) {
+      toast.error(t("errorUnauthorized"))
+      return
+    }
+
     setIsReopening(true)
     try {
       const response = await fetch(`/api/events/${shareUrl}/reopen`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ admin_token: adminToken }),
       })
 
       const result = await response.json()
@@ -52,10 +63,20 @@ export function AdminControls({ shareUrl, onEventReopened }: AdminControlsProps)
   }
 
   const handleDelete = async () => {
+    if (!event?.id) return
+
+    const adminToken = getAdminToken(event.id)
+    if (!adminToken) {
+      toast.error(t("errorUnauthorized"))
+      return
+    }
+
     setIsDeleting(true)
     try {
       const response = await fetch(`/api/events/${shareUrl}`, {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ admin_token: adminToken }),
       })
 
       const result = await response.json()

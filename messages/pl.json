@@ -182,7 +182,8 @@
       "successUpdate": "Dostępność została pomyślnie zaktualizowana!",
       "errorSubmit": "Nie udało się wysłać dostępności. Spróbuj ponownie.",
       "errorFetch": "Nie udało się załadować Twojej dostępności",
-      "noSelections": "Wybierz co najmniej jedną datę przed wysłaniem"
+      "noSelections": "Wybierz co najmniej jedną datę przed wysłaniem",
+      "errorUnauthorized": "Nie masz uprawnień do wysłania dostępności."
     },
     "whatsNext": {
       "title": "Co dalej?",
@@ -296,7 +297,8 @@
     },
     "successLock": "Wydarzenie zostało pomyślnie zablokowane!",
     "errorLock": "Nie udało się zablokować wydarzenia. Spróbuj ponownie.",
-    "errorCalculate": "Nie udało się obliczyć optymalnych dat. Spróbuj ponownie."
+    "errorCalculate": "Nie udało się obliczyć optymalnych dat. Spróbuj ponownie.",
+    "errorUnauthorized": "Nie masz uprawnień do zablokowania tego wydarzenia."
   },
   "events": {
     "passwordRequired": "Wymagane hasło",
@@ -330,7 +332,8 @@
     "successReopen": "Wydarzenie zostało pomyślnie otwarte ponownie!",
     "errorReopen": "Nie udało się otworzyć ponownie wydarzenia. Spróbuj ponownie.",
     "successDelete": "Wydarzenie zostało pomyślnie usunięte. Przekierowywanie...",
-    "errorDelete": "Nie udało się usunąć wydarzenia. Spróbuj ponownie."
+    "errorDelete": "Nie udało się usunąć wydarzenia. Spróbuj ponownie.",
+    "errorUnauthorized": "Nie masz uprawnień do wykonania tej operacji."
   },
   "errors": {
     "boundary": {

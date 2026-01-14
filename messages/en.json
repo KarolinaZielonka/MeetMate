@@ -181,7 +181,8 @@
       "successUpdate": "Availability updated successfully!",
       "errorSubmit": "Failed to submit availability. Please try again.",
       "errorFetch": "Failed to load your availability",
-      "noSelections": "Please select at least one date before submitting"
+      "noSelections": "Please select at least one date before submitting",
+      "errorUnauthorized": "You don't have permission to submit availability."
     },
     "whatsNext": {
       "title": "What's Next?",
@@ -290,7 +291,8 @@
     },
     "successLock": "Event locked successfully!",
     "errorLock": "Failed to lock event. Please try again.",
-    "errorCalculate": "Failed to calculate optimal dates. Please try again."
+    "errorCalculate": "Failed to calculate optimal dates. Please try again.",
+    "errorUnauthorized": "You don't have permission to lock this event."
   },
   "events": {
     "passwordRequired": "Password Required",
@@ -324,7 +326,8 @@
     "successReopen": "Event reopened successfully!",
     "errorReopen": "Failed to reopen event. Please try again.",
     "successDelete": "Event deleted successfully. Redirecting...",
-    "errorDelete": "Failed to delete event. Please try again."
+    "errorDelete": "Failed to delete event. Please try again.",
+    "errorUnauthorized": "You don't have permission to perform this action."
   },
   "errors": {
     "boundary": {

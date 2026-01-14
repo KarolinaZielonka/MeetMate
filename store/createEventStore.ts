@@ -164,8 +164,7 @@ export const useCreateEventStore = create<CreateEventState>((set, get) => ({
           creator_name: formData.creatorName.trim(),
           password: formData.password || undefined,
           captcha_token: formData.captchaToken || undefined,
-          excluded_dates:
-            formData.excludedDates.length > 0 ? formData.excludedDates : undefined,
+          excluded_dates: formData.excludedDates.length > 0 ? formData.excludedDates : undefined,
         }),
       })
 
@@ -177,11 +176,10 @@ export const useCreateEventStore = create<CreateEventState>((set, get) => ({
         return { success: false }
       }
 
-      // Success! Initialize admin session
       const eventId = result.data.id
       const shareUrl = result.data.share_url
+      const adminToken = result.data.admin_token
 
-      // Initialize admin session with participant data
       initializeSession(
         eventId,
         true, // isCreator/admin
@@ -190,7 +188,8 @@ export const useCreateEventStore = create<CreateEventState>((set, get) => ({
               participantId: result.data.participant.participant_id,
               sessionToken: result.data.participant.session_token,
             }
-          : undefined
+          : undefined,
+        adminToken
       )
 
       set({ isLoading: false })

@@ -197,6 +197,12 @@ export const useEventStore = create<EventState>((set, get) => ({
       return
     }
 
+    const sessionToken = state.currentSession?.sessionToken
+    if (!sessionToken) {
+      toast.error(t("errorUnauthorized"))
+      return
+    }
+
     set({ isSubmittingAvailability: true })
 
     try {
@@ -211,6 +217,7 @@ export const useEventStore = create<EventState>((set, get) => ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           participant_id: participantId,
+          session_token: sessionToken,
           dates,
         }),
       })

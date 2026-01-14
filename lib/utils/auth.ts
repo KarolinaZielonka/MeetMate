@@ -3,10 +3,10 @@ import bcrypt from "bcryptjs"
 /**
  * Number of salt rounds for bcrypt hashing
  * Higher number = more secure but slower
- * 8 rounds = ~30-40ms hashing time (good balance for event passwords)
- * Events are not high-value targets, so 8 rounds provides adequate security
+ * 12 rounds = ~200-300ms hashing time (OWASP recommended minimum)
+ * Provides better protection against brute force attacks
  */
-const SALT_ROUNDS = 8
+const SALT_ROUNDS = 12
 
 /**
  * Hash a password using bcrypt
@@ -64,10 +64,10 @@ export function validatePasswordStrength(password: string): PasswordValidation {
     }
   }
 
-  if (password.length < 6) {
+  if (password.length < 8) {
     return {
       valid: false,
-      error: "Password must be at least 6 characters long",
+      error: "Password must be at least 8 characters long",
     }
   }
 

@@ -10,7 +10,6 @@ import { SubmitButton } from "@/components/create-event/SubmitButton"
 import { SkeletonForm } from "@/components/skeletons"
 import { Turnstile } from "@/components/Turnstile"
 import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import { useRouter } from "@/i18n/routing"
 import { useCreateEventStore } from "@/store/createEventStore"
 

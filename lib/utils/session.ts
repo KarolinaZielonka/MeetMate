@@ -10,19 +10,14 @@ export interface Session {
   role: SessionRole
   sessionToken?: string // UUID for participants
   participantId?: string // Database ID for participants
+  adminToken?: string // Secret token for admin operations (only for event creators)
   createdAt: number // Timestamp
 }
 
-/**
- * Get localStorage key for event session
- */
 function getSessionKey(eventId: string): string {
   return `session_${eventId}`
 }
 
-/**
- * Get localStorage key for access token (password protection)
- */
 function getAccessTokenKey(eventId: string): string {
   return `access_token_${eventId}`
 }
@@ -35,7 +30,8 @@ function getAccessTokenKey(eventId: string): string {
 export function initializeSession(
   eventId: string,
   isCreator: boolean = false,
-  participantData?: { participantId: string; sessionToken: string }
+  participantData?: { participantId: string; sessionToken: string },
+  adminToken?: string
 ): Session {
   const session: Session = {
     eventId,
@@ -45,16 +41,13 @@ export function initializeSession(
       participantId: participantData.participantId,
       sessionToken: participantData.sessionToken,
     }),
+    ...(adminToken && { adminToken }),
   }
 
   saveSession(eventId, session)
   return session
 }
 
-/**
- * Get existing session for an event
- * Returns null if no session exists
- */
 export function getSession(eventId: string): Session | null {
   if (typeof window === "undefined") {
     // Server-side rendering
@@ -85,9 +78,6 @@ export function getSession(eventId: string): Session | null {
   }
 }
 
-/**
- * Save session to localStorage
- */
 export function saveSession(eventId: string, session: Session): void {
   if (typeof window === "undefined") {
     return
@@ -101,9 +91,6 @@ export function saveSession(eventId: string, session: Session): void {
   }
 }
 
-/**
- * Update session to participant role after joining
- */
 export function updateSessionAsParticipant(
   eventId: string,
   participantId: string,
@@ -123,9 +110,6 @@ export function updateSessionAsParticipant(
   return session
 }
 
-/**
- * Clear session for an event
- */
 export function clearSession(eventId: string): void {
   if (typeof window === "undefined") {
     return
@@ -143,34 +127,26 @@ export function clearSession(eventId: string): void {
   }
 }
 
-/**
- * Check if user is admin for an event
- */
 export function isAdmin(eventId: string): boolean {
   const session = getSession(eventId)
   return session?.role === "admin"
 }
 
-/**
- * Check if user is a participant for an event
- */
 export function isParticipant(eventId: string): boolean {
   const session = getSession(eventId)
   return session?.role === "participant" || session?.role === "admin"
 }
 
-/**
- * Get participant ID from session
- * Returns null if not a participant
- */
 export function getParticipantId(eventId: string): string | null {
   const session = getSession(eventId)
   return session?.participantId || null
 }
 
-/**
- * Store access token for password-protected event
- */
+export function getAdminToken(eventId: string): string | null {
+  const session = getSession(eventId)
+  return session?.adminToken || null
+}
+
 export function storeAccessToken(eventId: string, token: string): void {
   if (typeof window === "undefined") {
     return
@@ -184,10 +160,6 @@ export function storeAccessToken(eventId: string, token: string): void {
   }
 }
 
-/**
- * Get access token for password-protected event
- * Returns null if no token exists
- */
 export function getAccessToken(eventId: string): string | null {
   if (typeof window === "undefined") {
     return null
@@ -202,9 +174,6 @@ export function getAccessToken(eventId: string): string | null {
   }
 }
 
-/**
- * Check if user has access to password-protected event
- */
 export function hasAccess(eventId: string, passwordRequired: boolean): boolean {
   if (!passwordRequired) {
     return true
@@ -214,9 +183,6 @@ export function hasAccess(eventId: string, passwordRequired: boolean): boolean {
   return token !== null
 }
 
-/**
- * Clear all sessions (useful for debugging)
- */
 export function clearAllSessions(): void {
   if (typeof window === "undefined") {
     return

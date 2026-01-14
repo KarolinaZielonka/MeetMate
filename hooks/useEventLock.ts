@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
+import { getAdminToken } from "@/lib/utils/session"
 
 interface UseEventLockReturn {
   locking: boolean
@@ -13,11 +14,13 @@ interface UseEventLockReturn {
 /**
  * Custom hook for managing event locking functionality
  * @param shareUrl - Event share URL
+ * @param eventId - Event ID for getting admin token
  * @param translationKey - Translation function for messages
  * @param onEventLocked - Callback when event is successfully locked
  */
 export function useEventLock(
   shareUrl: string,
+  eventId: string | undefined,
   translationKey: (key: string) => string,
   onEventLocked?: () => void
 ): UseEventLockReturn {
@@ -26,14 +29,20 @@ export function useEventLock(
   const [showLockDialog, setShowLockDialog] = useState(false)
 
   const handleLockEvent = useCallback(async () => {
-    if (!selectedDate) return
+    if (!selectedDate || !eventId) return
+
+    const adminToken = getAdminToken(eventId)
+    if (!adminToken) {
+      toast.error(translationKey("errorUnauthorized"))
+      return
+    }
 
     setLocking(true)
     try {
       const response = await fetch(`/api/events/${shareUrl}/lock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chosen_date: selectedDate }),
+        body: JSON.stringify({ chosen_date: selectedDate, admin_token: adminToken }),
       })
 
       const data = await response.json()
@@ -52,7 +61,7 @@ export function useEventLock(
     } finally {
       setLocking(false)
     }
-  }, [selectedDate, shareUrl, translationKey, onEventLocked])
+  }, [selectedDate, shareUrl, eventId, translationKey, onEventLocked])
 
   return {
     locking,

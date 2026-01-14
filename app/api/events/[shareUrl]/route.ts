@@ -1,3 +1,4 @@
+import type { NextRequest } from "next/server"
 import { ApiError, createApiHandler, fetchSingleRecord, validateRequired } from "@/lib/api"
 
 /**
@@ -22,14 +23,11 @@ interface EventResponse {
  * Fetch event details by share URL
  */
 export const GET = createApiHandler<never, EventResponse>({
-  // Validate params
   validate: async (_body, params) => {
     return validateRequired({ shareUrl: params.shareUrl }, ["shareUrl"])
   },
 
-  // Main handler logic
   handler: async (_body, params, client) => {
-    // Fetch event from database
     const event = await fetchSingleRecord<{
       id: string
       name: string
@@ -50,10 +48,8 @@ export const GET = createApiHandler<never, EventResponse>({
       "id, name, start_date, end_date, share_url, creator_name, is_locked, calculated_date, created_at, password_hash, excluded_dates"
     )
 
-    // Check if event has password protection (don't expose the hash)
     const hasPassword = !!event.password_hash
 
-    // Return event data WITHOUT password_hash
     return {
       id: event.id,
       name: event.name,
@@ -69,10 +65,8 @@ export const GET = createApiHandler<never, EventResponse>({
     }
   },
 
-  // Success status
   successStatus: 200,
 
-  // Custom error messages
   errorMessages: {
     notFound: "Event not found",
     serverError: "Failed to fetch event",
@@ -80,31 +74,56 @@ export const GET = createApiHandler<never, EventResponse>({
 })
 
 /**
+ * Request body for DELETE event
+ */
+interface DeleteEventBody {
+  admin_token: string
+}
+
+/**
  * DELETE /api/events/[shareUrl]
  * Delete event and all associated data (admin only)
+ * Requires admin_token for authorization
  */
-export const DELETE = createApiHandler<never, { success: boolean }>({
-  // Validate params
-  validate: async (_body, params) => {
-    return validateRequired({ shareUrl: params.shareUrl }, ["shareUrl"])
+export const DELETE = createApiHandler<DeleteEventBody, { success: boolean }>({
+  // Parse request body
+  parseBody: async (request: NextRequest) => {
+    const body = await request.json()
+    return {
+      admin_token: body.admin_token,
+    }
   },
 
-  // Main handler logic
-  handler: async (_body, params, client) => {
-    // Fetch the event to verify it exists and get the ID
-    const event = await fetchSingleRecord<{ id: string }>(
+  validate: async (body, params) => {
+    const paramsValidation = validateRequired({ shareUrl: params.shareUrl }, ["shareUrl"])
+    if (!paramsValidation.valid) {
+      return paramsValidation
+    }
+
+    if (!body.admin_token || typeof body.admin_token !== "string") {
+      return {
+        valid: false,
+        error: "admin_token is required for this operation",
+        status: 401,
+      }
+    }
+
+    return { valid: true }
+  },
+
+  handler: async (body, params, client) => {
+    const event = await fetchSingleRecord<{ id: string; admin_token: string }>(
       client,
       "events",
       "share_url",
       params.shareUrl,
-      "id"
+      "id, admin_token"
     )
 
-    // Note: Session verification removed as getSession only works client-side (localStorage)
-    // The share URL acts as the authentication mechanism
-    // In a future update, add an admin_token field for proper verification
+    if (event.admin_token !== body.admin_token) {
+      throw new ApiError("Unauthorized: Invalid admin token", 403)
+    }
 
-    // Delete the event (cascade will handle participants and availability)
     const { error: deleteError } = await client.from("events").delete().eq("id", event.id)
 
     if (deleteError) {
@@ -115,13 +134,10 @@ export const DELETE = createApiHandler<never, { success: boolean }>({
     return { success: true }
   },
 
-  // Use admin client to bypass RLS for DELETE operations
   useAdminClient: true,
 
-  // Success status
   successStatus: 200,
 
-  // Custom error messages
   errorMessages: {
     notFound: "Event not found",
     serverError: "Failed to delete event. Please try again.",

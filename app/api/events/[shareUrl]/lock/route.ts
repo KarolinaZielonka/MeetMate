@@ -13,6 +13,7 @@ import {
  */
 interface LockEventBody {
   chosen_date: string
+  admin_token: string
 }
 
 /**
@@ -29,6 +30,7 @@ interface LockEventResponse {
 /**
  * POST /api/events/[shareUrl]/lock
  * Lock event with chosen date
+ * Requires admin_token for authorization
  */
 export const POST = createApiHandler<LockEventBody, LockEventResponse>({
   // Parse request body
@@ -36,40 +38,50 @@ export const POST = createApiHandler<LockEventBody, LockEventResponse>({
     const body = await request.json()
     return {
       chosen_date: body.chosen_date,
+      admin_token: body.admin_token,
     }
   },
 
-  // Validate inputs
   validate: async (body, params) => {
-    // Validate required fields
     const requiredValidation = validateRequired(
       { shareUrl: params.shareUrl, chosen_date: body.chosen_date },
       ["shareUrl", "chosen_date"]
     )
 
-    // Validate date format
+    if (!requiredValidation.valid) {
+      return requiredValidation
+    }
+
+    if (!body.admin_token || typeof body.admin_token !== "string") {
+      return {
+        valid: false,
+        error: "admin_token is required for this operation",
+        status: 401,
+      }
+    }
+
     const dateValidation = validateDateFormat(body.chosen_date, "chosen_date")
 
     return combineValidations(requiredValidation, dateValidation)
   },
 
-  // Main handler logic
   handler: async (body, params, client) => {
-    // Fetch the event
-    const event = await fetchSingleRecord<{ id: string; is_locked: boolean }>(
+    const event = await fetchSingleRecord<{ id: string; is_locked: boolean; admin_token: string }>(
       client,
       "events",
       "share_url",
       params.shareUrl,
-      "id, is_locked"
+      "id, is_locked, admin_token"
     )
 
-    // Check if event is already locked
+    if (event.admin_token !== body.admin_token) {
+      throw new ApiError("Unauthorized: Invalid admin token", 403)
+    }
+
     if (event.is_locked) {
       throw new ApiError("Event is already locked", 400)
     }
 
-    // Lock the event and set the calculated date
     const { data: updatedEvent, error: updateError } = await client
       .from("events")
       .update({
@@ -88,13 +100,10 @@ export const POST = createApiHandler<LockEventBody, LockEventResponse>({
     return updatedEvent as LockEventResponse
   },
 
-  // Use admin client to bypass RLS for UPDATE operations
   useAdminClient: true,
 
-  // Success status
   successStatus: 200,
 
-  // Custom error messages
   errorMessages: {
     validation: "Invalid request data",
     notFound: "Event not found",

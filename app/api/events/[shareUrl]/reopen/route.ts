@@ -1,8 +1,10 @@
+import type { NextRequest } from "next/server"
 import { ApiError, createApiHandler, fetchSingleRecord, validateRequired } from "@/lib/api"
 
-/**
- * Response type for reopen event
- */
+interface ReopenEventBody {
+  admin_token: string
+}
+
 interface ReopenEventResponse {
   id: string
   is_locked: boolean
@@ -13,34 +15,50 @@ interface ReopenEventResponse {
 /**
  * POST /api/events/[shareUrl]/reopen
  * Reopen a locked event (admin only)
+ * Requires admin_token for authorization
  */
-export const POST = createApiHandler<never, ReopenEventResponse>({
-  // Validate params
-  validate: async (_body, params) => {
-    return validateRequired({ shareUrl: params.shareUrl }, ["shareUrl"])
+export const POST = createApiHandler<ReopenEventBody, ReopenEventResponse>({
+  parseBody: async (request: NextRequest) => {
+    const body = await request.json()
+    return {
+      admin_token: body.admin_token,
+    }
   },
 
-  // Main handler logic
-  handler: async (_body, params, client) => {
-    // Fetch the event
-    const event = await fetchSingleRecord<{ id: string; is_locked: boolean }>(
+  validate: async (body, params) => {
+    const paramsValidation = validateRequired({ shareUrl: params.shareUrl }, ["shareUrl"])
+    if (!paramsValidation.valid) {
+      return paramsValidation
+    }
+
+    if (!body.admin_token || typeof body.admin_token !== "string") {
+      return {
+        valid: false,
+        error: "admin_token is required for this operation",
+        status: 401,
+      }
+    }
+
+    return { valid: true }
+  },
+
+  handler: async (body, params, client) => {
+    const event = await fetchSingleRecord<{ id: string; is_locked: boolean; admin_token: string }>(
       client,
       "events",
       "share_url",
       params.shareUrl,
-      "id, is_locked"
+      "id, is_locked, admin_token"
     )
 
-    // Check if event is not locked
+    if (event.admin_token !== body.admin_token) {
+      throw new ApiError("Unauthorized: Invalid admin token", 403)
+    }
+
     if (!event.is_locked) {
       throw new ApiError("Event is not locked", 400)
     }
 
-    // Note: Session verification removed as getSession only works client-side (localStorage)
-    // The share URL acts as the authentication mechanism - only those with the URL can access
-    // In a future update, we should add an admin_token field to the events table for proper verification
-
-    // Reopen the event (unlock and clear calculated date)
     const { data: updatedEvent, error: updateError } = await client
       .from("events")
       .update({
@@ -59,13 +77,10 @@ export const POST = createApiHandler<never, ReopenEventResponse>({
     return updatedEvent as ReopenEventResponse
   },
 
-  // Use admin client to bypass RLS for UPDATE operations
   useAdminClient: true,
 
-  // Success status
   successStatus: 200,
 
-  // Custom error messages
   errorMessages: {
     notFound: "Event not found",
     serverError: "Failed to reopen event. Please try again.",

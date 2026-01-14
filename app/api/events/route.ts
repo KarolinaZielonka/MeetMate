@@ -37,6 +37,7 @@ interface CreateEventResponse {
   creator_name: string | null
   is_locked: boolean
   excluded_dates: string[]
+  admin_token: string
   participant: {
     participant_id: string
     session_token: string
@@ -48,7 +49,6 @@ interface CreateEventResponse {
  * Create a new event
  */
 export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
-  // Parse request body
   parseBody: async (request: NextRequest) => {
     const body = await request.json()
     return {
@@ -62,9 +62,7 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
     }
   },
 
-  // Validate inputs
   validate: async (body, _params, request) => {
-    // Verify CAPTCHA token if configured
     if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
       if (!body.captcha_token) {
         return {
@@ -84,7 +82,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       }
     }
 
-    // Apply rate limiting (5 events per hour per IP)
     const clientIp = getClientIp(request)
     const rateLimitResult = await applyRateLimit(eventCreationLimiter, clientIp)
 
@@ -96,7 +93,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       }
     }
 
-    // Validate required fields
     const requiredValidation = validateRequired(
       {
         name: body.name,
@@ -107,7 +103,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       ["name", "start_date", "end_date", "creator_name"]
     )
 
-    // Validate string lengths
     const nameValidation = validateString(body.name, "name", { minLength: 1, maxLength: 255 })
 
     const creatorNameValidation = validateString(body.creator_name, "creator_name", {
@@ -115,7 +110,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       maxLength: 100,
     })
 
-    // Combine validations
     const combinedValidation = combineValidations(
       requiredValidation,
       nameValidation,
@@ -126,7 +120,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       return combinedValidation
     }
 
-    // Validate date range
     let parsedStartDate: Date
     let parsedEndDate: Date
 
@@ -150,9 +143,7 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       }
     }
 
-    // Validate excluded_dates if provided
     if (body.excluded_dates && body.excluded_dates.length > 0) {
-      // Check that it's an array
       if (!Array.isArray(body.excluded_dates)) {
         return {
           valid: false,
@@ -161,7 +152,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
         }
       }
 
-      // Validate each excluded date
       for (const dateStr of body.excluded_dates) {
         if (typeof dateStr !== "string") {
           return {
@@ -182,7 +172,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
           }
         }
 
-        // Check that excluded date is within the event date range
         if (excludedDate < parsedStartDate || excludedDate > parsedEndDate) {
           return {
             valid: false,
@@ -196,13 +185,10 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
     return { valid: true }
   },
 
-  // Main handler logic
   handler: async (body, _params, client) => {
-    // Parse dates
     const parsedStartDate = parseDate(body.start_date)
     const parsedEndDate = parseDate(body.end_date)
 
-    // Hash password if provided (do this once before retry loop)
     let passwordHash: string | null = null
     if (body.password && typeof body.password === "string" && body.password.length > 0) {
       try {
@@ -213,7 +199,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       }
     }
 
-    // Format dates for database (YYYY-MM-DD)
     const formattedStartDate = formatDateForAPI(parsedStartDate)
     const formattedEndDate = formatDateForAPI(parsedEndDate)
 
@@ -228,6 +213,7 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       creator_name: string | null
       is_locked: boolean
       excluded_dates: string[] | null
+      admin_token: string
     } | null = null
     let eventError: { code?: string; message?: string } | null = null
     const maxRetries = 5
@@ -248,20 +234,19 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
           calculated_date: null,
           excluded_dates: body.excluded_dates || [],
         })
-        .select("id, share_url, name, start_date, end_date, creator_name, is_locked, excluded_dates")
+        .select(
+          "id, share_url, name, start_date, end_date, creator_name, is_locked, excluded_dates, admin_token"
+        )
         .single()
 
       event = result.data
       eventError = result.error
 
-      // Check if error is a unique constraint violation on share_url
       if (eventError?.code === "23505" && eventError?.message?.includes("share_url")) {
-        // URL collision - retry with new URL
         console.log(`Share URL collision on attempt ${attempt + 1}, retrying...`)
         continue
       }
 
-      // Success or non-collision error - break out of retry loop
       break
     }
 
@@ -270,7 +255,6 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       throw new ApiError("Failed to create event. Please try again.", 500)
     }
 
-    // Automatically create a participant record for the creator if they provided a name
     let participantData: { participant_id: string; session_token: string } | null = null
     if (body.creator_name && body.creator_name.trim().length > 0) {
       const sessionToken = crypto.randomUUID()
@@ -304,14 +288,13 @@ export const POST = createApiHandler<CreateEventBody, CreateEventResponse>({
       creator_name: event.creator_name,
       is_locked: event.is_locked,
       excluded_dates: event.excluded_dates || [],
+      admin_token: event.admin_token,
       participant: participantData,
     }
   },
 
-  // Success status
   successStatus: 201,
 
-  // Custom error messages
   errorMessages: {
     validation: "Invalid event data",
     serverError: "Failed to create event. Please try again.",

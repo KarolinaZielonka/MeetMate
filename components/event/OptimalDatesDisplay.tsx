@@ -23,7 +23,7 @@ const MAX_DISPLAYED_DATES = 3
 export function OptimalDatesDisplay({ shareUrl, onEventLocked }: OptimalDatesDisplayProps) {
   const t = useTranslations("optimalDates")
 
-  const { userRole } = useEventStore()
+  const { userRole, event } = useEventStore()
 
   const isAdmin = userRole === "admin"
 
@@ -35,7 +35,7 @@ export function OptimalDatesDisplay({ shareUrl, onEventLocked }: OptimalDatesDis
     setSelectedDate,
     setShowLockDialog,
     handleLockEvent,
-  } = useEventLock(shareUrl, t, onEventLocked)
+  } = useEventLock(shareUrl, event?.id, t, onEventLocked)
 
   const topDates = useMemo(() => dateScores.slice(0, MAX_DISPLAYED_DATES), [dateScores])
 
