@@ -18,7 +18,7 @@ export function AlertMessage({ type, message }: AlertMessageProps) {
       text: "text-warning-foreground",
     },
     info: {
-      container: "bg-primary/10 border border-primary/20",
+      container: "bg-primary/10 border-l-4 border-primary",
       icon: "text-primary",
       text: "text-primary",
     },

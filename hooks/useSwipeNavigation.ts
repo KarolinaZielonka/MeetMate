@@ -19,6 +19,7 @@ export function useSwipeNavigation({ onSwipeLeft, onSwipeRight }: SwipeCallbacks
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX
+    touchEndX.current = e.targetTouches[0].clientX
   }, [])
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
